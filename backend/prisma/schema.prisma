@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Multi-Tenant SaaS Gym Scheduling and Management System
+// Prisma Schema for Agentic Scheduling
+// Based on BRD and FRD requirements
 
 generator client {
   provider = "prisma-client-js"
@@ -12,4 +10,966 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// MULTI-TENANCY & ORGANIZATION MANAGEMENT
+// =============================================================================
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique // For subdomain/URL identification
+  description String?
+  website     String?
+  phone       String?
+  email       String?
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  country     String?  @default("US")
+  timezone    String   @default("UTC")
+  currency    String   @default("USD")
+  
+  // Business settings
+  businessType String   @default("gym") // gym, studio, wellness, etc.
+  isActive     Boolean  @default(true)
+  subscriptionTier String @default("basic") // basic, pro, enterprise
+  
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  users            User[]
+  locations        Location[]
+  services         Service[]
+  resources        Resource[]
+  bookings         Booking[]
+  membershipTypes  MembershipType[]
+  waivers          Waiver[]
+  organizationSettings OrganizationSettings?
+  
+  // New relations for additional features
+  payments         Payment[]
+  analyticsSnapshots AnalyticsSnapshot[]
+  checkIns         CheckIn[]
+  reviews          Review[]
+  memberPackages   MemberPackage[]
+  
+  @@map("organizations")
+}
+
+model OrganizationSettings {
+  id             String @id @default(cuid())
+  organizationId String @unique
+  
+  // Booking settings
+  bookingWindowDays         Int     @default(30) // How far in advance can members book
+  cancellationWindowHours   Int     @default(24) // Hours before class to cancel without penalty
+  lateCancelPenalty         Boolean @default(false)
+  noShowPenalty            Boolean @default(true)
+  waitlistEnabled          Boolean @default(true)
+  maxWaitlistSize          Int?    @default(10)
+  
+  // Class settings
+  defaultClassDuration      Int     @default(60) // minutes
+  allowRecurringBookings    Boolean @default(true)
+  maxBookingsPerMember      Int?    @default(10) // per week/month
+  
+  // Communication settings
+  sendConfirmationEmails    Boolean @default(true)
+  sendReminderEmails        Boolean @default(true)
+  reminderHours             Int     @default(24)
+  
+  // Business hours (JSON or separate table)
+  businessHours Json? // Store as JSON for flexibility
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  @@map("organization_settings")
+}
+
+model Location {
+  id             String  @id @default(cuid())
+  organizationId String
+  name           String
+  address        String?
+  city           String?
+  state          String?
+  zipCode        String?
+  phone          String?
+  email          String?
+  isActive       Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resources    Resource[]
+  services     Service[]
+  bookings     Booking[]
+  exceptionLocation RecurrenceException[] @relation("ExceptionLocation")
+  checkIns     CheckIn[]
+  
+  @@map("locations")
+}
+
+// =============================================================================
+// USER MANAGEMENT & ROLES
+// =============================================================================
+
+enum UserRole {
+  SUPER_ADMIN      // Platform super admin
+  ORGANIZATION_ADMIN // Organization owner/admin
+  ADMIN            // Gym admin/manager
+  STAFF            // Trainers, instructors, front desk
+  MEMBER           // Gym members/clients
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+model User {
+  id             String     @id @default(cuid())
+  organizationId String?    // null for super admins
+  
+  // Basic info
+  email          String     @unique
+  username       String?    @unique
+  firstName      String
+  lastName       String
+  preferredName  String?
+  phone          String?
+  dateOfBirth    DateTime?
+  gender         String?
+  
+  // Profile
+  profilePhoto   String?    // URL to profile image
+  bio            String?
+  
+  // Address
+  address        String?
+  city           String?
+  state          String?
+  zipCode        String?
+  country        String?
+  
+  // Emergency contact
+  emergencyContactName   String?
+  emergencyContactPhone  String?
+  emergencyContactRelation String?
+  
+  // Account
+  role           UserRole
+  status         UserStatus @default(PENDING_VERIFICATION)
+  emailVerified  Boolean    @default(false)
+  phoneVerified  Boolean    @default(false)
+  lastLoginAt    DateTime?
+  
+  // Member-specific fields
+  memberId       String?    @unique // Human-readable member ID
+  memberSince    DateTime?
+  
+  // Staff-specific fields
+  employeeId     String?
+  department     String?
+  specialty      String?   // e.g., "Personal Training", "Yoga", "Pilates"
+  certifications String[]  // Array of certifications
+  hourlyRate     Decimal?  @db.Decimal(10, 2)
+  
+  // Audit
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  
+  // Relations
+  organization         Organization?       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships         Membership[]
+  bookings            Booking[]
+  staffAvailability   StaffAvailability[]
+  instructedServices  Service[]           @relation("ServiceInstructor")
+  assistantServices   Service[]           @relation("ServiceAssistant")
+  notes               UserNote[]
+  waiverSignatures    WaiverSignature[]
+  communicationLogs   CommunicationLog[]
+  exceptionInstructor RecurrenceException[] @relation("ExceptionInstructor")
+  
+  // New relations for additional features
+  waitlists           Waitlist[]
+  timeOffRequests     TimeOffRequest[]    @relation("StaffTimeOff")
+  approvedTimeOffRequests TimeOffRequest[] @relation("TimeOffApprover")
+  payments            Payment[]
+  checkIns            CheckIn[]
+  staffCheckIns       CheckIn[]           @relation("CheckInStaff")
+  reviews             Review[]
+  instructorReviews   Review[]            @relation("InstructorReviews")
+  reviewResponses     Review[]            @relation("ReviewResponder")
+  memberPackages      MemberPackage[]
+  
+  @@index([organizationId, role])
+  @@index([email])
+  @@index([memberId])
+  @@map("users")
+}
+
+model UserNote {
+  id       String  @id @default(cuid())
+  userId   String
+  authorId String  // Who wrote the note
+  content  String
+  isAlert  Boolean @default(false) // Flag as important alert
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_notes")
+}
+
+// =============================================================================
+// MEMBERSHIP MANAGEMENT
+// =============================================================================
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  FROZEN
+  EXPIRED
+  CANCELLED
+}
+
+model MembershipType {
+  id             String  @id @default(cuid())
+  organizationId String
+  
+  name           String
+  description    String?
+  price          Decimal @db.Decimal(10, 2)
+  billingCycle   String  @default("monthly") // monthly, yearly, etc.
+  
+  // Limits
+  classCredits   Int?    // Number of classes included
+  isUnlimited    Boolean @default(false)
+  validityDays   Int?    // How long membership is valid
+  
+  // Booking restrictions
+  canBookClasses        Boolean @default(true)
+  canBookAppointments   Boolean @default(true)
+  bookingWindowDays     Int?    // Override org setting
+  maxConcurrentBookings Int?
+  
+  isActive       Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships  Membership[]
+  memberPackages MemberPackage[]
+  
+  @@map("membership_types")
+}
+
+model Membership {
+  id               String           @id @default(cuid())
+  userId           String
+  membershipTypeId String
+  
+  status           MembershipStatus @default(ACTIVE)
+  startDate        DateTime
+  endDate          DateTime?
+  
+  // Credits and usage
+  remainingCredits Int?            // Current available credits
+  totalCredits     Int?            // Total credits for this period
+  
+  // Billing
+  lastBillingDate  DateTime?
+  nextBillingDate  DateTime?
+  
+  // Freeze/hold functionality
+  freezeStartDate  DateTime?
+  freezeEndDate    DateTime?
+  freezeReason     String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  membershipType MembershipType @relation(fields: [membershipTypeId], references: [id])
+  
+  @@map("memberships")
+}
+
+// =============================================================================
+// SERVICES & RESOURCES
+// =============================================================================
+
+enum ServiceType {
+  CLASS           // Group classes (yoga, spin, etc.)
+  APPOINTMENT     // One-on-one sessions
+  WORKSHOP        // Special events
+  PERSONAL_TRAINING
+}
+
+model Service {
+  id             String      @id @default(cuid())
+  organizationId String
+  locationId     String?
+  
+  name           String
+  description    String?
+  type           ServiceType
+  duration       Int         // Duration in minutes
+  capacity       Int?        // Max participants (null = unlimited)
+  price          Decimal?    @db.Decimal(10, 2)
+  
+  // Booking settings
+  bookable       Boolean     @default(true)
+  requiresApproval Boolean   @default(false)
+  allowWaitlist  Boolean     @default(true)
+  
+  // Staff assignments
+  primaryInstructorId   String?
+  assistantInstructorId String?
+  
+  // Resources required
+  resourceIds    String[]    // Array of required resource IDs
+  
+  isActive       Boolean     @default(true)
+  color          String?     // For calendar display
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location            Location?    @relation(fields: [locationId], references: [id])
+  primaryInstructor   User?        @relation("ServiceInstructor", fields: [primaryInstructorId], references: [id])
+  assistantInstructor User?        @relation("ServiceAssistant", fields: [assistantInstructorId], references: [id])
+  
+  bookings            Booking[]
+  recurringSchedules  RecurringSchedule[]
+  recurrenceExceptions RecurrenceException[] @relation("ExceptionService")
+  waitlists           Waitlist[]
+  reviews             Review[]
+  
+  @@map("services")
+}
+
+model Resource {
+  id             String  @id @default(cuid())
+  organizationId String
+  locationId     String?
+  
+  name           String
+  description    String?
+  type           String  // "room", "equipment", "court", etc.
+  capacity       Int?
+  isBookable     Boolean @default(true)
+  isActive       Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location     Location?    @relation(fields: [locationId], references: [id])
+  bookings     Booking[]
+  
+  @@map("resources")
+}
+
+// =============================================================================
+// SCHEDULING & BOOKING SYSTEM
+// =============================================================================
+
+enum BookingStatus {
+  CONFIRMED
+  PENDING
+  CANCELLED_BY_MEMBER
+  CANCELLED_BY_STAFF
+  NO_SHOW
+  ATTENDED
+  LATE_CANCELLED
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  organizationId String
+  locationId     String?
+  serviceId      String
+  userId         String        // Member who booked
+  resourceId     String?       // Optional resource booking
+  
+  // Scheduling
+  startTime      DateTime
+  endTime        DateTime
+  allDay         Boolean       @default(false)
+  
+  // Booking details
+  status         BookingStatus @default(CONFIRMED)
+  notes          String?
+  privateNotes   String?       // Staff-only notes
+  
+  // Recurring booking reference
+  recurringScheduleId String?
+  instanceDate        DateTime? // For recurring bookings, which specific date
+  
+  // Waitlist
+  isWaitlisted   Boolean       @default(false)
+  waitlistPosition Int?
+  
+  // Attendance tracking
+  checkedInAt    DateTime?
+  checkedInBy    String?       // Staff member who checked them in
+  
+  // Pricing (if different from service default)
+  price          Decimal?      @db.Decimal(10, 2)
+  creditsUsed    Int?          // How many membership credits used
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization      Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location          Location?          @relation(fields: [locationId], references: [id])
+  service           Service            @relation(fields: [serviceId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+  resource          Resource?          @relation(fields: [resourceId], references: [id])
+  recurringSchedule RecurringSchedule? @relation(fields: [recurringScheduleId], references: [id])
+  
+  // New relations
+  payments          Payment[]
+  checkIns          CheckIn[]
+  reviews           Review[]
+  packageUsage      PackageUsage[]
+  
+  @@index([organizationId, startTime])
+  @@index([userId, startTime])
+  @@index([serviceId, startTime])
+  @@map("bookings")
+}
+
+// Enhanced RRULE-based recurring schedules following Google Calendar standard
+model RecurringSchedule {
+  id        String @id @default(cuid())
+  serviceId String
+  
+  // Core RRULE components (RFC 5545 compliant)
+  rrule     String   // Complete RRULE string (e.g., "FREQ=WEEKLY;BYDAY=MO,WE,FR;INTERVAL=1")
+  dtstart   DateTime // Start date and time (DTSTART in RRULE spec)
+  dtend     DateTime? // End date (UNTIL in RRULE spec, optional)
+  
+  // Time zone handling
+  timezone  String   @default("UTC") // IANA timezone identifier
+  
+  // RRULE breakdown for easier querying
+  frequency String   // DAILY, WEEKLY, MONTHLY, YEARLY
+  interval  Int      @default(1) // Repeat every N periods
+  byDay     String[] // Days of week (MO, TU, WE, etc.) for WEEKLY
+  byMonthDay Int[]   // Days of month (1-31) for MONTHLY
+  byMonth   Int[]    // Months (1-12) for YEARLY
+  bySetPos  Int[]    // Position in set (e.g., 1st, 2nd, -1 for last)
+  count     Int?     // Number of occurrences (COUNT in RRULE)
+  
+  // Time details (extracted from dtstart for convenience)
+  startTime String   // Time in HH:MM format
+  duration  Int      // Duration in minutes
+  
+  // Exception handling (RFC 5545 EXDATE)
+  exdates   DateTime[] // Specific datetime instances to exclude
+  
+  // Modification tracking
+  lastGenerated DateTime? // Last time instances were generated
+  
+  // Human-readable description
+  description String? // e.g., "Every Monday, Wednesday, and Friday"
+  
+  isActive     Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  service  Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  bookings Booking[] // Individual instances created from this schedule
+  recurrenceExceptions RecurrenceException[] // Modified instances
+  
+  @@map("recurring_schedules")
+}
+
+// Handle modifications to specific instances in a recurring series
+model RecurrenceException {
+  id                  String   @id @default(cuid())
+  recurringScheduleId String
+  
+  // Which specific instance this exception applies to
+  originalDateTime    DateTime // The original datetime this would have occurred
+  
+  // Exception type
+  exceptionType       RecurrenceExceptionType
+  
+  // New details (if rescheduled)
+  newStartTime        DateTime?
+  newEndTime          DateTime?
+  newServiceId        String?
+  newInstructorId     String?
+  newLocationId       String?
+  newCapacity         Int?
+  
+  // Modification reason
+  reason              String?
+  notes               String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  recurringSchedule RecurringSchedule @relation(fields: [recurringScheduleId], references: [id], onDelete: Cascade)
+  newService        Service?         @relation("ExceptionService", fields: [newServiceId], references: [id])
+  newInstructor     User?            @relation("ExceptionInstructor", fields: [newInstructorId], references: [id])
+  newLocation       Location?        @relation("ExceptionLocation", fields: [newLocationId], references: [id])
+  
+  @@unique([recurringScheduleId, originalDateTime])
+  @@map("recurrence_exceptions")
+}
+
+enum RecurrenceExceptionType {
+  CANCELLED    // This instance is cancelled
+  RESCHEDULED  // This instance is moved to different time
+  MODIFIED     // This instance has modified details (instructor, capacity, etc.)
+}
+
+// =============================================================================
+// STAFF AVAILABILITY
+// =============================================================================
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model StaffAvailability {
+  id      String    @id @default(cuid())
+  userId  String    // Staff member
+  
+  // Regular weekly availability
+  dayOfWeek  DayOfWeek
+  startTime  String    // Time in HH:MM format
+  endTime    String    // Time in HH:MM format
+  
+  // Date-specific overrides
+  specificDate DateTime? // If set, this overrides the weekly schedule for this date
+  isAvailable  Boolean   @default(true) // false = not available on this day/time
+  
+  notes        String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("staff_availability")
+}
+
+// =============================================================================
+// WAIVERS & LEGAL
+// =============================================================================
+
+model Waiver {
+  id             String @id @default(cuid())
+  organizationId String
+  
+  title          String
+  content        String // HTML content of the waiver
+  version        String @default("1.0")
+  isActive       Boolean @default(true)
+  isRequired     Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  signatures   WaiverSignature[]
+  
+  @@map("waivers")
+}
+
+model WaiverSignature {
+  id        String @id @default(cuid())
+  waiverId  String
+  userId    String
+  
+  signedAt  DateTime @default(now())
+  ipAddress String?
+  signature String?  // Digital signature data
+  
+  waiver Waiver @relation(fields: [waiverId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  
+  @@unique([waiverId, userId]) // One signature per user per waiver version
+  @@map("waiver_signatures")
+}
+
+// =============================================================================
+// COMMUNICATION & LOGS
+// =============================================================================
+
+enum CommunicationType {
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  BOOKING_CANCELLATION
+  WAITLIST_NOTIFICATION
+  PAYMENT_RECEIPT
+  MEMBERSHIP_RENEWAL
+  GENERAL_ANNOUNCEMENT
+}
+
+model CommunicationLog {
+  id     String            @id @default(cuid())
+  userId String
+  
+  type    CommunicationType
+  subject String
+  content String
+  
+  // Delivery details
+  sentAt      DateTime
+  deliveredAt DateTime?
+  readAt      DateTime?
+  
+  // Communication method
+  method      String        @default("email") // email, sms, push, etc.
+  toAddress   String        // email or phone number
+  
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("communication_logs")
+}
+
+// =============================================================================
+// WAITLIST MANAGEMENT
+// =============================================================================
+
+model Waitlist {
+  id        String @id @default(cuid())
+  serviceId String
+  userId    String
+  
+  // Waitlist details
+  position     Int      // Position in the waitlist (1 = first)
+  joinedAt     DateTime @default(now())
+  notifiedAt   DateTime? // When user was last notified of availability
+  expiresAt    DateTime? // When the notification expires
+  
+  // Notification preferences
+  notifyByEmail Boolean @default(true)
+  notifyBySms   Boolean @default(false)
+  
+  // Status tracking
+  isActive      Boolean @default(true)
+  
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([serviceId, userId]) // One waitlist entry per user per service
+  @@index([serviceId, position])
+  @@map("waitlists")
+}
+
+// =============================================================================
+// STAFF TIME-OFF & SCHEDULE MANAGEMENT
+// =============================================================================
+
+enum TimeOffStatus {
+  PENDING
+  APPROVED
+  DENIED
+  CANCELLED
+}
+
+enum TimeOffType {
+  VACATION
+  SICK_LEAVE
+  PERSONAL
+  EMERGENCY
+  UNPAID
+  TRAINING
+}
+
+model TimeOffRequest {
+  id      String        @id @default(cuid())
+  userId  String        // Staff member requesting time off
+  
+  type    TimeOffType
+  status  TimeOffStatus @default(PENDING)
+  
+  startDate   DateTime
+  endDate     DateTime
+  reason      String?
+  notes       String?
+  
+  // Approval workflow
+  approvedBy  String?   // User ID of approver
+  approvedAt  DateTime?
+  reviewNotes String?   // Admin notes on approval/denial
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user     User  @relation("StaffTimeOff", fields: [userId], references: [id], onDelete: Cascade)
+  approver User? @relation("TimeOffApprover", fields: [approvedBy], references: [id])
+  
+  @@map("time_off_requests")
+}
+
+// =============================================================================
+// PAYMENT & BILLING TRACKING
+// =============================================================================
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  DIGITAL_WALLET
+  MEMBERSHIP_CREDITS
+}
+
+model Payment {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+  bookingId      String?  // Optional - for booking-specific payments
+  
+  amount         Decimal       @db.Decimal(10, 2)
+  currency       String        @default("USD")
+  status         PaymentStatus @default(PENDING)
+  method         PaymentMethod
+  
+  // Payment gateway details
+  externalId     String?  // ID from payment processor (Stripe, Square, etc.)
+  gatewayData    Json?    // Store gateway-specific data
+  
+  // Transaction details
+  description    String
+  notes          String?
+  
+  // Refund tracking
+  refundAmount   Decimal? @db.Decimal(10, 2)
+  refundReason   String?
+  refundedAt     DateTime?
+  
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  booking      Booking?     @relation(fields: [bookingId], references: [id])
+  
+  @@index([organizationId, status])
+  @@index([userId, status])
+  @@map("payments")
+}
+
+// =============================================================================
+// OPERATIONAL ANALYTICS & REPORTING
+// =============================================================================
+
+model AnalyticsSnapshot {
+  id             String   @id @default(cuid())
+  organizationId String
+  
+  // Time period
+  date           DateTime // Date this snapshot represents
+  periodType     String   // "daily", "weekly", "monthly"
+  
+  // Booking metrics
+  totalBookings     Int @default(0)
+  completedBookings Int @default(0)
+  cancelledBookings Int @default(0)
+  noShows          Int @default(0)
+  
+  // Revenue metrics
+  totalRevenue     Decimal @default(0) @db.Decimal(10, 2)
+  averageRevenue   Decimal @default(0) @db.Decimal(10, 2)
+  
+  // Utilization metrics
+  totalCapacity    Int @default(0) // Total available spots
+  bookedCapacity   Int @default(0) // Actually booked spots
+  utilizationRate  Decimal @default(0) @db.Decimal(5, 4) // Percentage (0.0000 to 1.0000)
+  
+  // Member metrics
+  activeMembers    Int @default(0)
+  newMembers      Int @default(0)
+  retentionRate   Decimal @default(0) @db.Decimal(5, 4)
+  
+  // Staff metrics
+  activeStaff     Int @default(0)
+  averageRating   Decimal? @db.Decimal(3, 2) // 0.00 to 5.00
+  
+  // Popular services (stored as JSON for flexibility)
+  popularServices Json?
+  
+  createdAt DateTime @default(now())
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  @@unique([organizationId, date, periodType])
+  @@map("analytics_snapshots")
+}
+
+// =============================================================================
+// MEMBER CHECK-IN & ATTENDANCE TRACKING
+// =============================================================================
+
+model CheckIn {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+  bookingId      String?
+  
+  // Check-in details
+  checkedInAt    DateTime @default(now())
+  checkedInBy    String?  // Staff member who checked them in
+  method         String   @default("manual") // manual, qr_code, rfid, mobile_app
+  
+  // Location tracking
+  locationId     String?
+  
+  // Notes
+  notes          String?
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  booking      Booking?     @relation(fields: [bookingId], references: [id])
+  location     Location?    @relation(fields: [locationId], references: [id])
+  checkedInByUser User?     @relation("CheckInStaff", fields: [checkedInBy], references: [id])
+  
+  @@index([organizationId, checkedInAt])
+  @@index([userId, checkedInAt])
+  @@map("check_ins")
+}
+
+// =============================================================================
+// MEMBER FEEDBACK & RATINGS
+// =============================================================================
+
+model Review {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+  serviceId      String?
+  instructorId   String?
+  bookingId      String?
+  
+  rating         Int     // 1-5 stars
+  comment        String?
+  isPublic       Boolean @default(true)
+  isVerified     Boolean @default(false) // Verified as actual attendee
+  
+  // Response from business
+  response       String?
+  respondedAt    DateTime?
+  respondedBy    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  service      Service?     @relation(fields: [serviceId], references: [id])
+  instructor   User?        @relation("InstructorReviews", fields: [instructorId], references: [id])
+  booking      Booking?     @relation(fields: [bookingId], references: [id])
+  responder    User?        @relation("ReviewResponder", fields: [respondedBy], references: [id])
+  
+  @@index([organizationId, rating])
+  @@index([serviceId, rating])
+  @@index([instructorId, rating])
+  @@map("reviews")
+}
+
+// =============================================================================
+// MEMBER PACKAGES & CREDITS
+// =============================================================================
+
+enum PackageStatus {
+  ACTIVE
+  EXPIRED
+  USED_UP
+  SUSPENDED
+  REFUNDED
+}
+
+model MemberPackage {
+  id             String        @id @default(cuid())
+  organizationId String
+  userId         String
+  membershipTypeId String?
+  
+  name           String
+  description    String?
+  
+  // Credits/sessions
+  totalCredits    Int
+  remainingCredits Int
+  
+  // Validity
+  purchaseDate   DateTime      @default(now())
+  expiryDate     DateTime?
+  status         PackageStatus @default(ACTIVE)
+  
+  // Pricing
+  price          Decimal       @db.Decimal(10, 2)
+  currency       String        @default("USD")
+  
+  // Usage restrictions
+  allowedServices String[]      // Service IDs this package can be used for
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User            @relation(fields: [userId], references: [id])
+  membershipType MembershipType? @relation(fields: [membershipTypeId], references: [id])
+  packageUsage PackageUsage[]
+  
+  @@index([organizationId, status])
+  @@index([userId, status])
+  @@map("member_packages")
+}
+
+model PackageUsage {
+  id        String @id @default(cuid())
+  packageId String
+  bookingId String
+  
+  creditsUsed Int       @default(1)
+  usedAt      DateTime  @default(now())
+  
+  package MemberPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  booking Booking       @relation(fields: [bookingId], references: [id])
+  
+  @@map("package_usage")
 }

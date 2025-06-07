@@ -83,8 +83,41 @@ model OrganizationSettings {
   sendReminderEmails        Boolean @default(true)
   reminderHours             Int     @default(24)
   
-  // Business hours (JSON or separate table)
+  // Business hours (JSON format for flexibility)
   businessHours Json? // Store as JSON for flexibility
+  
+  // Enhanced organization settings for FRD compliance
+  // Branding & Customization
+  primaryColor     String? @default("#007bff")
+  secondaryColor   String? @default("#6c757d")
+  logoUrl          String?
+  faviconUrl       String?
+  customDomain     String? // For white-label subdomain
+  
+  // Advanced Booking Policies
+  requireMembershipForBooking Boolean @default(false)
+  allowGuestBookings         Boolean @default(true)
+  minimumAdvanceBooking      Int     @default(0) // Minutes before class starts
+  maximumAdvanceBooking      Int     @default(43200) // Minutes (30 days default)
+  
+  // Operational Settings
+  defaultTimeZone            String  @default("UTC")
+  firstDayOfWeek            Int     @default(1) // 1 = Monday, 0 = Sunday
+  dateFormat                String  @default("MM/DD/YYYY")
+  timeFormat                String  @default("12h") // 12h or 24h
+  
+  // Feature Toggles
+  enableWaitlist            Boolean @default(true)
+  enableRecurringBookings   Boolean @default(true)
+  enableCheckIn             Boolean @default(true)
+  enableReviews             Boolean @default(true)
+  enablePayments            Boolean @default(true)
+  enableAnalytics           Boolean @default(true)
+  
+  // Integration Settings
+  paymentGateway            String? // stripe, square, etc.
+  emailProvider             String? @default("sendgrid")
+  smsProvider               String? // twilio, etc.
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -373,9 +406,45 @@ model Resource {
   name           String
   description    String?
   type           String  // "room", "equipment", "court", etc.
+  category       String? // "cardio", "strength", "studio", etc.
   capacity       Int?
   isBookable     Boolean @default(true)
   isActive       Boolean @default(true)
+  
+  // Enhanced resource attributes for FRD compliance
+  // Physical attributes
+  area           Decimal? @db.Decimal(8, 2) // Square footage/meters
+  maxOccupancy   Int?     // Fire safety max occupancy
+  
+  // Equipment specifics
+  manufacturer   String?
+  model          String?
+  serialNumber   String?
+  purchaseDate   DateTime?
+  warrantyExpiry DateTime?
+  
+  // Booking & scheduling attributes
+  requiresStaffSupervision Boolean @default(false)
+  allowMultipleBookings    Boolean @default(false) // Can resource be shared
+  bookingDuration          Int?    // Default booking duration in minutes
+  bufferTime               Int?    @default(0) // Buffer time between bookings
+  
+  // Availability constraints
+  availableHours          Json? // Specific hours different from facility hours
+  blockedDates            DateTime[] // Dates when resource is unavailable
+  
+  // Maintenance tracking
+  lastMaintenanceDate     DateTime?
+  nextMaintenanceDate     DateTime?
+  maintenanceNotes        String?
+  maintenanceStatus       String? @default("operational") // operational, maintenance, out_of_order
+  
+  // Cost tracking
+  hourlyRate              Decimal? @db.Decimal(10, 2) // Cost per hour if applicable
+  monthlyMaintenance      Decimal? @db.Decimal(10, 2)
+  
+  // Metadata
+  tags                    String[] // For categorization and search
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -384,6 +453,8 @@ model Resource {
   location     Location?    @relation(fields: [locationId], references: [id])
   bookings     Booking[]
   
+  @@index([organizationId, type])
+  @@index([organizationId, isActive])
   @@map("resources")
 }
 

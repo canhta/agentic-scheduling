@@ -26,6 +26,8 @@ import {
   CreateResourceDto,
   UpdateResourceDto,
   UpdateOrganizationSettingsDto,
+  CreateServiceDto,
+  UpdateServiceDto,
   ResourceType,
 } from './dto/organization.dto';
 import { OrganizationResponseDto } from './dto/organization-response.dto';
@@ -296,5 +298,91 @@ export class OrganizationController {
       id,
       updateSettingsDto,
     );
+  }
+
+  // Service Management (FR-OM-SC-01)
+  @Post(':id/services')
+  @ApiOperation({ summary: 'Create a new service/class' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiResponse({ status: 201, description: 'Service created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid service data' })
+  @ApiResponse({ status: 404, description: 'Organization not found' })
+  @ApiResponse({ status: 409, description: 'Service name already exists' })
+  createService(
+    @Param('id') id: string,
+    @Body() createServiceDto: CreateServiceDto,
+  ) {
+    return this.organizationService.createService(id, createServiceDto);
+  }
+
+  @Get(':id/services')
+  @ApiOperation({ summary: 'Get all services for organization' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiResponse({ status: 200, description: 'Services retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Organization not found' })
+  getServices(@Param('id') id: string) {
+    return this.organizationService.findServicesByOrganization(id);
+  }
+
+  @Get(':id/services/:serviceId')
+  @ApiOperation({ summary: 'Get service by ID' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiParam({ name: 'serviceId', description: 'Service ID' })
+  @ApiResponse({ status: 200, description: 'Service retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Service not found' })
+  getService(@Param('id') id: string, @Param('serviceId') serviceId: string) {
+    return this.organizationService.findServiceById(id, serviceId);
+  }
+
+  @Patch(':id/services/:serviceId')
+  @ApiOperation({ summary: 'Update service' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiParam({ name: 'serviceId', description: 'Service ID' })
+  @ApiResponse({ status: 200, description: 'Service updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid service data' })
+  @ApiResponse({ status: 404, description: 'Service not found' })
+  @ApiResponse({ status: 409, description: 'Service name already exists' })
+  updateService(
+    @Param('id') id: string,
+    @Param('serviceId') serviceId: string,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ) {
+    return this.organizationService.updateService(
+      id,
+      serviceId,
+      updateServiceDto,
+    );
+  }
+
+  @Delete(':id/services/:serviceId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete service (soft delete)' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiParam({ name: 'serviceId', description: 'Service ID' })
+  @ApiResponse({ status: 204, description: 'Service deleted successfully' })
+  @ApiResponse({ status: 400, description: 'Service has existing bookings' })
+  @ApiResponse({ status: 404, description: 'Service not found' })
+  removeService(
+    @Param('id') id: string,
+    @Param('serviceId') serviceId: string,
+  ) {
+    return this.organizationService.deleteService(id, serviceId);
+  }
+
+  @Get(':id/services/type/:serviceType')
+  @ApiOperation({ summary: 'Get services by type' })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiParam({
+    name: 'serviceType',
+    description: 'Service type',
+    enum: ['CLASS', 'APPOINTMENT', 'WORKSHOP', 'PERSONAL_TRAINING'],
+  })
+  @ApiResponse({ status: 200, description: 'Services retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Organization not found' })
+  getServicesByType(
+    @Param('id') id: string,
+    @Param('serviceType') serviceType: string,
+  ) {
+    return this.organizationService.getServicesByType(id, serviceType as any);
   }
 }

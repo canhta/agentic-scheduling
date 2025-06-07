@@ -7,6 +7,9 @@ import {
   IsUrl,
   IsEmail,
   IsEnum,
+  IsNumber,
+  IsArray,
+  IsUUID,
   Min,
   Max,
 } from 'class-validator';
@@ -492,4 +495,192 @@ export class UpdateOrganizationSettingsDto {
   })
   @IsOptional()
   businessHours?: BusinessHoursDto[];
+}
+
+export enum ServiceType {
+  CLASS = 'CLASS',
+  APPOINTMENT = 'APPOINTMENT',
+  WORKSHOP = 'WORKSHOP',
+  PERSONAL_TRAINING = 'PERSONAL_TRAINING',
+}
+
+export class CreateServiceDto {
+  @ApiProperty({ description: 'Service/Class name' })
+  @IsString()
+  name: string;
+
+  @ApiPropertyOptional({ description: 'Service description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({ description: 'Service type', enum: ServiceType })
+  @IsEnum(ServiceType)
+  type: ServiceType;
+
+  @ApiProperty({
+    description: 'Default duration in minutes',
+    minimum: 1,
+  })
+  @IsInt()
+  @Min(1)
+  duration: number;
+
+  @ApiPropertyOptional({
+    description: 'Maximum capacity',
+    minimum: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  capacity?: number;
+
+  @ApiPropertyOptional({ description: 'Service price' })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @ApiPropertyOptional({
+    description: 'Is bookable by members',
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  bookable?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Requires approval for booking',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  requiresApproval?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Allow waitlist',
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  allowWaitlist?: boolean;
+
+  @ApiPropertyOptional({ description: 'Location ID' })
+  @IsOptional()
+  @IsUUID('4')
+  locationId?: string;
+
+  @ApiPropertyOptional({ description: 'Primary instructor ID' })
+  @IsOptional()
+  @IsUUID('4')
+  primaryInstructorId?: string;
+
+  @ApiPropertyOptional({ description: 'Assistant instructor ID' })
+  @IsOptional()
+  @IsUUID('4')
+  assistantInstructorId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Resource IDs this service can use',
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  resourceIds?: string[];
+
+  @ApiPropertyOptional({ description: 'Calendar display color' })
+  @IsOptional()
+  @IsString()
+  color?: string;
+}
+
+export class UpdateServiceDto {
+  @ApiPropertyOptional({ description: 'Service/Class name' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional({ description: 'Service description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional({ description: 'Service type', enum: ServiceType })
+  @IsOptional()
+  @IsEnum(ServiceType)
+  type?: ServiceType;
+
+  @ApiPropertyOptional({
+    description: 'Default duration in minutes',
+    minimum: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  duration?: number;
+
+  @ApiPropertyOptional({
+    description: 'Maximum capacity',
+    minimum: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  capacity?: number;
+
+  @ApiPropertyOptional({ description: 'Service price' })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @ApiPropertyOptional({ description: 'Is bookable by members' })
+  @IsOptional()
+  @IsBoolean()
+  bookable?: boolean;
+
+  @ApiPropertyOptional({ description: 'Requires approval for booking' })
+  @IsOptional()
+  @IsBoolean()
+  requiresApproval?: boolean;
+
+  @ApiPropertyOptional({ description: 'Allow waitlist' })
+  @IsOptional()
+  @IsBoolean()
+  allowWaitlist?: boolean;
+
+  @ApiPropertyOptional({ description: 'Location ID' })
+  @IsOptional()
+  @IsUUID('4')
+  locationId?: string;
+
+  @ApiPropertyOptional({ description: 'Primary instructor ID' })
+  @IsOptional()
+  @IsUUID('4')
+  primaryInstructorId?: string;
+
+  @ApiPropertyOptional({ description: 'Assistant instructor ID' })
+  @IsOptional()
+  @IsUUID('4')
+  assistantInstructorId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Resource IDs this service can use',
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  resourceIds?: string[];
+
+  @ApiPropertyOptional({ description: 'Calendar display color' })
+  @IsOptional()
+  @IsString()
+  color?: string;
+
+  @ApiPropertyOptional({ description: 'Active status' })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

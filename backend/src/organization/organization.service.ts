@@ -13,6 +13,9 @@ import {
   CreateResourceDto,
   UpdateResourceDto,
   UpdateOrganizationSettingsDto,
+  CreateServiceDto,
+  UpdateServiceDto,
+  ServiceType,
 } from './dto/organization.dto';
 import { Prisma } from '../../generated/prisma';
 
@@ -489,5 +492,278 @@ export class OrganizationService {
       }
       throw new BadRequestException('Failed to update organization settings');
     }
+  }
+
+  // Service Management (FR-OM-SC-01)
+  async createService(
+    organizationId: string,
+    createServiceDto: CreateServiceDto,
+  ): Promise<any> {
+    try {
+      // Verify organization exists
+      await this.findOrganizationById(organizationId);
+
+      // Check if service name is unique within organization
+      const existingService = await this.prisma.service.findFirst({
+        where: {
+          organizationId,
+          name: createServiceDto.name,
+        },
+      });
+
+      if (existingService) {
+        throw new ConflictException(
+          'Service name already exists in this organization',
+        );
+      }
+
+      // Verify resource IDs if provided
+      if (createServiceDto.resourceIds?.length) {
+        const resources = await this.prisma.resource.findMany({
+          where: {
+            id: { in: createServiceDto.resourceIds },
+            organizationId,
+            isActive: true,
+          },
+        });
+
+        if (resources.length !== createServiceDto.resourceIds.length) {
+          throw new BadRequestException('One or more resource IDs are invalid');
+        }
+      }
+
+      // Create service
+      const service = await this.prisma.service.create({
+        data: {
+          ...createServiceDto,
+          organizationId,
+        },
+        include: {
+          organization: {
+            select: { id: true, name: true },
+          },
+          location: {
+            select: { id: true, name: true },
+          },
+          primaryInstructor: {
+            select: { id: true, firstName: true, lastName: true },
+          },
+          assistantInstructor: {
+            select: { id: true, firstName: true, lastName: true },
+          },
+        },
+      });
+
+      return service;
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ConflictException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to create service');
+    }
+  }
+
+  async findServicesByOrganization(organizationId: string): Promise<any[]> {
+    // Verify organization exists
+    await this.findOrganizationById(organizationId);
+
+    return await this.prisma.service.findMany({
+      where: { organizationId, isActive: true },
+      include: {
+        location: {
+          select: { id: true, name: true },
+        },
+        primaryInstructor: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+        assistantInstructor: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
+  }
+
+  async findServiceById(
+    organizationId: string,
+    serviceId: string,
+  ): Promise<any> {
+    // Verify organization exists
+    await this.findOrganizationById(organizationId);
+
+    const service = await this.prisma.service.findFirst({
+      where: {
+        id: serviceId,
+        organizationId,
+        isActive: true,
+      },
+      include: {
+        organization: {
+          select: { id: true, name: true },
+        },
+        location: {
+          select: { id: true, name: true, address: true },
+        },
+        primaryInstructor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            specialty: true,
+          },
+        },
+        assistantInstructor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            specialty: true,
+          },
+        },
+      },
+    });
+
+    if (!service) {
+      throw new NotFoundException('Service not found');
+    }
+
+    return service;
+  }
+
+  async updateService(
+    organizationId: string,
+    serviceId: string,
+    updateServiceDto: UpdateServiceDto,
+  ): Promise<any> {
+    try {
+      // Verify organization exists and service belongs to organization
+      const existingService = await this.findServiceById(
+        organizationId,
+        serviceId,
+      );
+
+      // Check name uniqueness if name is being updated
+      if (
+        updateServiceDto.name &&
+        updateServiceDto.name !== existingService.name
+      ) {
+        const nameConflict = await this.prisma.service.findFirst({
+          where: {
+            organizationId,
+            name: updateServiceDto.name,
+            id: { not: serviceId },
+          },
+        });
+
+        if (nameConflict) {
+          throw new ConflictException(
+            'Service name already exists in this organization',
+          );
+        }
+      }
+
+      // Verify resource IDs if provided
+      if (updateServiceDto.resourceIds?.length) {
+        const resources = await this.prisma.resource.findMany({
+          where: {
+            id: { in: updateServiceDto.resourceIds },
+            organizationId,
+            isActive: true,
+          },
+        });
+
+        if (resources.length !== updateServiceDto.resourceIds.length) {
+          throw new BadRequestException('One or more resource IDs are invalid');
+        }
+      }
+
+      // Update service
+      const updatedService = await this.prisma.service.update({
+        where: { id: serviceId },
+        data: updateServiceDto,
+        include: {
+          organization: {
+            select: { id: true, name: true },
+          },
+          location: {
+            select: { id: true, name: true },
+          },
+          primaryInstructor: {
+            select: { id: true, firstName: true, lastName: true },
+          },
+          assistantInstructor: {
+            select: { id: true, firstName: true, lastName: true },
+          },
+        },
+      });
+
+      return updatedService;
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ConflictException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to update service');
+    }
+  }
+
+  async deleteService(
+    organizationId: string,
+    serviceId: string,
+  ): Promise<void> {
+    // Verify service exists and belongs to organization
+    await this.findServiceById(organizationId, serviceId);
+
+    // Check if service is used in any bookings or schedules
+    const serviceUsage = await this.prisma.booking.findFirst({
+      where: { serviceId },
+    });
+
+    if (serviceUsage) {
+      throw new BadRequestException(
+        'Cannot delete service that has existing bookings. Consider deactivating instead.',
+      );
+    }
+
+    // Soft delete by setting isActive to false
+    await this.prisma.service.update({
+      where: { id: serviceId },
+      data: { isActive: false },
+    });
+  }
+
+  async getServicesByType(
+    organizationId: string,
+    serviceType: ServiceType,
+  ): Promise<any[]> {
+    // Verify organization exists
+    await this.findOrganizationById(organizationId);
+
+    return await this.prisma.service.findMany({
+      where: {
+        organizationId,
+        type: serviceType,
+        isActive: true,
+      },
+      include: {
+        location: {
+          select: { id: true, name: true },
+        },
+        primaryInstructor: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+        assistantInstructor: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
   }
 }

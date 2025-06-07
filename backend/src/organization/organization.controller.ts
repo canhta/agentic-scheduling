@@ -28,6 +28,7 @@ import {
   UpdateOrganizationSettingsDto,
   ResourceType,
 } from './dto/organization.dto';
+import { OrganizationResponseDto } from './dto/organization-response.dto';
 
 @ApiTags('Organization Management')
 @Controller('organizations')
@@ -40,6 +41,7 @@ export class OrganizationController {
   @ApiResponse({
     status: 201,
     description: 'Organization created successfully',
+    type: OrganizationResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 409, description: 'Organization slug already exists' })
@@ -52,6 +54,7 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'Organizations retrieved successfully',
+    type: [OrganizationResponseDto],
   })
   findAll() {
     return this.organizationService.findAllOrganizations();
@@ -63,6 +66,7 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'Organization retrieved successfully',
+    type: OrganizationResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Organization not found' })
   findOne(@Param('id') id: string) {
@@ -75,6 +79,7 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'Organization retrieved successfully',
+    type: OrganizationResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Organization not found' })
   findBySlug(@Param('slug') slug: string) {
@@ -87,6 +92,7 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'Organization updated successfully',
+    type: OrganizationResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Organization not found' })
   update(

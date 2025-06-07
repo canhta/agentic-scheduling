@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated API types (regenerated from backend)
+/lib/generated/api-types.ts

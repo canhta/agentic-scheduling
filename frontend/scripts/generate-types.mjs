@@ -5,27 +5,27 @@ import fs from 'fs';
 import path from 'path';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
-const OUTPUT_FILE = './lib/generated/api-types.ts';
+const OUTPUT_FILE = './lib/api-types.ts';
 
 async function generateTypes() {
   try {
     console.log('🔄 Generating TypeScript types from OpenAPI spec...');
-    
+
     // Ensure the output directory exists
     const outputDir = path.dirname(OUTPUT_FILE);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Generate types from the Swagger JSON endpoint
-    const command = `npx openapi-typescript ${BACKEND_URL}/api-json -o ${OUTPUT_FILE}`;
-    
+    // Generate types from the OpenAPI spec
+    const command = `npx openapi-typescript ${BACKEND_URL}/api-yaml -o ${OUTPUT_FILE}`;
+
     console.log(`Running: ${command}`);
     execSync(command, { stdio: 'inherit' });
-    
+
     console.log('✅ TypeScript types generated successfully!');
     console.log(`📄 Types saved to: ${OUTPUT_FILE}`);
-    
+
   } catch (error) {
     console.error('❌ Error generating types:', error.message);
     process.exit(1);

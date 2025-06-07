@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --port 3030",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 3030",
     "lint": "next lint",
     "generate-types": "node scripts/generate-types.mjs",
     "generate-types:watch": "nodemon --watch ../backend/src --ext ts --exec \"npm run generate-types\"",

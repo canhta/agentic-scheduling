@@ -233,6 +233,7 @@ model User {
   instructedServices  Service[]             @relation("ServiceInstructor")
   assistantServices   Service[]             @relation("ServiceAssistant")
   notes               UserNote[]
+  authoredNotes       UserNote[]            @relation("UserNoteAuthor")
   waiverSignatures    WaiverSignature[]
   communicationLogs   CommunicationLog[]
   exceptionInstructor RecurrenceException[] @relation("ExceptionInstructor")
@@ -265,7 +266,8 @@ model UserNote {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  author User @relation("UserNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("user_notes")
 }

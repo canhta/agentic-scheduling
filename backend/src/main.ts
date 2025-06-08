@@ -26,6 +26,11 @@ async function bootstrap() {
       'Multi-Tenant SaaS Gym Scheduling and Management System API',
     )
     .setVersion('1.0')
+    .addBearerAuth()
+    .addTag(
+      'User Management',
+      'Endpoints for managing users, members, staff, and admins',
+    )
     .addTag(
       'Organization Management',
       'Endpoints for managing organizations, locations, and resources',

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Navbar } from 'flowbite-react';
-import { HiHome, HiUser, HiCalendar, HiCreditCard, HiCog, HiSupport, HiLogout } from 'react-icons/hi';
+import { HiHome, HiUser, HiCalendar, HiCreditCard, HiCog, HiSupport, HiLogout, HiClipboardList } from 'react-icons/hi';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -49,6 +49,12 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
       label: 'Membership',
       icon: HiCreditCard,
       active: pathname.startsWith('/account/membership')
+    },
+    {
+      href: '/account/activity',
+      label: 'Activity Log',
+      icon: HiClipboardList,
+      active: pathname.startsWith('/account/activity')
     },
     {
       href: '/account/settings',

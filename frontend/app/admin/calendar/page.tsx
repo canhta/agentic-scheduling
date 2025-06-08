@@ -3,9 +3,11 @@
 import { useState, useCallback } from 'react';
 import { Calendar } from '@/components/calendar/Calendar';
 import { mockCalendarEvents } from '@/components/calendar/mock-data';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { UserRole } from '@/lib/types';
 import type { CalendarEvent } from '@/lib/types';
 
-export default function CalendarPage() {
+export default function AdminCalendarPage() {
   const [events, setEvents] = useState<CalendarEvent[]>(mockCalendarEvents);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -101,33 +103,35 @@ export default function CalendarPage() {
   }, [handleCloseModal]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Gym Schedule Calendar
-          </h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Manage classes, bookings, and facility schedules
-          </p>
-        </div>
+    <ProtectedRoute requireRole={[UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.ORGANIZATION_ADMIN, UserRole.STAFF]}>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          {/* Page Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Schedule Calendar Management
+            </h1>
+            <p className="mt-1 text-sm text-gray-600">
+              Manage classes, bookings, and facility schedules
+            </p>
+          </div>
 
-        {/* Calendar Component */}
-        <Calendar
-          organizationId="org-1"
-          events={events}
-          onEventClick={handleEventClick}
-          onDateSelect={handleDateSelect}
-          onEventDrop={handleEventDrop}
-          onEventResize={handleEventResize}
-          onEventCreate={handleEventCreate}
-          onEventUpdate={handleEventUpdate}
-          onEventDelete={handleEventDelete}
-          height="calc(100vh - 200px)"
-          className="shadow-sm"
-        />
+          {/* Calendar Component */}
+          <Calendar
+            organizationId="org-1"
+            events={events}
+            onEventClick={handleEventClick}
+            onDateSelect={handleDateSelect}
+            onEventDrop={handleEventDrop}
+            onEventResize={handleEventResize}
+            onEventCreate={handleEventCreate}
+            onEventUpdate={handleEventUpdate}
+            onEventDelete={handleEventDelete}
+            height="calc(100vh - 200px)"
+            className="shadow-sm"
+          />
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

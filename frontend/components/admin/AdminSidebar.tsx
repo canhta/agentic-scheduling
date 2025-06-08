@@ -54,7 +54,8 @@ const sidebarSections: SidebarSection[] = [
   {
     title: 'Operations',
     items: [
-      { name: 'Schedules', href: '/admin/schedules', icon: HiCalendar },
+      { name: 'Calendar', href: '/admin/calendar', icon: HiCalendar },
+      { name: 'Schedules', href: '/admin/schedules', icon: HiViewBoards },
       { name: 'Bookings', href: '/admin/bookings', icon: HiInbox, badge: 5 },
       { name: 'Reports', href: '/admin/reports', icon: HiCollection },
     ]

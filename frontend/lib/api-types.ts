@@ -204,6 +204,566 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all users with search and filtering */
+        get: operations["UsersController_findAll"];
+        put?: never;
+        /** Create a new user */
+        post: operations["UsersController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user by ID */
+        get: operations["UsersController_findOne"];
+        put?: never;
+        post?: never;
+        /** Delete user */
+        delete: operations["UsersController_remove"];
+        options?: never;
+        head?: never;
+        /** Update user */
+        patch: operations["UsersController_update"];
+        trace?: never;
+    };
+    "/users/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all members */
+        get: operations["UsersController_getAllMembers"];
+        put?: never;
+        /** Create a new member */
+        post: operations["UsersController_createMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get member by ID */
+        get: operations["UsersController_getMemberById"];
+        put?: never;
+        post?: never;
+        /** Delete member */
+        delete: operations["UsersController_deleteMember"];
+        options?: never;
+        head?: never;
+        /** Update member */
+        patch: operations["UsersController_updateMember"];
+        trace?: never;
+    };
+    "/users/members/member-id/{memberId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get member by member ID */
+        get: operations["UsersController_getMemberByMemberId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}/booking-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get member booking history */
+        get: operations["UsersController_getMemberBookingHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}/attendance-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get member attendance statistics */
+        get: operations["UsersController_getMemberAttendanceStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate member */
+        post: operations["UsersController_activateMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deactivate member */
+        post: operations["UsersController_deactivateMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/members/{id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Suspend member */
+        post: operations["UsersController_suspendMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all staff members */
+        get: operations["UsersController_getAllStaff"];
+        put?: never;
+        /** Create a new staff member */
+        post: operations["UsersController_createStaff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/staff/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get staff member by ID */
+        get: operations["UsersController_getStaffById"];
+        put?: never;
+        post?: never;
+        /** Delete staff member */
+        delete: operations["UsersController_deleteStaff"];
+        options?: never;
+        head?: never;
+        /** Update staff member */
+        patch: operations["UsersController_updateStaff"];
+        trace?: never;
+    };
+    "/users/staff/{id}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get staff availability */
+        get: operations["UsersController_getStaffAvailability"];
+        put?: never;
+        /** Set staff availability */
+        post: operations["UsersController_setStaffAvailability"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/admins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all admins */
+        get: operations["UsersController_getAllAdmins"];
+        put?: never;
+        /** Create a new admin */
+        post: operations["UsersController_createAdmin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/admins/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get admin by ID */
+        get: operations["UsersController_getAdminById"];
+        put?: never;
+        post?: never;
+        /** Delete admin */
+        delete: operations["UsersController_deleteAdmin"];
+        options?: never;
+        head?: never;
+        /** Update admin */
+        patch: operations["UsersController_updateAdmin"];
+        trace?: never;
+    };
+    "/users/organization/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization user statistics */
+        get: operations["UsersController_getOrganizationStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/organization/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization activity report */
+        get: operations["UsersController_getOrganizationActivity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/organization/recent-signups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get recent user signups */
+        get: operations["UsersController_getRecentSignups"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/organization/attention-required": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get users requiring attention */
+        get: operations["UsersController_getUsersRequiringAttention"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/bulk-operations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Perform bulk operations on users */
+        post: operations["UsersController_bulkUserOperations"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/promote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Promote user role */
+        post: operations["UsersController_promoteUserRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/demote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Demote user role */
+        post: operations["UsersController_demoteUserRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change user password */
+        post: operations["UsersController_changePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset user password */
+        post: operations["UsersController_resetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify user email */
+        post: operations["UsersController_verifyEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/verify-phone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify user phone */
+        post: operations["UsersController_verifyPhone"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{userId}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user notes */
+        get: operations["UsersController_getUserNotes"];
+        put?: never;
+        /** Create user note */
+        post: operations["UsersController_createUserNote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/notes/{noteId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get specific note */
+        get: operations["UsersController_getNote"];
+        put?: never;
+        post?: never;
+        /** Delete user note */
+        delete: operations["UsersController_deleteUserNote"];
+        options?: never;
+        head?: never;
+        /** Update user note */
+        patch: operations["UsersController_updateUserNote"];
+        trace?: never;
+    };
+    "/users/organization/alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all alerts for organization */
+        get: operations["UsersController_getAlerts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/organization/users-with-alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get users with alerts */
+        get: operations["UsersController_getUsersWithAlerts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/alerts/{alertId}/mark-read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark alert as read */
+        post: operations["UsersController_markAlertAsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/organization/notes-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get notes statistics */
+        get: operations["UsersController_getNotesStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -549,6 +1109,335 @@ export interface components {
             color?: string;
             /** @description Active status */
             isActive?: boolean;
+        };
+        CreateUserDto: {
+            /** @description Organization ID for the user */
+            organizationId: string;
+            /** @description User email address (unique) */
+            email: string;
+            /** @description Username (optional) */
+            username?: string;
+            /** @description First name */
+            firstName: string;
+            /** @description Last name */
+            lastName: string;
+            /** @description Preferred name */
+            preferredName?: string;
+            /** @description Phone number */
+            phone?: string;
+            /** @description Date of birth */
+            dateOfBirth?: string;
+            /**
+             * @description Gender
+             * @enum {string}
+             */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say";
+            /** @description Profile photo URL */
+            profilePhoto?: string;
+            /** @description Bio/description */
+            bio?: string;
+            /** @description Street address */
+            address?: string;
+            /** @description City */
+            city?: string;
+            /** @description State/Province */
+            state?: string;
+            /** @description ZIP/Postal code */
+            zipCode?: string;
+            /** @description Country */
+            country?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Emergency contact relation */
+            emergencyContactRelation?: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Member ID (for members) */
+            memberId?: string;
+            /** @description Employee ID (for staff) */
+            employeeId?: string;
+            /** @description Department (for staff) */
+            department?: string;
+            /** @description Specialty (for staff) */
+            specialty?: string;
+            /** @description Certifications (for staff) */
+            certifications?: string[];
+            /** @description Hourly rate (for staff) */
+            hourlyRate?: string;
+            /** @description Temporary password (will be required to change on first login) */
+            temporaryPassword?: string;
+        };
+        UserResponseDto: {
+            /** @description User ID */
+            id: string;
+            /** @description User email address */
+            email: string;
+            /** @description User first name */
+            firstName: string;
+            /** @description User last name */
+            lastName: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Organization ID */
+            organizationId: string;
+            /** @description Member ID (for members only) */
+            memberId?: string;
+            /** @description User phone number */
+            phone?: string;
+            /**
+             * Format: date-time
+             * @description Date of birth
+             */
+            dateOfBirth?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Email verified status */
+            emailVerified: boolean;
+            /** @description Phone verified status */
+            phoneVerified: boolean;
+            /**
+             * Format: date-time
+             * @description User creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Last update date
+             */
+            updatedAt: string;
+            /**
+             * Format: date-time
+             * @description Last login date
+             */
+            lastLoginAt?: string;
+        };
+        PaginatedUsersResponseDto: {
+            /** @description List of users */
+            users: components["schemas"]["UserResponseDto"][];
+            /** @description Total number of users */
+            total: number;
+            /** @description Current page number */
+            page: number;
+            /** @description Number of items per page */
+            limit: number;
+            /** @description Total number of pages */
+            totalPages: number;
+        };
+        UpdateUserDto: {
+            /** @description User email address (unique) */
+            email?: string;
+            /** @description Username (optional) */
+            username?: string;
+            /** @description First name */
+            firstName?: string;
+            /** @description Last name */
+            lastName?: string;
+            /** @description Preferred name */
+            preferredName?: string;
+            /** @description Phone number */
+            phone?: string;
+            /** @description Date of birth */
+            dateOfBirth?: string;
+            /**
+             * @description Gender
+             * @enum {string}
+             */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say";
+            /** @description Profile photo URL */
+            profilePhoto?: string;
+            /** @description Bio/description */
+            bio?: string;
+            /** @description Street address */
+            address?: string;
+            /** @description City */
+            city?: string;
+            /** @description State/Province */
+            state?: string;
+            /** @description ZIP/Postal code */
+            zipCode?: string;
+            /** @description Country */
+            country?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Emergency contact relation */
+            emergencyContactRelation?: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Member ID (for members) */
+            memberId?: string;
+            /** @description Employee ID (for staff) */
+            employeeId?: string;
+            /** @description Department (for staff) */
+            department?: string;
+            /** @description Specialty (for staff) */
+            specialty?: string;
+            /** @description Certifications (for staff) */
+            certifications?: string[];
+            /** @description Hourly rate (for staff) */
+            hourlyRate?: string;
+            /** @description Email verification status */
+            emailVerified?: boolean;
+            /** @description Phone verification status */
+            phoneVerified?: boolean;
+        };
+        OrganizationStatsResponseDto: {
+            /** @description Total number of users */
+            totalUsers: number;
+            /** @description Number of members */
+            memberCount: number;
+            /** @description Number of staff */
+            staffCount: number;
+            /** @description Number of admins */
+            adminCount: number;
+            /** @description Number of active users */
+            activeUsers: number;
+            /** @description Number of inactive users */
+            inactiveUsers: number;
+            /** @description Number of suspended users */
+            suspendedUsers: number;
+            /** @description Number of pending users */
+            pendingUsers: number;
+        };
+        OrganizationActivityResponseDto: {
+            /** @description Total number of bookings */
+            totalBookings: number;
+            /** @description Number of completed bookings */
+            completedBookings: number;
+            /** @description Number of cancelled bookings */
+            cancelledBookings: number;
+            /** @description Number of no-shows */
+            noShows: number;
+            /** @description Number of new members */
+            newMembers: number;
+            /** @description Total revenue */
+            totalRevenue: number;
+        };
+        AttentionUsersResponseDto: {
+            /** @description Users pending verification */
+            pendingVerification: components["schemas"]["UserResponseDto"][];
+            /** @description Suspended users */
+            suspendedUsers: components["schemas"]["UserResponseDto"][];
+            /** @description Users with alerts */
+            usersWithAlerts: components["schemas"]["UserResponseDto"][];
+        };
+        BulkUserOperationDto: {
+            /** @description User IDs to perform operation on */
+            userIds: string[];
+            /**
+             * @description Operation to perform
+             * @enum {string}
+             */
+            operation: "activate" | "deactivate" | "suspend" | "delete";
+        };
+        BulkOperationResponseDto: {
+            /** @description Number of affected users */
+            affected: number;
+        };
+        ChangePasswordDto: {
+            /** @description Current password */
+            currentPassword: string;
+            /** @description New password */
+            newPassword: string;
+            /** @description Confirm new password */
+            confirmPassword: string;
+        };
+        ResetPasswordDto: {
+            /** @description User email */
+            email: string;
+        };
+        CreateUserNoteDto: {
+            /** @description Note content */
+            content: string;
+            /**
+             * @description Mark as alert
+             * @default false
+             */
+            isAlert: boolean;
+        };
+        UserNoteResponseDto: {
+            /** @description Note ID */
+            id: string;
+            /** @description Note content */
+            content: string;
+            /** @description Is alert flag */
+            isAlert: boolean;
+            /**
+             * Format: date-time
+             * @description Note creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Note update date
+             */
+            updatedAt: string;
+            /** @description Author information */
+            author: Record<string, never>;
+        };
+        UpdateUserNoteDto: {
+            /** @description Note content */
+            content?: string;
+            /** @description Mark as alert */
+            isAlert?: boolean;
+        };
+        UserWithAlertsResponseDto: {
+            /** @description User ID */
+            id: string;
+            /** @description User first name */
+            firstName: string;
+            /** @description User last name */
+            lastName: string;
+            /** @description User email */
+            email: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /** @description Number of alerts */
+            alertCount: number;
+            /** @description Latest alert */
+            latestAlert?: components["schemas"]["UserNoteResponseDto"];
+        };
+        NotesStatsResponseDto: {
+            /** @description Total number of notes */
+            totalNotes: number;
+            /** @description Total number of alerts */
+            totalAlerts: number;
+            /** @description Notes created this week */
+            notesThisWeek: number;
+            /** @description Alerts created this week */
+            alertsThisWeek: number;
         };
     };
     responses: never;
@@ -1342,6 +2231,1174 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    UsersController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Search query (name, email, member ID) */
+                query?: string;
+                /** @description Filter by user role */
+                role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+                /** @description Filter by user status */
+                status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+                /** @description Search term for name or email */
+                search?: unknown;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Users retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedUsersResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserDto"];
+            };
+        };
+        responses: {
+            /** @description User created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Invalid user data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
+            };
+        };
+        responses: {
+            /** @description User updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_getAllMembers: {
+        parameters: {
+            query?: {
+                /** @description Search query (name, email, member ID) */
+                query?: string;
+                /** @description Filter by role */
+                role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+                /** @description Filter by status */
+                status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+                /** @description Page number */
+                page?: string;
+                /** @description Items per page */
+                limit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Members retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedUsersResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_createMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Member created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getMemberById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Member ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_deleteMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Member updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getMemberByMemberId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Member ID */
+                memberId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getMemberBookingHistory: {
+        parameters: {
+            query?: {
+                /** @description Number of records to return */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Booking history retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_getMemberAttendanceStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attendance statistics retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_activateMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member activated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_deactivateMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member deactivated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_suspendMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member suspended successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getAllStaff: {
+        parameters: {
+            query?: {
+                /** @description Search query (name, email, member ID) */
+                query?: string;
+                /** @description Filter by role */
+                role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+                /** @description Filter by status */
+                status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+                /** @description Page number */
+                page?: string;
+                /** @description Items per page */
+                limit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff members retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedUsersResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_createStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Staff member created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getStaffById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff member found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_deleteStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff member deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Staff member updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getStaffAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff availability retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_setStaffAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff availability set successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_getAllAdmins: {
+        parameters: {
+            query?: {
+                /** @description Search query (name, email, member ID) */
+                query?: string;
+                /** @description Filter by role */
+                role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+                /** @description Filter by status */
+                status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+                /** @description Page number */
+                page?: string;
+                /** @description Items per page */
+                limit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admins retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedUsersResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_createAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Admin created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getAdminById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_deleteAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
+            };
+        };
+        responses: {
+            /** @description Admin updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getOrganizationStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organization statistics retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationStatsResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getOrganizationActivity: {
+        parameters: {
+            query?: {
+                /** @description Start date for activity report */
+                startDate?: string;
+                /** @description End date for activity report */
+                endDate?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organization activity retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationActivityResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getRecentSignups: {
+        parameters: {
+            query?: {
+                /** @description Number of days to look back (default: 30) */
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recent signups retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"][];
+                };
+            };
+        };
+    };
+    UsersController_getUsersRequiringAttention: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Users requiring attention retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttentionUsersResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_bulkUserOperations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkUserOperationDto"];
+            };
+        };
+        responses: {
+            /** @description Bulk operation completed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkOperationResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_promoteUserRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User role promoted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_demoteUserRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User role demoted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_changePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password changed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid password data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password reset successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_verifyEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Email verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_verifyPhone: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Phone verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getUserNotes: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notes retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"][];
+                };
+            };
+        };
+    };
+    UsersController_createUserNote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserNoteDto"];
+            };
+        };
+        responses: {
+            /** @description Note created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getNote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                noteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Note retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_deleteUserNote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                noteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Note deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_updateUserNote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                noteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserNoteDto"];
+            };
+        };
+        responses: {
+            /** @description Note updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getAlerts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Alerts retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"][];
+                };
+            };
+        };
+    };
+    UsersController_getUsersWithAlerts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Users with alerts retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserWithAlertsResponseDto"][];
+                };
+            };
+        };
+    };
+    UsersController_markAlertAsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                alertId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Alert marked as read successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserNoteResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_getNotesStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notes statistics retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotesStatsResponseDto"];
+                };
             };
         };
     };

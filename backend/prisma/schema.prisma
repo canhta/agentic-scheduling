@@ -180,6 +180,7 @@ model User {
   // Basic info
   email         String    @unique
   username      String?   @unique
+  password      String? // Hashed password
   firstName     String
   lastName      String
   preferredName String?

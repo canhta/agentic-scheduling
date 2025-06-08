@@ -1,9 +1,21 @@
 import { PrismaClient } from '../generated/prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+const defaultPassword = 'password123'; // Default password for all users
+
+// Helper function to hash passwords
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
+}
+
 async function main() {
   console.log('🌱 Starting to seed the database...');
+
+  // Hash the default password once for all users
+  const hashedPassword = await hashPassword(defaultPassword);
+  console.log(`🔒 Using hashed password for all users: ${defaultPassword}`);
 
   // Create Organizations with different types and tiers
   const organizations = await Promise.all([
@@ -1274,6 +1286,587 @@ async function main() {
   );
   console.log(`✅ Created ${services.length} services`);
 
+  // Create Users for all organizations with different roles
+  const users: any[] = [];
+
+  // Create Super Admin (not tied to any organization)
+  const superAdmin = await prisma.user.create({
+    data: {
+      email: 'admin@agenticsystem.com',
+      password: hashedPassword,
+      firstName: 'System',
+      lastName: 'Administrator',
+      preferredName: 'Admin',
+      phone: '+1 (555) 000-0001',
+      role: 'SUPER_ADMIN',
+      status: 'ACTIVE',
+      emailVerified: true,
+      phoneVerified: true,
+      lastLoginAt: new Date(),
+      createdAt: new Date('2024-01-01'),
+    },
+  });
+  users.push(superAdmin);
+
+  // FitCore Gymnasium Users
+  const fitcoreUsers = await Promise.all([
+    // Organization Admin
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'owner@fitcore-gym.com',
+        password: hashedPassword,
+        firstName: 'Marcus',
+        lastName: 'Johnson',
+        preferredName: 'Marc',
+        phone: '+1 (555) 123-4501',
+        dateOfBirth: new Date('1985-03-15'),
+        gender: 'Male',
+        address: '123 Fitness Avenue',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94105',
+        country: 'US',
+        role: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'FC001',
+        department: 'Management',
+        specialty: 'Business Operations',
+        certifications: ['CPR', 'First Aid', 'Business Management'],
+        hourlyRate: 75,
+        memberSince: new Date('2023-01-01'),
+      },
+    }),
+    // Gym Manager
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'manager@fitcore-gym.com',
+        password: hashedPassword,
+        firstName: 'Sarah',
+        lastName: 'Chen',
+        phone: '+1 (555) 123-4502',
+        dateOfBirth: new Date('1988-07-22'),
+        gender: 'Female',
+        address: '456 Marina Boulevard',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94123',
+        country: 'US',
+        role: 'ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'FC002',
+        department: 'Operations',
+        specialty: 'Facility Management',
+        certifications: ['ACSM', 'CPR', 'First Aid'],
+        hourlyRate: 45.0,
+      },
+    }),
+    // Personal Trainers (Staff)
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'alex.trainer@fitcore-gym.com',
+        password: hashedPassword,
+        firstName: 'Alex',
+        lastName: 'Rodriguez',
+        phone: '+1 (555) 123-4503',
+        dateOfBirth: new Date('1992-11-08'),
+        gender: 'Male',
+        address: '789 Mission Street',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94103',
+        country: 'US',
+        emergencyContactName: 'Maria Rodriguez',
+        emergencyContactPhone: '+1 (555) 123-9999',
+        emergencyContactRelation: 'Spouse',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'FC003',
+        department: 'Personal Training',
+        specialty: 'Strength Training, Weight Loss',
+        certifications: ['NASM-CPT', 'CSCS', 'CPR', 'First Aid'],
+        hourlyRate: 65.0,
+      },
+    }),
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'jessica.fitness@fitcore-gym.com',
+        password: hashedPassword,
+        firstName: 'Jessica',
+        lastName: 'Williams',
+        phone: '+1 (555) 123-4504',
+        dateOfBirth: new Date('1990-05-14'),
+        gender: 'Female',
+        address: '321 Valencia Street',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94110',
+        country: 'US',
+        emergencyContactName: 'Tom Williams',
+        emergencyContactPhone: '+1 (555) 123-8888',
+        emergencyContactRelation: 'Brother',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'FC004',
+        department: 'Group Fitness',
+        specialty: 'HIIT, Spin, Group Training',
+        certifications: ['ACE-GFI', 'Spinning Certified', 'CPR'],
+        hourlyRate: 55.0,
+      },
+    }),
+    // Members
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'john.member@gmail.com',
+        password: hashedPassword,
+        firstName: 'John',
+        lastName: 'Smith',
+        phone: '+1 (555) 123-4505',
+        dateOfBirth: new Date('1985-12-03'),
+        gender: 'Male',
+        address: '654 California Street',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94108',
+        country: 'US',
+        emergencyContactName: 'Jane Smith',
+        emergencyContactPhone: '+1 (555) 123-7777',
+        emergencyContactRelation: 'Spouse',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'FC-M001',
+        memberSince: new Date('2023-06-15'),
+      },
+    }),
+    prisma.user.create({
+      data: {
+        organizationId: organizations[0].id,
+        email: 'emily.active@gmail.com',
+        password: hashedPassword,
+        firstName: 'Emily',
+        lastName: 'Davis',
+        phone: '+1 (555) 123-4506',
+        dateOfBirth: new Date('1993-09-18'),
+        gender: 'Female',
+        address: '987 Lombard Street',
+        city: 'San Francisco',
+        state: 'CA',
+        zipCode: '94133',
+        country: 'US',
+        emergencyContactName: 'Michael Davis',
+        emergencyContactPhone: '+1 (555) 123-6666',
+        emergencyContactRelation: 'Father',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'FC-M002',
+        memberSince: new Date('2024-01-10'),
+      },
+    }),
+  ]);
+
+  // Zen Flow Yoga Users
+  const yogaUsers = await Promise.all([
+    // Organization Admin
+    prisma.user.create({
+      data: {
+        organizationId: organizations[1].id,
+        email: 'owner@zenflow-yoga.com',
+        password: hashedPassword,
+        firstName: 'Luna',
+        lastName: 'Patel',
+        phone: '+1 (555) 987-6501',
+        dateOfBirth: new Date('1980-04-12'),
+        gender: 'Female',
+        address: '456 Serenity Lane',
+        city: 'Portland',
+        state: 'OR',
+        zipCode: '97205',
+        country: 'US',
+        role: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'ZF001',
+        department: 'Management',
+        specialty: 'Yoga Philosophy, Business',
+        certifications: ['RYT-500', 'Yoga Alliance', 'CPR'],
+        hourlyRate: 85.0,
+        memberSince: new Date('2022-03-01'),
+      },
+    }),
+    // Yoga Instructors
+    prisma.user.create({
+      data: {
+        organizationId: organizations[1].id,
+        email: 'maya.yoga@zenflow-yoga.com',
+        password: hashedPassword,
+        firstName: 'Maya',
+        lastName: 'Thompson',
+        phone: '+1 (555) 987-6502',
+        dateOfBirth: new Date('1987-08-25'),
+        gender: 'Female',
+        address: '123 Peaceful Ave',
+        city: 'Portland',
+        state: 'OR',
+        zipCode: '97201',
+        country: 'US',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'ZF002',
+        department: 'Instruction',
+        specialty: 'Vinyasa, Hot Yoga',
+        certifications: ['RYT-200', 'Hot Yoga Certified', 'CPR'],
+        hourlyRate: 70.0,
+      },
+    }),
+    prisma.user.create({
+      data: {
+        organizationId: organizations[1].id,
+        email: 'david.zen@zenflow-yoga.com',
+        password: hashedPassword,
+        firstName: 'David',
+        lastName: 'Kim',
+        phone: '+1 (555) 987-6503',
+        dateOfBirth: new Date('1984-02-17'),
+        gender: 'Male',
+        address: '789 Mindful Street',
+        city: 'Portland',
+        state: 'OR',
+        zipCode: '97203',
+        country: 'US',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'ZF003',
+        department: 'Instruction',
+        specialty: 'Restorative, Meditation',
+        certifications: ['RYT-200', 'Meditation Teacher', 'Reiki Level 2'],
+        hourlyRate: 65.0,
+      },
+    }),
+    // Members
+    prisma.user.create({
+      data: {
+        organizationId: organizations[1].id,
+        email: 'sophie.zen@gmail.com',
+        password: hashedPassword,
+        firstName: 'Sophie',
+        lastName: 'Anderson',
+        phone: '+1 (555) 987-6504',
+        dateOfBirth: new Date('1991-06-30'),
+        gender: 'Female',
+        address: '456 Harmony Way',
+        city: 'Portland',
+        state: 'OR',
+        zipCode: '97209',
+        country: 'US',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'ZF-M001',
+        memberSince: new Date('2023-04-20'),
+      },
+    }),
+  ]);
+
+  // CoreStrength Pilates Users
+  const pilatesUsers = await Promise.all([
+    // Organization Admin
+    prisma.user.create({
+      data: {
+        organizationId: organizations[2].id,
+        email: 'owner@corestrength-pilates.com',
+        password: hashedPassword,
+        firstName: 'Victoria',
+        lastName: 'Martinez',
+        phone: '+1 (555) 456-7801',
+        dateOfBirth: new Date('1982-09-05'),
+        gender: 'Female',
+        address: '789 Wellness Way',
+        city: 'Austin',
+        state: 'TX',
+        zipCode: '73301',
+        country: 'US',
+        role: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'CS001',
+        department: 'Management',
+        specialty: 'Pilates Method, Business Operations',
+        certifications: ['PMA-CPT', 'Comprehensive Pilates', 'CPR'],
+        hourlyRate: 95.0,
+        memberSince: new Date('2021-11-01'),
+      },
+    }),
+    // Pilates Instructors
+    prisma.user.create({
+      data: {
+        organizationId: organizations[2].id,
+        email: 'amanda.pilates@corestrength-pilates.com',
+        password: hashedPassword,
+        firstName: 'Amanda',
+        lastName: 'Wilson',
+        phone: '+1 (555) 456-7802',
+        dateOfBirth: new Date('1989-01-12'),
+        gender: 'Female',
+        address: '321 Core Street',
+        city: 'Austin',
+        state: 'TX',
+        zipCode: '73304',
+        country: 'US',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'CS002',
+        department: 'Instruction',
+        specialty: 'Reformer, Mat Pilates',
+        certifications: ['PMA-CPT', 'BASI Pilates', 'CPR'],
+        hourlyRate: 80.0,
+      },
+    }),
+    // Members
+    prisma.user.create({
+      data: {
+        organizationId: organizations[2].id,
+        email: 'rachel.strong@gmail.com',
+        password: hashedPassword,
+        firstName: 'Rachel',
+        lastName: 'Brown',
+        phone: '+1 (555) 456-7803',
+        dateOfBirth: new Date('1986-11-22'),
+        gender: 'Female',
+        address: '654 Strength Ave',
+        city: 'Austin',
+        state: 'TX',
+        zipCode: '73302',
+        country: 'US',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'CS-M001',
+        memberSince: new Date('2023-08-15'),
+      },
+    }),
+  ]);
+
+  // Iron Beast CrossFit Users
+  const crossfitUsers = await Promise.all([
+    // Organization Admin
+    prisma.user.create({
+      data: {
+        organizationId: organizations[3].id,
+        email: 'owner@ironbeast-crossfit.com',
+        password: hashedPassword,
+        firstName: 'Jake',
+        lastName: 'Thompson',
+        phone: '+1 (555) 321-9801',
+        dateOfBirth: new Date('1983-05-18'),
+        gender: 'Male',
+        address: '321 Power Street',
+        city: 'Denver',
+        state: 'CO',
+        zipCode: '80202',
+        country: 'US',
+        role: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'IB001',
+        department: 'Management',
+        specialty: 'CrossFit, Olympic Lifting',
+        certifications: ['CF-L3', 'USAW-L1', 'CPR', 'First Aid'],
+        hourlyRate: 85.0,
+        memberSince: new Date('2022-01-01'),
+      },
+    }),
+    // CrossFit Coaches
+    prisma.user.create({
+      data: {
+        organizationId: organizations[3].id,
+        email: 'mike.beast@ironbeast-crossfit.com',
+        password: hashedPassword,
+        firstName: 'Mike',
+        lastName: 'Santos',
+        phone: '+1 (555) 321-9802',
+        dateOfBirth: new Date('1990-03-07'),
+        gender: 'Male',
+        address: '123 Beast Ave',
+        city: 'Denver',
+        state: 'CO',
+        zipCode: '80204',
+        country: 'US',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'IB002',
+        department: 'Coaching',
+        specialty: 'CrossFit, Strength & Conditioning',
+        certifications: ['CF-L2', 'CSCS', 'CPR'],
+        hourlyRate: 70.0,
+      },
+    }),
+    // Members
+    prisma.user.create({
+      data: {
+        organizationId: organizations[3].id,
+        email: 'tyler.strong@gmail.com',
+        password: hashedPassword,
+        firstName: 'Tyler',
+        lastName: 'Johnson',
+        phone: '+1 (555) 321-9803',
+        dateOfBirth: new Date('1988-07-11'),
+        gender: 'Male',
+        address: '456 Power Lane',
+        city: 'Denver',
+        state: 'CO',
+        zipCode: '80203',
+        country: 'US',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'IB-M001',
+        memberSince: new Date('2023-02-14'),
+      },
+    }),
+  ]);
+
+  // Harmony Wellness Users
+  const wellnessUsers = await Promise.all([
+    // Organization Admin
+    prisma.user.create({
+      data: {
+        organizationId: organizations[4].id,
+        email: 'owner@harmony-wellness.com',
+        password: hashedPassword,
+        firstName: 'Dr. Elena',
+        lastName: 'Foster',
+        phone: '+1 (555) 654-3201',
+        dateOfBirth: new Date('1975-10-28'),
+        gender: 'Female',
+        address: '654 Healing Boulevard',
+        city: 'Asheville',
+        state: 'NC',
+        zipCode: '28801',
+        country: 'US',
+        role: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'HW001',
+        department: 'Management',
+        specialty: 'Holistic Wellness, Acupuncture',
+        certifications: ['LAc', 'NCCAOM', 'LMT', 'CPR'],
+        hourlyRate: 120.0,
+        memberSince: new Date('2020-05-01'),
+      },
+    }),
+    // Therapists
+    prisma.user.create({
+      data: {
+        organizationId: organizations[4].id,
+        email: 'sarah.massage@harmony-wellness.com',
+        password: hashedPassword,
+        firstName: 'Sarah',
+        lastName: 'Mitchell',
+        phone: '+1 (555) 654-3202',
+        dateOfBirth: new Date('1986-12-15'),
+        gender: 'Female',
+        address: '123 Wellness Street',
+        city: 'Asheville',
+        state: 'NC',
+        zipCode: '28803',
+        country: 'US',
+        role: 'STAFF',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        employeeId: 'HW002',
+        department: 'Therapy',
+        specialty: 'Swedish Massage, Deep Tissue',
+        certifications: ['LMT', 'Deep Tissue Certified', 'CPR'],
+        hourlyRate: 85.0,
+      },
+    }),
+    // Members/Clients
+    prisma.user.create({
+      data: {
+        organizationId: organizations[4].id,
+        email: 'jennifer.wellness@gmail.com',
+        password: hashedPassword,
+        firstName: 'Jennifer',
+        lastName: 'Taylor',
+        phone: '+1 (555) 654-3203',
+        dateOfBirth: new Date('1979-04-08'),
+        gender: 'Female',
+        address: '789 Harmony Road',
+        city: 'Asheville',
+        state: 'NC',
+        zipCode: '28804',
+        country: 'US',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        emailVerified: true,
+        phoneVerified: true,
+        lastLoginAt: new Date(),
+        memberId: 'HW-M001',
+        memberSince: new Date('2023-03-10'),
+      },
+    }),
+  ]);
+
+  users.push(
+    ...fitcoreUsers,
+    ...yogaUsers,
+    ...pilatesUsers,
+    ...crossfitUsers,
+    ...wellnessUsers,
+  );
+
+  console.log(`✅ Created ${users.length} users across all organizations`);
+
   // Summary
   console.log('\n🎉 Database seeding completed successfully!');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -1282,6 +1875,7 @@ async function main() {
   console.log(`   • ${locations.length} Locations created`);
   console.log(`   • ${resources.length} Resources created`);
   console.log(`   • ${services.length} Services created`);
+  console.log(`   • ${users.length} Users created`);
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   console.log('\n🏢 Organizations created:');
@@ -1290,12 +1884,33 @@ async function main() {
       `   ${index + 1}. ${org.name} (${org.slug}) - ${org.businessType} - ${org.subscriptionTier}`,
     );
   });
+
+  console.log('\n👥 Users created by role:');
+  const usersByRole = users.reduce(
+    (acc, user) => {
+      acc[user.role] = (acc[user.role] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  Object.entries(usersByRole).forEach(([role, count]) => {
+    console.log(`   • ${role}: ${count as number} users`);
+  });
+
+  console.log('\n🔐 Sample login credentials:');
+  console.log('   Super Admin: admin@agenticsystem.com');
+  console.log('   FitCore Owner: owner@fitcore-gym.com');
+  console.log('   Yoga Owner: owner@zenflow-yoga.com');
+  console.log('   Pilates Owner: owner@corestrength-pilates.com');
+  console.log('   CrossFit Owner: owner@ironbeast-crossfit.com');
+  console.log('   Wellness Owner: owner@harmony-wellness.com');
+  console.log('   (All passwords can be set via authentication system)');
 }
 
 main()
   .catch((e) => {
     console.error('❌ Error during seeding:', e);
-    process.exit(1);
   })
   .finally(() => {
     prisma.$disconnect();

@@ -934,6 +934,438 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/organizations/{organizationId}/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get bookings with filters */
+        get: operations["BookingController_getBookings"];
+        put?: never;
+        /** Create a new booking */
+        post: operations["BookingController_createBooking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/my-bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user bookings */
+        get: operations["BookingController_getMyBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/{bookingId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a specific booking */
+        get: operations["BookingController_getBooking"];
+        /** Update a booking */
+        put: operations["BookingController_updateBooking"];
+        post?: never;
+        /** Cancel a booking */
+        delete: operations["BookingController_cancelBooking"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/check-availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check availability for booking */
+        post: operations["BookingController_checkAvailability"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/availability/slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get available time slots for a specific date */
+        get: operations["BookingController_getAvailableSlots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/waitlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get waitlist entries */
+        get: operations["BookingController_getWaitlistEntries"];
+        put?: never;
+        /** Add member to waitlist */
+        post: operations["BookingController_addToWaitlist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/waitlist/my-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user waitlist entries */
+        get: operations["BookingController_getMyWaitlistEntries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/waitlist/{waitlistId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove from waitlist */
+        delete: operations["BookingController_removeFromWaitlist"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/waitlist/{waitlistId}/priority": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update waitlist entry priority */
+        put: operations["BookingController_updateWaitlistPriority"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/bookings/waitlist/position": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get waitlist position for a member */
+        get: operations["BookingController_getWaitlistPosition"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get recurring schedules with filters */
+        get: operations["RecurringScheduleController_getRecurringSchedules"];
+        put?: never;
+        /** Create a new recurring schedule */
+        post: operations["RecurringScheduleController_createRecurringSchedule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules/validate-rrule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Validate RRULE string and preview occurrences */
+        get: operations["RecurringScheduleController_validateRRule"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get common recurring schedule templates */
+        get: operations["RecurringScheduleController_getRecurringTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules/{scheduleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a specific recurring schedule */
+        get: operations["RecurringScheduleController_getRecurringSchedule"];
+        /** Update a recurring schedule */
+        put: operations["RecurringScheduleController_updateRecurringSchedule"];
+        post?: never;
+        /** Delete a recurring schedule */
+        delete: operations["RecurringScheduleController_deleteRecurringSchedule"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules/{scheduleId}/occurrences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Generate occurrences for a recurring schedule */
+        get: operations["RecurringScheduleController_generateOccurrences"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/recurring-schedules/{scheduleId}/exceptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create an exception for a recurring schedule */
+        post: operations["RecurringScheduleController_createException"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get calendar events for the organization */
+        get: operations["CalendarController_getCalendarEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/staff/{staffId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get staff calendar */
+        get: operations["CalendarController_getStaffCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/member/{memberId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get member calendar */
+        get: operations["CalendarController_getMemberCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/resource/{resourceId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get resource calendar */
+        get: operations["CalendarController_getResourceCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/service/{serviceId}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get service schedule including recurring schedules */
+        get: operations["CalendarController_getServiceSchedule"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get detailed day view with time slots */
+        get: operations["CalendarController_getDayView"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/week": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get week view with daily summaries */
+        get: operations["CalendarController_getWeekView"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/my-calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user personal calendar */
+        get: operations["CalendarController_getMyCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/calendar/availability-overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get availability overview for resources and staff */
+        get: operations["CalendarController_getAvailabilityOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1796,6 +2228,97 @@ export interface components {
             color?: string;
             /** @description Active status */
             isActive?: boolean;
+        };
+        CreateBookingDto: {
+            serviceId: string;
+            userId: string;
+            locationId?: string;
+            resourceId?: string;
+            /** Format: date-time */
+            startTime: string;
+            /** Format: date-time */
+            endTime: string;
+            /** @default false */
+            allDay: boolean;
+            /**
+             * @default CONFIRMED
+             * @enum {string}
+             */
+            status: "CONFIRMED" | "PENDING" | "CANCELLED_BY_MEMBER" | "CANCELLED_BY_STAFF" | "NO_SHOW" | "ATTENDED" | "LATE_CANCELLED";
+            notes?: string;
+            privateNotes?: string;
+            recurringScheduleId?: string;
+            /** Format: date-time */
+            instanceDate?: string;
+            price?: number;
+            creditsUsed?: number;
+        };
+        UpdateBookingDto: {
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            endTime?: string;
+            /** @enum {string} */
+            status?: "CONFIRMED" | "PENDING" | "CANCELLED_BY_MEMBER" | "CANCELLED_BY_STAFF" | "NO_SHOW" | "ATTENDED" | "LATE_CANCELLED";
+            notes?: string;
+            privateNotes?: string;
+            price?: number;
+            creditsUsed?: number;
+        };
+        CheckAvailabilityDto: {
+            /** Format: date-time */
+            startTime: string;
+            /** Format: date-time */
+            endTime: string;
+            serviceId?: string;
+            resourceId?: string;
+            staffId?: string;
+            userId?: string;
+            excludeBookingId?: string;
+        };
+        AddToWaitlistDto: {
+            userId: string;
+            serviceId: string;
+            /** @default true */
+            notifyByEmail: boolean;
+            /** @default false */
+            notifyBySms: boolean;
+        };
+        UpdateWaitlistPositionDto: {
+            position: number;
+        };
+        CreateRecurringScheduleDto: {
+            serviceId: string;
+            organizationId: string;
+            rrule: string;
+            /** Format: date-time */
+            dtstart: string;
+            /** Format: date-time */
+            dtend?: string;
+            /** @default UTC */
+            timezone: string;
+            frequency: string;
+            /** @default 1 */
+            interval: number;
+            byDay?: string[];
+            byMonthDay?: string[];
+            byMonth?: string[];
+            bySetPos?: string[];
+            byYearDay?: string[];
+            byWeekNo?: string[];
+            count?: number;
+            /** Format: date-time */
+            until?: string;
+            weekStart?: string;
+            startTime: string;
+            /** Format: date-time */
+            endTime: string;
+            duration: number;
+            exdates?: string[];
+            description?: string;
+            resourceId?: string;
+            staffId?: string;
+            notes?: string;
         };
     };
     responses: never;
@@ -4048,6 +4571,846 @@ export interface operations {
             };
             /** @description Organization not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getBookings: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+                memberId: string;
+                staffId: string;
+                serviceId: string;
+                resourceId: string;
+                status: string;
+                type: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bookings retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_createBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBookingDto"];
+            };
+        };
+        responses: {
+            /** @description Booking created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request - validation error or conflicts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getMyBookings: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+                status: string;
+                type: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User bookings retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                bookingId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Booking retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Booking not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_updateBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                bookingId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBookingDto"];
+            };
+        };
+        responses: {
+            /** @description Booking updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request - validation error or conflicts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Booking not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_cancelBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                bookingId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Booking cancelled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Booking not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_checkAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckAvailabilityDto"];
+            };
+        };
+        responses: {
+            /** @description Availability checked successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getAvailableSlots: {
+        parameters: {
+            query: {
+                date: string;
+                serviceId: string;
+                resourceId: string;
+                staffId: string;
+                duration: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Available slots retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getWaitlistEntries: {
+        parameters: {
+            query: {
+                serviceId: string;
+                resourceId: string;
+                memberId: string;
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Waitlist entries retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_addToWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddToWaitlistDto"];
+            };
+        };
+        responses: {
+            /** @description Added to waitlist successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getMyWaitlistEntries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User waitlist entries retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_removeFromWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                waitlistId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed from waitlist successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_updateWaitlistPriority: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                waitlistId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateWaitlistPositionDto"];
+            };
+        };
+        responses: {
+            /** @description Waitlist priority updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BookingController_getWaitlistPosition: {
+        parameters: {
+            query: {
+                memberId: string;
+                serviceId: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Waitlist position retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_getRecurringSchedules: {
+        parameters: {
+            query: {
+                serviceId: string;
+                resourceId: string;
+                staffId: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recurring schedules retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_createRecurringSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRecurringScheduleDto"];
+            };
+        };
+        responses: {
+            /** @description Recurring schedule created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_validateRRule: {
+        parameters: {
+            query: {
+                frequency: string;
+                interval: string;
+                startTime: string;
+                endTime: string;
+                byDay: string;
+                byMonthDay: string;
+                count: string;
+                until: string;
+                weekStart: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description RRULE validated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_getRecurringTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Templates retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_getRecurringSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                scheduleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recurring schedule retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurring schedule not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_updateRecurringSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                scheduleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recurring schedule updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurring schedule not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_deleteRecurringSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                scheduleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recurring schedule deleted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurring schedule not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_generateOccurrences: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+                scheduleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Occurrences generated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurring schedule not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringScheduleController_createException: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+                scheduleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Exception created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurring schedule not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getCalendarEvents: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+                staffId: string;
+                memberId: string;
+                serviceId: string;
+                resourceId: string;
+                type: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Calendar events retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getStaffCalendar: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+                staffId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff calendar retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getMemberCalendar: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+                memberId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member calendar retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getResourceCalendar: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource calendar retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getServiceSchedule: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service schedule retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getDayView: {
+        parameters: {
+            query: {
+                date: string;
+                staffId: string;
+                resourceId: string;
+                serviceId: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Day view retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getWeekView: {
+        parameters: {
+            query: {
+                startOfWeek: string;
+                staffId: string;
+                resourceId: string;
+                serviceId: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Week view retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getMyCalendar: {
+        parameters: {
+            query: {
+                startDate: string;
+                endDate: string;
+                type: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Personal calendar retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CalendarController_getAvailabilityOverview: {
+        parameters: {
+            query: {
+                date: string;
+            };
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Availability overview retrieved successfully */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

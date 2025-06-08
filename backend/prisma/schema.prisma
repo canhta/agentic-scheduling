@@ -230,6 +230,7 @@ model User {
   organization        Organization?         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   memberships         Membership[]
   bookings            Booking[]
+  staffBookings       Booking[]             @relation("BookingStaff")
   staffAvailability   StaffAvailability[]
   instructedServices  Service[]             @relation("ServiceInstructor")
   assistantServices   Service[]             @relation("ServiceAssistant")
@@ -477,12 +478,27 @@ enum BookingStatus {
   LATE_CANCELLED
 }
 
+enum BookingType {
+  INDIVIDUAL
+  CLASS
+  APPOINTMENT
+  EVENT
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
 model Booking {
   id             String  @id @default(cuid())
   organizationId String
   locationId     String?
   serviceId      String
   userId         String // Member who booked
+  staffId        String? // Staff member assigned to this booking
   resourceId     String? // Optional resource booking
 
   // Scheduling
@@ -492,6 +508,7 @@ model Booking {
 
   // Booking details
   status       BookingStatus @default(CONFIRMED)
+  type         BookingType   @default(CLASS) // Type of booking
   notes        String?
   privateNotes String? // Staff-only notes
 
@@ -518,6 +535,7 @@ model Booking {
   location          Location?          @relation(fields: [locationId], references: [id])
   service           Service            @relation(fields: [serviceId], references: [id])
   user              User               @relation(fields: [userId], references: [id])
+  staff             User?              @relation("BookingStaff", fields: [staffId], references: [id])
   resource          Resource?          @relation(fields: [resourceId], references: [id])
   recurringSchedule RecurringSchedule? @relation(fields: [recurringScheduleId], references: [id])
 
@@ -547,8 +565,8 @@ model RecurringSchedule {
   timezone String @default("UTC") // IANA timezone identifier
 
   // RRULE breakdown for easier querying
-  frequency  String // DAILY, WEEKLY, MONTHLY, YEARLY
-  interval   Int      @default(1) // Repeat every N periods
+  frequency  Frequency // DAILY, WEEKLY, MONTHLY, YEARLY
+  interval   Int       @default(1) // Repeat every N periods
   byDay      String[] // Days of week (MO, TU, WE, etc.) for WEEKLY
   byMonthDay Int[] // Days of month (1-31) for MONTHLY
   byMonth    Int[] // Months (1-12) for YEARLY

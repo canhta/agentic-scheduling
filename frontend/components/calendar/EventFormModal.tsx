@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Modal, Button, Label, TextInput, Textarea, Select, Checkbox, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
-import { HiCalendar, HiClock, HiLocationMarker, HiUser, HiUserGroup, HiRefresh } from 'react-icons/hi';
+import { HiCalendar, HiClock, HiLocationMarker, HiUser, HiUserGroup, HiRefresh, HiX, HiCheck, HiExclamation } from 'react-icons/hi';
 import type { CalendarEvent } from '@/lib/types';
 
 interface EventFormModalProps {
@@ -23,6 +23,12 @@ interface RecurrencePattern {
   occurrences?: number;
 }
 
+interface FormValidation {
+  title: boolean;
+  startTime: boolean;
+  endTime: boolean;
+}
+
 export function EventFormModal({
   event,
   isOpen,
@@ -40,9 +46,10 @@ export function EventFormModal({
     location: '',
     instructor: '',
     capacity: '',
-    color: '#3b82f6',
+    color: '#1a73e8',
     type: 'booking' as 'booking' | 'recurring' | 'exception' | 'availability',
     status: 'confirmed',
+    description: '',
   });
 
   const [recurrence, setRecurrence] = useState<RecurrencePattern>({
@@ -52,6 +59,9 @@ export function EventFormModal({
   });
 
   const [isRecurring, setIsRecurring] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Partial<FormValidation>>({});
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   // Initialize form data when modal opens or event changes
   useEffect(() => {
@@ -66,9 +76,10 @@ export function EventFormModal({
           location: event.location || '',
           instructor: event.instructor || '',
           capacity: event.capacity?.toString() || '',
-          color: event.color || '#3b82f6',
+          color: event.color || '#1a73e8',
           type: event.type,
           status: event.status || 'confirmed',
+          description: '',
         });
         setIsRecurring(event.type === 'recurring');
       } else {
@@ -84,9 +95,10 @@ export function EventFormModal({
           location: '',
           instructor: '',
           capacity: '',
-          color: '#3b82f6',
+          color: '#1a73e8',
           type: 'booking',
           status: 'confirmed',
+          description: '',
         });
         setIsRecurring(false);
       }
@@ -98,6 +110,28 @@ export function EventFormModal({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const validateForm = () => {
+    const newErrors: string[] = [];
+    
+    if (!formData.title.trim()) {
+      newErrors.push('Event title is required');
+    }
+    
+    if (!formData.start) {
+      newErrors.push('Start time is required');
+    }
+    
+    if (!formData.end) {
+      newErrors.push('End time is required');
+    }
+    
+    if (formData.start && formData.end && new Date(formData.end) <= new Date(formData.start)) {
+      newErrors.push('End time must be after start time');
+    }
+    
+    return newErrors;
   };
 
   const handleRecurrenceChange = (field: string, value: any) => {
@@ -119,8 +153,9 @@ export function EventFormModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title.trim()) {
-      alert('Please enter a title for the event');
+    const validationErrors = validateForm();
+    if (validationErrors.length > 0) {
+      alert(validationErrors.join('\n'));
       return;
     }
 
@@ -148,9 +183,10 @@ export function EventFormModal({
       location: '',
       instructor: '',
       capacity: '',
-      color: '#3b82f6',
+      color: '#1a73e8',
       type: 'booking',
       status: 'confirmed',
+      description: '',
     });
     setRecurrence({
       type: 'none',
@@ -182,75 +218,138 @@ export function EventFormModal({
 
   return (
     <Modal show={isOpen} onClose={handleClose} size="xl" className="z-[1001]">
-      <ModalHeader>
-        <div className="flex items-center gap-2">
-          <HiCalendar className="h-5 w-5" />
-          {event ? 'Edit Event' : 'Create New Event'}
+      <ModalHeader className="pb-3">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-blue-50 rounded-full">
+            <HiCalendar className="h-5 w-5 text-blue-600" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">
+              {event ? 'Edit Event' : 'Create New Event'}
+            </h3>
+            <p className="text-sm text-gray-500 mt-1">
+              {event ? 'Make changes to your event' : 'Add a new event to your calendar'}
+            </p>
+          </div>
         </div>
       </ModalHeader>
       
       <form onSubmit={handleSubmit}>
-        <ModalBody className="space-y-4">
+        <ModalBody className="space-y-6">
           {/* Event Title */}
           <div>
-            <Label htmlFor="title">Event Title *</Label>
+            <Label htmlFor="title" className="mb-2 block text-sm font-medium text-gray-900">
+              Event Title *
+            </Label>
             <TextInput
               id="title"
               type="text"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="Enter event title"
+              placeholder="Add title"
               required
+              className="w-full"
             />
           </div>
 
-          {/* Date and Time */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="start">Start Date & Time</Label>
-              <div className="flex items-center gap-2">
-                <HiClock className="h-4 w-4 text-gray-500" />
-                <TextInput
-                  id="start"
-                  type="datetime-local"
-                  value={formData.start}
-                  onChange={(e) => handleInputChange('start', e.target.value)}
-                  disabled={formData.allDay}
-                  className="flex-1"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="end">End Date & Time</Label>
-              <div className="flex items-center gap-2">
-                <HiClock className="h-4 w-4 text-gray-500" />
-                <TextInput
-                  id="end"
-                  type="datetime-local"
-                  value={formData.end}
-                  onChange={(e) => handleInputChange('end', e.target.value)}
-                  disabled={formData.allDay}
-                  className="flex-1"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* All Day Toggle */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center space-x-2">
             <Checkbox
               id="allDay"
               checked={formData.allDay}
               onChange={(e) => handleInputChange('allDay', e.target.checked)}
             />
-            <Label htmlFor="allDay">All Day Event</Label>
+            <Label htmlFor="allDay" className="text-sm font-medium text-gray-700 cursor-pointer">
+              All day
+            </Label>
           </div>
 
-          {/* Event Type and Status */}
+          {/* Date and Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="type">Event Type</Label>
+              <Label htmlFor="start" className="mb-2 block text-sm font-medium text-gray-900">
+                Start
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <HiClock className="h-4 w-4 text-gray-400" />
+                </div>
+                <TextInput
+                  id="start"
+                  type={formData.allDay ? "date" : "datetime-local"}
+                  value={formData.allDay ? formData.start.split('T')[0] : formData.start}
+                  onChange={(e) => handleInputChange('start', e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="end" className="mb-2 block text-sm font-medium text-gray-900">
+                End
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <HiClock className="h-4 w-4 text-gray-400" />
+                </div>
+                <TextInput
+                  id="end"
+                  type={formData.allDay ? "date" : "datetime-local"}
+                  value={formData.allDay ? formData.end.split('T')[0] : formData.end}
+                  onChange={(e) => handleInputChange('end', e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Location and Instructor */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900">
+                Location
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <HiLocationMarker className="h-4 w-4 text-gray-400" />
+                </div>
+                <TextInput
+                  id="location"
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  placeholder="Add location"
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="instructor" className="mb-2 block text-sm font-medium text-gray-900">
+                Instructor
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <HiUser className="h-4 w-4 text-gray-400" />
+                </div>
+                <TextInput
+                  id="instructor"
+                  type="text"
+                  value={formData.instructor}
+                  onChange={(e) => handleInputChange('instructor', e.target.value)}
+                  placeholder="Add instructor"
+                  className="pl-10"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Event Type and Color */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="type" className="mb-2 block text-sm font-medium text-gray-900">
+                Event Type
+              </Label>
               <Select
                 id="type"
                 value={formData.type}
@@ -265,90 +364,84 @@ export function EventFormModal({
             </div>
             
             <div>
-              <Label htmlFor="color">Color</Label>
-              <Select
-                id="color"
-                value={formData.color}
-                onChange={(e) => handleInputChange('color', e.target.value)}
-              >
-                {colorOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          </div>
-
-          {/* Location and Instructor */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="location">Location</Label>
-              <div className="flex items-center gap-2">
-                <HiLocationMarker className="h-4 w-4 text-gray-500" />
-                <TextInput
-                  id="location"
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
-                  placeholder="Enter location"
-                  className="flex-1"
+              <Label className="mb-2 block text-sm font-medium text-gray-900">
+                Color
+              </Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-full border-2 border-white shadow-md cursor-pointer hover:scale-110 transition-transform"
+                  style={{ backgroundColor: formData.color }}
+                  onClick={() => setShowColorPicker(!showColorPicker)}
                 />
+                <span className="text-sm text-gray-600">
+                  {colorOptions.find(c => c.value === formData.color)?.label || 'Custom'}
+                </span>
               </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="instructor">Instructor</Label>
-              <div className="flex items-center gap-2">
-                <HiUser className="h-4 w-4 text-gray-500" />
-                <TextInput
-                  id="instructor"
-                  type="text"
-                  value={formData.instructor}
-                  onChange={(e) => handleInputChange('instructor', e.target.value)}
-                  placeholder="Enter instructor name"
-                  className="flex-1"
-                />
-              </div>
+              {showColorPicker && (
+                <div className="absolute mt-2 p-3 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="grid grid-cols-4 gap-2">
+                    {colorOptions.map(option => (
+                      <div
+                        key={option.value}
+                        className={`w-7 h-7 rounded-full cursor-pointer transition-all hover:scale-110 ${
+                          formData.color === option.value ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                        }`}
+                        style={{ backgroundColor: option.value }}
+                        onClick={() => {
+                          handleInputChange('color', option.value);
+                          setShowColorPicker(false);
+                        }}
+                        title={option.label}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Capacity */}
           <div>
-            <Label htmlFor="capacity">Capacity</Label>
-            <div className="flex items-center gap-2">
-              <HiUserGroup className="h-4 w-4 text-gray-500" />
+            <Label htmlFor="capacity" className="mb-2 block text-sm font-medium text-gray-900">
+              Capacity (Optional)
+            </Label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <HiUserGroup className="h-4 w-4 text-gray-400" />
+              </div>
               <TextInput
                 id="capacity"
                 type="number"
                 value={formData.capacity}
                 onChange={(e) => handleInputChange('capacity', e.target.value)}
-                placeholder="Maximum number of participants"
+                placeholder="Maximum participants"
                 min="1"
-                className="flex-1"
+                className="pl-10"
               />
             </div>
           </div>
 
           {/* Recurring Event */}
-          <div className="border-t pt-4">
-            <div className="flex items-center gap-2 mb-4">
+          <div className="border-t border-gray-200 pt-4">
+            <div className="flex items-center space-x-2 mb-4">
               <Checkbox
                 id="recurring"
                 checked={isRecurring}
                 onChange={(e) => setIsRecurring(e.target.checked)}
               />
-              <Label htmlFor="recurring" className="flex items-center gap-2">
+              <Label htmlFor="recurring" className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-900">
                 <HiRefresh className="h-4 w-4" />
-                Recurring Event
+                Repeat
               </Label>
             </div>
 
             {isRecurring && (
-              <div className="space-y-4 pl-6 border-l-2 border-gray-200">
+              <div className="space-y-4 ml-6 border-l-2 border-gray-200 pl-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="recurrenceType">Repeat</Label>
+                    <Label htmlFor="recurrenceType" className="mb-2 block text-sm font-medium text-gray-900">
+                      Repeat
+                    </Label>
                     <Select
                       id="recurrenceType"
                       value={recurrence.type}
@@ -362,7 +455,9 @@ export function EventFormModal({
                   </div>
                   
                   <div>
-                    <Label htmlFor="interval">Every</Label>
+                    <Label htmlFor="interval" className="mb-2 block text-sm font-medium text-gray-900">
+                      Every
+                    </Label>
                     <TextInput
                       id="interval"
                       type="number"
@@ -376,23 +471,27 @@ export function EventFormModal({
 
                 {recurrence.type === 'weekly' && (
                   <div>
-                    <Label>Repeat on</Label>
-                    <div className="flex gap-2 mt-2">
+                    <Label className="mb-2 block text-sm font-medium text-gray-900">
+                      Repeat on
+                    </Label>
+                    <div className="flex gap-2">
                       {dayLabels.map((day, index) => (
-                        <label key={index} className="flex flex-col items-center">
+                        <div key={index} className="flex flex-col items-center">
                           <Checkbox
                             checked={recurrence.daysOfWeek?.includes(index) || false}
                             onChange={(e) => handleDayOfWeekChange(index, e.target.checked)}
                           />
-                          <span className="text-xs mt-1">{day}</span>
-                        </label>
+                          <span className="text-xs text-gray-600 mt-1">{day}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <Label htmlFor="endDate">End Date (Optional)</Label>
+                  <Label htmlFor="endDate" className="mb-2 block text-sm font-medium text-gray-900">
+                    End Date (Optional)
+                  </Label>
                   <TextInput
                     id="endDate"
                     type="date"

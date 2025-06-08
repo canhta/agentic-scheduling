@@ -3,7 +3,8 @@
 import { Button, Select } from 'flowbite-react';
 import { 
   HiChevronLeft, 
-  HiChevronRight
+  HiChevronRight,
+  HiPlus
 } from 'react-icons/hi';
 
 export type CalendarView = 
@@ -27,6 +28,7 @@ interface CalendarToolbarProps {
   selectedResource?: string;
   resources?: Array<{ id: string; title: string }>;
   onResourceChange?: (resourceId: string) => void;
+  onCreateEvent?: () => void;
   className?: string;
 }
 
@@ -34,9 +36,8 @@ const viewOptions = [
   { value: 'dayGridMonth', label: 'Month' },
   { value: 'timeGridWeek', label: 'Week' },
   { value: 'timeGridDay', label: 'Day' },
-  { value: 'listWeek', label: 'List Week' },
-  { value: 'resourceTimeGridWeek', label: 'Resource Week' },
-  { value: 'resourceTimeGridDay', label: 'Resource Day' },
+  { value: 'listWeek', label: 'Agenda' },
+  { value: 'resourceTimeGridWeek', label: 'Resources' },
 ] as const;
 
 export function CalendarToolbar({
@@ -49,57 +50,78 @@ export function CalendarToolbar({
   selectedResource,
   resources = [],
   onResourceChange,
+  onCreateEvent,
   className = '',
 }: CalendarToolbarProps) {
   const formatDate = (date: Date) => {
+    if (currentView === 'timeGridDay') {
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
     return date.toLocaleDateString('en-US', {
       month: 'long',
       year: 'numeric',
-      ...(currentView === 'timeGridDay' && { day: 'numeric' }),
     });
   };
 
   return (
-    <div className={`flex items-center justify-between gap-4 p-4 bg-white border-b border-gray-200 ${className}`}>
-      {/* Left section - Navigation */}
-      <div className="flex items-center gap-2">
+    <div className={`flex items-center justify-between p-4 bg-white border-b border-gray-200 ${className}`}>
+      {/* Left section - Navigation and Create */}
+      <div className="flex items-center gap-3">
+        {onCreateEvent && (
+          <Button 
+            onClick={onCreateEvent}
+            className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+            size="sm"
+          >
+            <HiPlus className="h-4 w-4 mr-2" />
+            Create
+          </Button>
+        )}
+        
         <Button
-          size="sm"
-          color="gray"
           onClick={onToday}
-          className="whitespace-nowrap"
+          color="gray"
+          size="sm"
+          className="border border-gray-300 text-gray-700 hover:bg-gray-50"
         >
           Today
         </Button>
         
-        <div className="flex items-center">
+        <div className="flex items-center gap-1 ml-2">
           <Button
-            size="sm"
-            color="gray"
             onClick={onPrevious}
-            className="rounded-r-none border-r-0"
+            color="gray"
+            size="sm"
+            className="p-2 border border-gray-300 hover:bg-gray-50"
+            title="Previous"
           >
             <HiChevronLeft className="h-4 w-4" />
           </Button>
           <Button
-            size="sm"
-            color="gray"
             onClick={onNext}
-            className="rounded-l-none"
+            color="gray"
+            size="sm"
+            className="p-2 border border-gray-300 hover:bg-gray-50"
+            title="Next"
           >
             <HiChevronRight className="h-4 w-4" />
           </Button>
         </div>
         
-        <h2 className="text-lg font-semibold text-gray-900 ml-4">
+        <h1 className="text-xl font-normal text-gray-800 ml-4">
           {formatDate(currentDate)}
-        </h2>
+        </h1>
       </div>
 
       {/* Center section - Resource selector (for resource views) */}
       {currentView.includes('resource') && resources.length > 0 && (
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-gray-600">
             Resource:
           </label>
           <Select
@@ -119,22 +141,24 @@ export function CalendarToolbar({
       )}
 
       {/* Right section - View selector */}
-      <div className="flex items-center gap-2">
-        <label className="text-sm font-medium text-gray-700">
-          View:
-        </label>
-        <Select
-          value={currentView}
-          onChange={(e) => onViewChange(e.target.value as CalendarView)}
-          className="min-w-40"
-          sizing="sm"
-        >
+      <div className="flex items-center">
+        <div className="flex bg-gray-100 rounded-lg p-1">
           {viewOptions.map(({ value, label }) => (
-            <option key={value} value={value}>
+            <button
+              key={value}
+              onClick={() => onViewChange(value)}
+              className={`
+                px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                ${currentView === value 
+                  ? 'bg-white text-gray-900 shadow-sm border border-gray-200' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }
+              `}
+            >
               {label}
-            </option>
+            </button>
           ))}
-        </Select>
+        </div>
       </div>
     </div>
   );

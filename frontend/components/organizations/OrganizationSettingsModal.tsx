@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
-import { HiX } from 'react-icons/hi';
+import { Button, Label, TextInput, Textarea, Select, Modal, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
 import { UpdateOrganizationSettingsDto, OrganizationSettingsResponse, BusinessHoursDto } from '../../lib/types';
 
 interface OrganizationSettingsModalProps {
@@ -71,31 +70,16 @@ export function OrganizationSettingsModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={onClose}></div>
+        <Modal show={isOpen} onClose={onClose} size="4xl">
+            <ModalHeader>
+                Organization Settings
+            </ModalHeader>
 
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full max-h-[90vh] overflow-y-auto">
-                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-medium text-gray-900" id="modal-title">
-                                Organization Settings
-                            </h3>
-                            <button
-                                onClick={onClose}
-                                className="text-gray-400 hover:text-gray-600"
-                                disabled={isLoading}
-                            >
-                                <HiX className="w-6 h-6" />
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Booking Settings */}
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <h4 className="text-md font-medium text-gray-900 mb-4">Booking Settings</h4>
+            <form onSubmit={handleSubmit}>
+                <ModalBody className="space-y-6">
+                    {/* Booking Settings */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                        <h4 className="text-md font-medium text-gray-900 mb-4">Booking Settings</h4>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <Label htmlFor="bookingWindowDays" title="Booking Window (Days)" />
@@ -425,19 +409,17 @@ export function OrganizationSettingsModal({
                                     })}
                                 </div>
                             </div>
+                </ModalBody>
 
-                            <div className="flex justify-end space-x-3 pt-4">
-                                <Button color="gray" onClick={onClose} disabled={isLoading}>
-                                    Cancel
-                                </Button>
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? 'Saving...' : 'Update Settings'}
-                                </Button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <ModalFooter>
+                    <Button color="gray" onClick={onClose} disabled={isLoading}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Saving...' : 'Update Settings'}
+                    </Button>
+                </ModalFooter>
+            </form>
+        </Modal>
     );
 }

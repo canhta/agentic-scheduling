@@ -1,8 +1,7 @@
 'use client';
 
-import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
-import { HiX } from 'react-icons/hi';
-import { CreateOrganizationDto, Organization } from '../../lib/types';
+import { Button, Label, TextInput, Textarea, Select, Modal, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
+import type { CreateOrganizationDto, Organization } from '@/lib/types';
 
 interface OrganizationFormModalProps {
   isOpen: boolean;
@@ -49,20 +48,13 @@ export function OrganizationFormModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-            disabled={isLoading}
-          >
-            <HiX className="h-6 w-6" />
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal show={isOpen} onClose={onClose} size="4xl">
+      <ModalHeader>
+        {title}
+      </ModalHeader>
+      
+      <form onSubmit={handleSubmit}>
+        <ModalBody className="space-y-4">
           {/* Basic Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -257,24 +249,24 @@ export function OrganizationFormModal({
               </Select>
             </div>
           </div>
-
-          <div className="flex justify-end space-x-3 mt-6">
-            <Button
-              color="gray"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Saving...' : organization ? 'Update' : 'Create'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </ModalBody>
+        
+        <ModalFooter>
+          <Button
+            color="gray"
+            onClick={onClose}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Saving...' : organization ? 'Update' : 'Create'}
+          </Button>
+        </ModalFooter>
+      </form>
+    </Modal>
   );
 }

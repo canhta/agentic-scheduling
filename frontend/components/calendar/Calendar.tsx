@@ -64,21 +64,38 @@ export function Calendar({
 
   // Convert CalendarEvent to @event-calendar/core format
   const formatEventsForCalendar = useCallback((events: CalendarEvent[]) => {
-    return events.map(event => ({
-      id: event.id,
-      title: event.title,
-      start: new Date(event.start),
-      end: new Date(event.end),
-      allDay: event.allDay,
-      backgroundColor: event.color || '#3b82f6',
-      borderColor: event.color || '#3b82f6',
-      textColor: '#ffffff',
-      extendedProps: {
-        ...event,
-        description: `${event.instructor ? `Instructor: ${event.instructor}` : ''}${event.capacity ? `\nCapacity: ${event.booked}/${event.capacity}` : ''}${event.location ? `\nLocation: ${event.location}` : ''}`,
-      },
-      resourceId: currentView.includes('resource') ? event.resource : undefined,
-    }));
+    return events.map(event => {
+      // Map color to CSS class for better styling
+      const getEventClass = (color: string) => {
+        const colorMap: { [key: string]: string } = {
+          '#3b82f6': 'event-blue',
+          '#ef4444': 'event-red',
+          '#10b981': 'event-green',
+          '#f59e0b': 'event-yellow',
+          '#8b5cf6': 'event-purple',
+          '#f97316': 'event-orange',
+          '#06b6d4': 'event-cyan',
+        };
+        return colorMap[color] || 'event-blue';
+      };
+
+      return {
+        id: event.id,
+        title: event.title,
+        start: new Date(event.start),
+        end: new Date(event.end),
+        allDay: event.allDay,
+        backgroundColor: event.color || '#3b82f6',
+        borderColor: 'transparent',
+        textColor: event.color === '#f59e0b' ? '#374151' : '#ffffff',
+        classNames: [getEventClass(event.color || '#3b82f6')],
+        extendedProps: {
+          ...event,
+          description: `${event.instructor ? `Instructor: ${event.instructor}` : ''}${event.capacity ? `\nCapacity: ${event.booked}/${event.capacity}` : ''}${event.location ? `\nLocation: ${event.location}` : ''}`,
+        },
+        resourceId: currentView.includes('resource') ? event.resource : undefined,
+      };
+    });
   }, [currentView]);
 
   // Filter events by resource if selected
@@ -116,20 +133,32 @@ export function Calendar({
         center: '',
         end: '',
       }, // We use our custom toolbar
-      dayMaxEvents: true,
-      moreLinkText: 'more',
+      
+      // Enhanced visual options for Google Calendar-like appearance
+      dayMaxEvents: currentView === 'dayGridMonth' ? true : false,
+      moreLinkText: (num: number) => `+${num} more`,
       eventDisplay: 'block',
-      displayEventTime: true,
+      displayEventTime: currentView !== 'dayGridMonth',
+      displayEventEnd: currentView.includes('timeGrid'),
+      
+      // Better time formatting
       eventTimeFormat: {
         hour: 'numeric' as const,
         minute: '2-digit' as const,
         hour12: true,
+        omitZeroMinute: true,
       },
       slotLabelFormat: {
         hour: 'numeric' as const,
         minute: '2-digit' as const,
         hour12: true,
+        omitZeroMinute: true,
       },
+      
+      // Enhanced day/date formatting
+      dayHeaderFormat: currentView === 'dayGridMonth' 
+        ? { weekday: 'short' as const }
+        : { weekday: 'short' as const, month: 'numeric' as const, day: 'numeric' as const },
       
       // Interaction settings
       selectable: true,
@@ -137,6 +166,11 @@ export function Calendar({
       eventResizable: true,
       eventDraggable: true,
       dragRevertDuration: 300,
+      selectMirror: true,
+      unselectAuto: false,
+      
+      // Enhanced visual feedback
+      selectBackgroundColor: 'rgba(26, 115, 232, 0.1)',
       
       // Event handlers
       eventClick: (info: any) => {
@@ -194,18 +228,7 @@ export function Calendar({
         }
       },
       
-      // Drag and drop constraints
-      eventAllow: (dropInfo: any, draggedEvent: any) => {
-        // Allow dropping only during business hours
-        return true; // You can add more complex logic here
-      },
-      
-      selectAllow: (selectInfo: any) => {
-        // Allow selection only during business hours
-        return true; // You can add more complex logic here
-      },
-      
-      // Business hours
+      // Business hours for better UX
       businessHours: {
         daysOfWeek: [1, 2, 3, 4, 5, 6, 0], // Monday - Sunday
         startTime: '06:00',
@@ -220,8 +243,8 @@ export function Calendar({
         slotLabelInterval: '01:00:00',
         nowIndicator: true,
         scrollTime: '08:00:00',
-        selectMirror: true,
-        unselectAuto: false,
+        allDaySlot: true,
+        allDayContent: 'All day',
       }),
     };
 
@@ -233,6 +256,7 @@ export function Calendar({
         resourceAreaHeaderContent: 'Resources',
         resourceAreaWidth: '200px',
         filterResourcesWithEvents: false,
+        datesAboveResources: true,
       };
     }
 
@@ -358,6 +382,16 @@ export function Calendar({
     setSelectedResource(resourceId);
   };
 
+  const handleCreateEvent = () => {
+    setEventFormModal({
+      isOpen: true,
+      event: null,
+      selectedDate: new Date(),
+      selectedStartTime: new Date(),
+      selectedEndTime: new Date(Date.now() + 60 * 60 * 1000), // 1 hour later
+    });
+  };
+
   if (loading) {
     return (
       <Card className={className}>
@@ -368,7 +402,7 @@ export function Calendar({
 
   return (
     <>
-      <Card className={`overflow-hidden ${className}`}>
+      <div className={`bg-white border border-gray-200 rounded-lg shadow-sm ${className}`}>
         <CalendarToolbar
           currentView={currentView}
           onViewChange={handleViewChange}
@@ -379,12 +413,13 @@ export function Calendar({
           selectedResource={selectedResource}
           resources={mockResources}
           onResourceChange={handleResourceChange}
+          onCreateEvent={handleCreateEvent}
         />
         
-        <div className="calendar-container relative">
-          <div ref={calendarRef} className="w-full ec-calendar" />
+        <div className="relative">
+          <div ref={calendarRef} className="w-full" />
         </div>
-      </Card>
+      </div>
 
       {/* Event Form Modal */}
       <EventFormModal

@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AppController_getHello"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/organizations": {
         parameters: {
             query?: never;
@@ -164,6 +148,60 @@ export interface paths {
         head?: never;
         /** Update organization settings */
         patch: operations["OrganizationController_updateSettings"];
+        trace?: never;
+    };
+    "/organizations/{id}/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all services for organization */
+        get: operations["OrganizationController_getServices"];
+        put?: never;
+        /** Create a new service/class */
+        post: operations["OrganizationController_createService"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}/services/{serviceId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get service by ID */
+        get: operations["OrganizationController_getService"];
+        put?: never;
+        post?: never;
+        /** Delete service (soft delete) */
+        delete: operations["OrganizationController_removeService"];
+        options?: never;
+        head?: never;
+        /** Update service */
+        patch: operations["OrganizationController_updateService"];
+        trace?: never;
+    };
+    "/organizations/{id}/services/type/{serviceType}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get services by type */
+        get: operations["OrganizationController_getServicesByType"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -435,6 +473,83 @@ export interface components {
             /** @description Business hours */
             businessHours?: components["schemas"]["BusinessHoursDto"][];
         };
+        CreateServiceDto: {
+            /** @description Service/Class name */
+            name: string;
+            /** @description Service description */
+            description?: string;
+            /**
+             * @description Service type
+             * @enum {string}
+             */
+            type: "CLASS" | "APPOINTMENT" | "WORKSHOP" | "PERSONAL_TRAINING";
+            /** @description Default duration in minutes */
+            duration: number;
+            /** @description Maximum capacity */
+            capacity?: number;
+            /** @description Service price */
+            price?: number;
+            /**
+             * @description Is bookable by members
+             * @default true
+             */
+            bookable: boolean;
+            /**
+             * @description Requires approval for booking
+             * @default false
+             */
+            requiresApproval: boolean;
+            /**
+             * @description Allow waitlist
+             * @default true
+             */
+            allowWaitlist: boolean;
+            /** @description Location ID */
+            locationId?: string;
+            /** @description Primary instructor ID */
+            primaryInstructorId?: string;
+            /** @description Assistant instructor ID */
+            assistantInstructorId?: string;
+            /** @description Resource IDs this service can use */
+            resourceIds?: string[];
+            /** @description Calendar display color */
+            color?: string;
+        };
+        UpdateServiceDto: {
+            /** @description Service/Class name */
+            name?: string;
+            /** @description Service description */
+            description?: string;
+            /**
+             * @description Service type
+             * @enum {string}
+             */
+            type?: "CLASS" | "APPOINTMENT" | "WORKSHOP" | "PERSONAL_TRAINING";
+            /** @description Default duration in minutes */
+            duration?: number;
+            /** @description Maximum capacity */
+            capacity?: number;
+            /** @description Service price */
+            price?: number;
+            /** @description Is bookable by members */
+            bookable?: boolean;
+            /** @description Requires approval for booking */
+            requiresApproval?: boolean;
+            /** @description Allow waitlist */
+            allowWaitlist?: boolean;
+            /** @description Location ID */
+            locationId?: string;
+            /** @description Primary instructor ID */
+            primaryInstructorId?: string;
+            /** @description Assistant instructor ID */
+            assistantInstructorId?: string;
+            /** @description Resource IDs this service can use */
+            resourceIds?: string[];
+            /** @description Calendar display color */
+            color?: string;
+            /** @description Active status */
+            isActive?: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -444,23 +559,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    AppController_getHello: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     OrganizationController_findAll: {
         parameters: {
             query?: never;
@@ -1013,6 +1111,225 @@ export interface operations {
         };
         responses: {
             /** @description Settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getServices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Services retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_createService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid service data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service name already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_removeService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service has existing bookings */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid service data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service name already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getServicesByType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service type */
+                serviceType: "CLASS" | "APPOINTMENT" | "WORKSHOP" | "PERSONAL_TRAINING";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Services retrieved successfully */
             200: {
                 headers: {
                     [name: string]: unknown;

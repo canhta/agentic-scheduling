@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Button } from 'flowbite-react';
-import { HiPlus } from 'react-icons/hi';
-import { apiClient, Organization, CreateOrganizationDto } from '../../../lib/api-client';
-import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
-import { ErrorAlert } from '../../../components/ui/ErrorAlert';
-import { DataTable, StatusBadge, TableColumn } from '../../../components/ui/DataTable';
-import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
-import { OrganizationFormModal } from '../../../components/organizations/OrganizationFormModal';
+import { HiPlus, HiEye } from 'react-icons/hi';
+import { apiClient, Organization, CreateOrganizationDto } from '@/lib/api-client';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
+import { DataTable, StatusBadge, TableColumn } from '@/components/ui/DataTable';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
+import { OrganizationFormModal } from '@/components/organizations/OrganizationFormModal';
 
 export default function OrganizationsPage() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
@@ -180,6 +181,19 @@ export default function OrganizationsPage() {
         <span className="text-sm text-gray-500">
           {record.city && record.state ? `${record.city}, ${record.state}` : record.country}
         </span>
+      )
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      render: (_, record) => (
+        <Link 
+          href={`/admin/organizations/${record.id}`}
+          className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          <HiEye className="w-4 h-4 mr-1" />
+          View Details
+        </Link>
       )
     }
   ];

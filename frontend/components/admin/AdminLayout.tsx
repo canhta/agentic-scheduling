@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminHeader from './AdminHeader';
 import AdminSidebar from './AdminSidebar';
 
@@ -15,14 +15,38 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     setSidebarOpen(!sidebarOpen);
   };
 
-  return (
-    <div className="bg-gray-50 dark:bg-gray-900">
-      <AdminHeader onSidebarToggle={toggleSidebar} />
+  // Set initial sidebar state and handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        // Desktop - show sidebar by default
+        setSidebarOpen(true);
+      } else {
+        // Mobile - hide sidebar by default
+        setSidebarOpen(false);
+      }
+    };
+
+    // Set initial state based on screen size
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+    return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <AdminHeader onSidebarToggle={toggleSidebar} sidebarOpen={sidebarOpen} />
       <AdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <div className="p-4 lg:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-          {children}
+      {/* Main content area */}
+      <div className={`transition-all duration-300 ${
+        sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'
+      } ${sidebarOpen ? 'ml-0' : 'ml-0'}`}>
+        <div className="pt-20 p-4 lg:p-6">
+          <div className="mx-auto max-w-7xl">
+            {children}
+          </div>
         </div>
       </div>
     </div>

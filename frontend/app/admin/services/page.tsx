@@ -149,7 +149,7 @@ export default function ServicesPage() {
 
   const formatPrice = (price?: number) => {
     if (price === undefined || price === null) return 'Free';
-    return `$${price.toFixed(2)}`;
+    return `$${price}`;
   };
 
   const columns = [

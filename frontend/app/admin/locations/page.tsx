@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from 'flowbite-react';
 import { HiPlus, HiPencil, HiTrash, HiEye } from 'react-icons/hi';
 import Link from 'next/link';
-import { apiClient, LocationResponse, Organization } from '@/lib/api-client';
+import { apiClient, LocationResponse, Organization, CreateLocationDto, UpdateLocationDto } from '@/lib/api-client';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { DataTable, StatusBadge } from '@/components/ui/DataTable';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
+import { LocationFormModal } from '@/components/organizations/LocationFormModal';
 
 export default function LocationsPage() {
   const [locations, setLocations] = useState<LocationResponse[]>([]);
@@ -19,6 +20,15 @@ export default function LocationsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<LocationResponse | null>(null);
   const [locationToDelete, setLocationToDelete] = useState<LocationResponse | null>(null);
+  const [locationFormData, setLocationFormData] = useState<CreateLocationDto | UpdateLocationDto>({
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'US',
+    isPrimary: false
+  });
 
   const loadData = useCallback(async () => {
     try {
@@ -70,11 +80,33 @@ export default function LocationsPage() {
 
   const handleCreateLocation = () => {
     setSelectedLocation(null);
+    setLocationFormData({
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'US',
+      isPrimary: false
+    });
     setShowLocationModal(true);
   };
 
   const handleEditLocation = (location: LocationResponse) => {
     setSelectedLocation(location);
+    setLocationFormData({
+      name: location.name,
+      description: location.description,
+      address: location.address,
+      city: location.city,
+      state: location.state,
+      zipCode: location.zipCode,
+      country: location.country,
+      phone: location.phone,
+      email: location.email,
+      isPrimary: location.isPrimary,
+      isActive: location.isActive
+    });
     setShowLocationModal(true);
   };
 
@@ -96,14 +128,14 @@ export default function LocationsPage() {
     }
   };
 
-  const handleLocationSubmit = async (locationData: any) => {
+  const handleLocationSubmit = async (locationData: CreateLocationDto | UpdateLocationDto) => {
     try {
       if (selectedLocation) {
         // Update existing location
         const updatedLocation = await apiClient.updateOrganizationLocation(
           selectedLocation.organizationId,
           selectedLocation.id,
-          locationData
+          locationData as UpdateLocationDto
         );
         setLocations(locations.map(l => 
           l.id === selectedLocation.id ? updatedLocation : l
@@ -111,8 +143,8 @@ export default function LocationsPage() {
       } else {
         // Create new location
         const newLocation = await apiClient.createOrganizationLocation(
-          locationData.organizationId,
-          locationData
+          (locationData as CreateLocationDto & { organizationId: string }).organizationId,
+          locationData as CreateLocationDto
         );
         setLocations([...locations, newLocation]);
       }
@@ -225,6 +257,20 @@ export default function LocationsPage() {
       <DataTable
         data={locations}
         columns={columns}
+      />
+
+      <LocationFormModal
+        isOpen={showLocationModal}
+        onClose={() => {
+          setShowLocationModal(false);
+          setSelectedLocation(null);
+        }}
+        onSubmit={handleLocationSubmit}
+        title={selectedLocation ? 'Edit Location' : 'Create Location'}
+        formData={locationFormData}
+        setFormData={setLocationFormData}
+        location={selectedLocation}
+        organizations={organizations}
       />
 
       {showDeleteModal && locationToDelete && (

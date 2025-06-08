@@ -10,7 +10,7 @@ interface AuthContextType extends AuthState {
   register: (userData: RegisterDto) => Promise<void>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<string>;
-  resetPassword: (token: string, newPassword: string, confirmPassword: string) => Promise<string>;
+  resetPassword: (token: string, newPassword: string) => Promise<string>;
   refreshUserData: () => Promise<void>;
   initiateGoogleOAuth: (organizationId?: string) => Promise<string>;
   handleOAuthCallback: (code: string, state?: string) => Promise<void>;
@@ -127,13 +127,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const resetPassword = async (
-    token: string, 
-    newPassword: string, 
-    confirmPassword: string
+    token: string,
+    newPassword: string
   ): Promise<string> => {
     setError(null);
     try {
-      return await authService.resetPassword(token, newPassword, confirmPassword);
+      return await authService.resetPassword(token, newPassword);
     } catch (error) {
       setError(error as AuthError);
       throw error;

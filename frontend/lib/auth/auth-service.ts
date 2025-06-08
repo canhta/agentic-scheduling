@@ -113,20 +113,14 @@ export class AuthService {
     }
   }
 
-  // TODO: Review this method - the backend API schema suggests resetPassword only takes email
-  // but this implementation expects token, newPassword, confirmPassword
-  async resetPassword(token: string, newPassword: string, confirmPassword: string): Promise<string> {
+  /**
+   * Reset a user's password using the provided reset token and new password.
+   * The backend API expects the token and the new password in the request body.
+   */
+  async resetPassword(token: string, newPassword: string): Promise<string> {
     try {
-      // NOTE: This method needs to be updated to match the actual backend API
-      // Current generated schema suggests reset password only takes email
-      throw new Error('Reset password implementation needs to be reviewed and updated to match backend API');
-      
-      // const response = await apiClient.resetPassword({
-      //   token,
-      //   newPassword,
-      //   confirmPassword,
-      // });
-      // return response.message;
+      const response = await api.resetPassword({ token, password: newPassword });
+      return response.message;
     } catch (error) {
       const authError: AuthError = {
         message: error instanceof Error ? error.message : 'Password reset failed',

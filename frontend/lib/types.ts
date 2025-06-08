@@ -18,7 +18,14 @@ export type { paths, components, operations };
 export type LoginDto = components['schemas']['LoginDto'];
 export type RegisterDto = components['schemas']['RegisterDto'];
 export type ForgotPasswordDto = components['schemas']['ForgotPasswordDto'];
-export type ResetPasswordDto = components['schemas']['ResetPasswordDto'];
+// The generated schema includes a ResetPasswordDto type that only contains
+// an email property, which is outdated. The backend expects a token and the
+// new password when resetting a password. Define the interface manually here
+// to reflect the current API contract.
+export interface ResetPasswordDto {
+  token: string;
+  password: string;
+}
 export type RefreshTokenDto = components['schemas']['RefreshTokenDto'];
 export type OAuthCallbackDto = components['schemas']['OAuthCallbackDto'];
 

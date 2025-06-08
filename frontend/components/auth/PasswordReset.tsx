@@ -127,10 +127,8 @@ export function ResetPasswordForm({ token, onSuccess, onBack }: ResetPasswordFor
     const { resetPassword, error, clearError } = useAuth();
     const [formData, setFormData] = useState({
         newPassword: '',
-        confirmPassword: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -157,12 +155,6 @@ export function ResetPasswordForm({ token, onSuccess, onBack }: ResetPasswordFor
             errors.newPassword = 'Password must be at least 8 characters long';
         }
 
-        if (!formData.confirmPassword) {
-            errors.confirmPassword = 'Please confirm your password';
-        } else if (formData.newPassword !== formData.confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
-        }
-
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -178,7 +170,7 @@ export function ResetPasswordForm({ token, onSuccess, onBack }: ResetPasswordFor
         clearError();
 
         try {
-            const message = await resetPassword(token, formData.newPassword, formData.confirmPassword);
+            const message = await resetPassword(token, formData.newPassword);
             setSuccessMessage(message);
 
             if (onSuccess) {
@@ -191,10 +183,7 @@ export function ResetPasswordForm({ token, onSuccess, onBack }: ResetPasswordFor
         }
     };
 
-    const isFormValid = formData.newPassword &&
-        formData.confirmPassword &&
-        formData.newPassword === formData.confirmPassword &&
-        formData.newPassword.length >= 8;
+    const isFormValid = formData.newPassword && formData.newPassword.length >= 8;
 
     return (
         <Card className="w-full max-w-md mx-auto">
@@ -251,35 +240,6 @@ export function ResetPasswordForm({ token, onSuccess, onBack }: ResetPasswordFor
                         </div>
                     </div>
 
-                    <div>
-                        <Label htmlFor="confirmPassword" title="Confirm new password" />
-                        <div className="relative">
-                            <TextInput
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                placeholder="Confirm your new password"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                required
-                                disabled={isSubmitting || !!successMessage}
-                                color={validationErrors.confirmPassword ? 'failure' : undefined}
-                            />
-                            {validationErrors.confirmPassword && (
-                                <HelperText color="failure">
-                                    {validationErrors.confirmPassword}
-                                </HelperText>
-                            )}
-                            <button
-                                type="button"
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                disabled={isSubmitting || !!successMessage}
-                            >
-                                {showConfirmPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
-                            </button>
-                        </div>
-                    </div>
 
                     <Button
                         type="submit"

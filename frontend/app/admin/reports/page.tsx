@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button, Select, Badge } from 'flowbite-react';
+import { Card, Button, Select, Badge, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import { HiDocumentReport, HiDownload, HiChartBar, HiTrendingUp, HiUsers, HiCalendar } from 'react-icons/hi';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { UserRole } from '@/lib/types';
@@ -215,66 +215,64 @@ export default function ReportsPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">Report Name</th>
-                    <th scope="col" className="px-6 py-3">Type</th>
-                    <th scope="col" className="px-6 py-3">Generated</th>
-                    <th scope="col" className="px-6 py-3">Status</th>
-                    <th scope="col" className="px-6 py-3">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+              <Table>
+                <TableHead>
+                  <TableHeadCell>Report Name</TableHeadCell>
+                  <TableHeadCell>Type</TableHeadCell>
+                  <TableHeadCell>Generated</TableHeadCell>
+                  <TableHeadCell>Status</TableHeadCell>
+                  <TableHeadCell>Actions</TableHeadCell>
+                </TableHead>
+                <TableBody className="divide-y">
+                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <TableCell className="font-medium text-gray-900 dark:text-white">
                       Monthly Revenue Report - December
-                    </td>
-                    <td className="px-6 py-4">Revenue</td>
-                    <td className="px-6 py-4">2 hours ago</td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>Revenue</TableCell>
+                    <TableCell>2 hours ago</TableCell>
+                    <TableCell>
                       <Badge color="success">Ready</Badge>
-                    </td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>
                       <Button size="xs" outline>
                         <HiDownload className="w-3 h-3 mr-1" />
                         Download
                       </Button>
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <TableCell className="font-medium text-gray-900 dark:text-white">
                       Class Attendance Report - Weekly
-                    </td>
-                    <td className="px-6 py-4">Booking</td>
-                    <td className="px-6 py-4">1 day ago</td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>Booking</TableCell>
+                    <TableCell>1 day ago</TableCell>
+                    <TableCell>
                       <Badge color="success">Ready</Badge>
-                    </td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>
                       <Button size="xs" outline>
                         <HiDownload className="w-3 h-3 mr-1" />
                         Download
                       </Button>
-                    </td>
-                  </tr>
-                  <tr className="bg-white dark:bg-gray-800">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="bg-white dark:bg-gray-800">
+                    <TableCell className="font-medium text-gray-900 dark:text-white">
                       Member Growth Analysis
-                    </td>
-                    <td className="px-6 py-4">Membership</td>
-                    <td className="px-6 py-4">3 days ago</td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>Membership</TableCell>
+                    <TableCell>3 days ago</TableCell>
+                    <TableCell>
                       <Badge color="warning">Processing</Badge>
-                    </td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell>
                       <Button size="xs" outline disabled>
                         Processing...
                       </Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
           </div>
         </Card>

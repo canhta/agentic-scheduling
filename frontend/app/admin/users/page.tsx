@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button, TextInput, Select } from 'flowbite-react';
+import { Card, Button, TextInput, Select, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Badge } from 'flowbite-react';
 import { HiPlus, HiSearch, HiUsers, HiUserGroup, HiShieldCheck } from 'react-icons/hi';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { UserRole } from '@/lib/types';
@@ -77,20 +77,18 @@ export default function UsersPage() {
         {/* Users Table */}
         <Card>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">User</th>
-                  <th scope="col" className="px-6 py-3">Role</th>
-                  <th scope="col" className="px-6 py-3">Organization</th>
-                  <th scope="col" className="px-6 py-3">Status</th>
-                  <th scope="col" className="px-6 py-3">Last Login</th>
-                  <th scope="col" className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
+            <Table>
+              <TableHead>
+                <TableHeadCell>User</TableHeadCell>
+                <TableHeadCell>Role</TableHeadCell>
+                <TableHeadCell>Organization</TableHeadCell>
+                <TableHeadCell>Status</TableHeadCell>
+                <TableHeadCell>Last Login</TableHeadCell>
+                <TableHeadCell>Actions</TableHeadCell>
+              </TableHead>
+              <TableBody className="divide-y">
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell>
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
                         <HiUsers className="w-5 h-5 text-gray-600" />
@@ -104,21 +102,20 @@ export default function UsersPage() {
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      <HiShieldCheck className="w-3 h-3 mr-1" />
+                  </TableCell>
+                  <TableCell>
+                    <Badge color="info" icon={HiShieldCheck}>
                       Admin
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">FitLife Gym</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>FitLife Gym</TableCell>
+                  <TableCell>
+                    <Badge color="success">
                       Active
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">2 hours ago</td>
-                  <td className="px-6 py-4">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>2 hours ago</TableCell>
+                  <TableCell>
                     <div className="flex gap-2">
                       <Button size="xs" outline>
                         Edit
@@ -127,11 +124,11 @@ export default function UsersPage() {
                         Disable
                       </Button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
                 
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell>
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
                         <HiUserGroup className="w-5 h-5 text-gray-600" />
@@ -145,20 +142,20 @@ export default function UsersPage() {
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  </TableCell>
+                  <TableCell>
+                    <Badge color="success">
                       Staff
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">PowerHouse Fitness</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>PowerHouse Fitness</TableCell>
+                  <TableCell>
+                    <Badge color="success">
                       Active
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">1 day ago</td>
-                  <td className="px-6 py-4">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>1 day ago</TableCell>
+                  <TableCell>
                     <div className="flex gap-2">
                       <Button size="xs" outline>
                         Edit
@@ -167,10 +164,10 @@ export default function UsersPage() {
                         Disable
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           {/* Pagination */}

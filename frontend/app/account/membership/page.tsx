@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, Badge, Button, Progress, Alert } from 'flowbite-react';
+import { Card, Badge, Button, Progress, Alert, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import { HiCreditCard, HiCalendar, HiClock, HiTrendingUp, HiGift, HiInformationCircle, HiDownload, HiX } from 'react-icons/hi';
 
 interface MembershipPlan {
@@ -362,43 +362,41 @@ export default function MembershipPage() {
         </h3>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">Date</th>
-                <th scope="col" className="px-6 py-3">Description</th>
-                <th scope="col" className="px-6 py-3">Amount</th>
-                <th scope="col" className="px-6 py-3">Status</th>
-                <th scope="col" className="px-6 py-3">Invoice</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
+          <Table>
+            <TableHead>
+              <TableHeadCell>Date</TableHeadCell>
+              <TableHeadCell>Description</TableHeadCell>
+              <TableHeadCell>Amount</TableHeadCell>
+              <TableHeadCell>Status</TableHeadCell>
+              <TableHeadCell>Invoice</TableHeadCell>
+            </TableHead>
+            <TableBody className="divide-y">
               {mockTransactions.map((transaction) => (
-                <tr key={transaction.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                <TableRow key={transaction.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {formatDate(transaction.date)}
-                  </td>
-                  <td className="px-6 py-4">{transaction.description}</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell>
                     {formatCurrency(transaction.amount, transaction.currency)}
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <Badge color={transaction.status === 'completed' ? 'success' : 'warning'}>
                       {transaction.status}
                     </Badge>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     {transaction.invoiceUrl && (
                       <Button size="xs" color="gray">
                         <HiDownload className="w-3 h-3 mr-1" />
                         Download
                       </Button>
                     )}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </Card>
 

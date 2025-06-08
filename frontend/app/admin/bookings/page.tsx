@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button, Select, Badge, TextInput } from 'flowbite-react';
+import { Card, Button, Select, Badge, TextInput, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import { HiPlus, HiSearch, HiCalendar, HiUser, HiEye, HiPencil, HiX } from 'react-icons/hi';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { UserRole } from '@/lib/types';
@@ -115,21 +115,19 @@ export default function BookingsPage() {
         {/* Bookings Table */}
         <Card>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">Member</th>
-                  <th scope="col" className="px-6 py-3">Service</th>
-                  <th scope="col" className="px-6 py-3">Date & Time</th>
-                  <th scope="col" className="px-6 py-3">Instructor</th>
-                  <th scope="col" className="px-6 py-3">Status</th>
-                  <th scope="col" className="px-6 py-3">Booking Date</th>
-                  <th scope="col" className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
+            <Table>
+              <TableHead>
+                <TableHeadCell>Member</TableHeadCell>
+                <TableHeadCell>Service</TableHeadCell>
+                <TableHeadCell>Date & Time</TableHeadCell>
+                <TableHeadCell>Instructor</TableHeadCell>
+                <TableHeadCell>Status</TableHeadCell>
+                <TableHeadCell>Booking Date</TableHeadCell>
+                <TableHeadCell>Actions</TableHeadCell>
+              </TableHead>
+              <TableBody className="divide-y">
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell>
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
                         <HiUser className="w-4 h-4 text-gray-600" />
@@ -143,8 +141,8 @@ export default function BookingsPage() {
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         Morning Yoga Flow
@@ -153,8 +151,8 @@ export default function BookingsPage() {
                         Studio 1
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         Today, 9:00 AM
@@ -163,13 +161,13 @@ export default function BookingsPage() {
                         60 minutes
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">Sarah Johnson</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>Sarah Johnson</TableCell>
+                  <TableCell>
                     <Badge color="success">Confirmed</Badge>
-                  </td>
-                  <td className="px-6 py-4">2 days ago</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>2 days ago</TableCell>
+                  <TableCell>
                     <div className="flex gap-1">
                       <Button size="xs" outline>
                         <HiEye className="w-3 h-3" />
@@ -181,11 +179,11 @@ export default function BookingsPage() {
                         <HiX className="w-3 h-3" />
                       </Button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
 
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell>
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
                         <HiUser className="w-4 h-4 text-gray-600" />
@@ -199,8 +197,8 @@ export default function BookingsPage() {
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         Personal Training
@@ -209,8 +207,8 @@ export default function BookingsPage() {
                         Studio 2
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         Tomorrow, 2:00 PM
@@ -219,13 +217,13 @@ export default function BookingsPage() {
                         60 minutes
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">Mike Wilson</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>Mike Wilson</TableCell>
+                  <TableCell>
                     <Badge color="warning">Pending</Badge>
-                  </td>
-                  <td className="px-6 py-4">1 hour ago</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>1 hour ago</TableCell>
+                  <TableCell>
                     <div className="flex gap-1">
                       <Button size="xs" outline>
                         <HiEye className="w-3 h-3" />
@@ -237,11 +235,11 @@ export default function BookingsPage() {
                         <HiX className="w-3 h-3" />
                       </Button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
 
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <TableCell>
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
                         <HiUser className="w-4 h-4 text-gray-600" />
@@ -255,8 +253,8 @@ export default function BookingsPage() {
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         HIIT Training
@@ -265,8 +263,8 @@ export default function BookingsPage() {
                         Main Gym
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         Yesterday, 6:00 PM
@@ -275,13 +273,13 @@ export default function BookingsPage() {
                         45 minutes
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">John Smith</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>John Smith</TableCell>
+                  <TableCell>
                     <Badge color="purple">Completed</Badge>
-                  </td>
-                  <td className="px-6 py-4">3 days ago</td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>3 days ago</TableCell>
+                  <TableCell>
                     <div className="flex gap-1">
                       <Button size="xs" outline>
                         <HiEye className="w-3 h-3" />
@@ -293,10 +291,10 @@ export default function BookingsPage() {
                         <HiX className="w-3 h-3" />
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           {/* Pagination */}

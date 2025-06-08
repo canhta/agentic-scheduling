@@ -229,7 +229,7 @@ export function useAuth(): AuthContextType {
 }
 
 // Hook for protecting routes
-export function useRequireAuth(): User {
+export function useRequireAuth(): User | null {
   const { user, isAuthenticated, loading } = useAuth();
   const router = useRouter();
   
@@ -240,6 +240,11 @@ export function useRequireAuth(): User {
     }
   }, [isAuthenticated, loading, router]);
 
+  // Return null during loading to allow components to show loading state
+  if (loading) {
+    return null;
+  }
+
   if (!user || !isAuthenticated) {
     throw new Error('Authentication required');
   }
@@ -247,22 +252,74 @@ export function useRequireAuth(): User {
   return user;
 }
 
+// Hook for protecting routes with loading handling
+export function useRequireAuthWithLoading(): { user: User | null; loading: boolean } {
+  const { user, isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      // Redirect to login page
+      router.push('/auth/login');
+    }
+  }, [isAuthenticated, loading, router]);
+
+  return { 
+    user: (loading || !isAuthenticated) ? null : user, 
+    loading 
+  };
+}
+
 // Hook for role-based access control
-export function useRequireRole(roles: string | string[]): User {
-  const { user, hasRole, hasAnyRole } = useRequireAuth() as any;
+export function useRequireRole(roles: string | string[]): User | null {
+  const { user, isAuthenticated, loading, hasAnyRole } = useAuth();
   const router = useRouter();
   const rolesArray = useMemo(() => Array.isArray(roles) ? roles : [roles], [roles]);
   
   useEffect(() => {
-    if (user && !hasAnyRole(rolesArray)) {
-      // Redirect to unauthorized page or dashboard
+    if (!loading && !isAuthenticated) {
+      // Redirect to login page if not authenticated
+      router.push('/auth/login');
+    } else if (!loading && user && !hasAnyRole(rolesArray)) {
+      // Redirect to unauthorized page if user doesn't have required role
       router.push('/unauthorized');
     }
-  }, [user, rolesArray, hasAnyRole, router]);
+  }, [user, rolesArray, hasAnyRole, router, loading, isAuthenticated]);
+
+  // Return null during loading to allow components to show loading state
+  if (loading) {
+    return null;
+  }
+
+  if (!user || !isAuthenticated) {
+    throw new Error('Authentication required');
+  }
 
   if (!hasAnyRole(rolesArray)) {
     throw new Error(`Role ${rolesArray.join(' or ')} required`);
   }
 
   return user;
+}
+
+// Hook for role-based access control with loading handling
+export function useRequireRoleWithLoading(roles: string | string[]): { user: User | null; loading: boolean } {
+  const { user, isAuthenticated, loading, hasAnyRole } = useAuth();
+  const router = useRouter();
+  const rolesArray = useMemo(() => Array.isArray(roles) ? roles : [roles], [roles]);
+  
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      // Redirect to login page if not authenticated
+      router.push('/auth/login');
+    } else if (!loading && user && !hasAnyRole(rolesArray)) {
+      // Redirect to unauthorized page if user doesn't have required role
+      router.push('/unauthorized');
+    }
+  }, [user, rolesArray, hasAnyRole, router, loading, isAuthenticated]);
+
+  return { 
+    user: (loading || !isAuthenticated || !hasAnyRole(rolesArray)) ? null : user, 
+    loading 
+  };
 }

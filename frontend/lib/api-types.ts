@@ -4,206 +4,6 @@
  */
 
 export interface paths {
-    "/organizations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all organizations */
-        get: operations["OrganizationController_findAll"];
-        put?: never;
-        /** Create a new organization */
-        post: operations["OrganizationController_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organizations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization by ID */
-        get: operations["OrganizationController_findOne"];
-        put?: never;
-        post?: never;
-        /** Delete organization (soft delete) */
-        delete: operations["OrganizationController_remove"];
-        options?: never;
-        head?: never;
-        /** Update organization */
-        patch: operations["OrganizationController_update"];
-        trace?: never;
-    };
-    "/organizations/slug/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization by slug */
-        get: operations["OrganizationController_findBySlug"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organizations/{id}/locations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all locations for organization */
-        get: operations["OrganizationController_findLocations"];
-        put?: never;
-        /** Create a new location for organization */
-        post: operations["OrganizationController_createLocation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organizations/{id}/locations/{locationId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get location by ID */
-        get: operations["OrganizationController_findLocation"];
-        put?: never;
-        post?: never;
-        /** Delete location (soft delete) */
-        delete: operations["OrganizationController_removeLocation"];
-        options?: never;
-        head?: never;
-        /** Update location */
-        patch: operations["OrganizationController_updateLocation"];
-        trace?: never;
-    };
-    "/organizations/{id}/resources": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all resources for organization */
-        get: operations["OrganizationController_findResources"];
-        put?: never;
-        /** Create a new resource for organization */
-        post: operations["OrganizationController_createResource"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organizations/{id}/resources/{resourceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get resource by ID */
-        get: operations["OrganizationController_findResource"];
-        put?: never;
-        post?: never;
-        /** Delete resource (soft delete) */
-        delete: operations["OrganizationController_removeResource"];
-        options?: never;
-        head?: never;
-        /** Update resource */
-        patch: operations["OrganizationController_updateResource"];
-        trace?: never;
-    };
-    "/organizations/{id}/settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization settings */
-        get: operations["OrganizationController_getSettings"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update organization settings */
-        patch: operations["OrganizationController_updateSettings"];
-        trace?: never;
-    };
-    "/organizations/{id}/services": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all services for organization */
-        get: operations["OrganizationController_getServices"];
-        put?: never;
-        /** Create a new service/class */
-        post: operations["OrganizationController_createService"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organizations/{id}/services/{serviceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get service by ID */
-        get: operations["OrganizationController_getService"];
-        put?: never;
-        post?: never;
-        /** Delete service (soft delete) */
-        delete: operations["OrganizationController_removeService"];
-        options?: never;
-        head?: never;
-        /** Update service */
-        patch: operations["OrganizationController_updateService"];
-        trace?: never;
-    };
-    "/organizations/{id}/services/type/{serviceType}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get services by type */
-        get: operations["OrganizationController_getServicesByType"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/users": {
         parameters: {
             query?: never;
@@ -764,10 +564,539 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all organizations */
+        get: operations["OrganizationController_findAll"];
+        put?: never;
+        /** Create a new organization */
+        post: operations["OrganizationController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization by ID */
+        get: operations["OrganizationController_findOne"];
+        put?: never;
+        post?: never;
+        /** Delete organization (soft delete) */
+        delete: operations["OrganizationController_remove"];
+        options?: never;
+        head?: never;
+        /** Update organization */
+        patch: operations["OrganizationController_update"];
+        trace?: never;
+    };
+    "/organizations/slug/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization by slug */
+        get: operations["OrganizationController_findBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all locations for organization */
+        get: operations["OrganizationController_findLocations"];
+        put?: never;
+        /** Create a new location for organization */
+        post: operations["OrganizationController_createLocation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}/locations/{locationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get location by ID */
+        get: operations["OrganizationController_findLocation"];
+        put?: never;
+        post?: never;
+        /** Delete location (soft delete) */
+        delete: operations["OrganizationController_removeLocation"];
+        options?: never;
+        head?: never;
+        /** Update location */
+        patch: operations["OrganizationController_updateLocation"];
+        trace?: never;
+    };
+    "/organizations/{id}/resources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all resources for organization */
+        get: operations["OrganizationController_findResources"];
+        put?: never;
+        /** Create a new resource for organization */
+        post: operations["OrganizationController_createResource"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}/resources/{resourceId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get resource by ID */
+        get: operations["OrganizationController_findResource"];
+        put?: never;
+        post?: never;
+        /** Delete resource (soft delete) */
+        delete: operations["OrganizationController_removeResource"];
+        options?: never;
+        head?: never;
+        /** Update resource */
+        patch: operations["OrganizationController_updateResource"];
+        trace?: never;
+    };
+    "/organizations/{id}/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization settings */
+        get: operations["OrganizationController_getSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update organization settings */
+        patch: operations["OrganizationController_updateSettings"];
+        trace?: never;
+    };
+    "/organizations/{id}/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all services for organization */
+        get: operations["OrganizationController_getServices"];
+        put?: never;
+        /** Create a new service/class */
+        post: operations["OrganizationController_createService"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{id}/services/{serviceId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get service by ID */
+        get: operations["OrganizationController_getService"];
+        put?: never;
+        post?: never;
+        /** Delete service (soft delete) */
+        delete: operations["OrganizationController_removeService"];
+        options?: never;
+        head?: never;
+        /** Update service */
+        patch: operations["OrganizationController_updateService"];
+        trace?: never;
+    };
+    "/organizations/{id}/services/type/{serviceType}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get services by type */
+        get: operations["OrganizationController_getServicesByType"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateUserDto: {
+            /** @description Organization ID for the user */
+            organizationId: string;
+            /** @description User email address (unique) */
+            email: string;
+            /** @description Username (optional) */
+            username?: string;
+            /** @description First name */
+            firstName: string;
+            /** @description Last name */
+            lastName: string;
+            /** @description Preferred name */
+            preferredName?: string;
+            /** @description Phone number */
+            phone?: string;
+            /** @description Date of birth */
+            dateOfBirth?: string;
+            /**
+             * @description Gender
+             * @enum {string}
+             */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say";
+            /** @description Profile photo URL */
+            profilePhoto?: string;
+            /** @description Bio/description */
+            bio?: string;
+            /** @description Street address */
+            address?: string;
+            /** @description City */
+            city?: string;
+            /** @description State/Province */
+            state?: string;
+            /** @description ZIP/Postal code */
+            zipCode?: string;
+            /** @description Country */
+            country?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Emergency contact relation */
+            emergencyContactRelation?: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Member ID (for members) */
+            memberId?: string;
+            /** @description Employee ID (for staff) */
+            employeeId?: string;
+            /** @description Department (for staff) */
+            department?: string;
+            /** @description Specialty (for staff) */
+            specialty?: string;
+            /** @description Certifications (for staff) */
+            certifications?: string[];
+            /** @description Hourly rate (for staff) */
+            hourlyRate?: string;
+            /** @description Temporary password (will be required to change on first login) */
+            temporaryPassword?: string;
+        };
+        UserResponseDto: {
+            /** @description User ID */
+            id: string;
+            /** @description User email address */
+            email: string;
+            /** @description User first name */
+            firstName: string;
+            /** @description User last name */
+            lastName: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Organization ID */
+            organizationId: string;
+            /** @description Member ID (for members only) */
+            memberId?: string;
+            /** @description User phone number */
+            phone?: string;
+            /**
+             * Format: date-time
+             * @description Date of birth
+             */
+            dateOfBirth?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Email verified status */
+            emailVerified: boolean;
+            /** @description Phone verified status */
+            phoneVerified: boolean;
+            /**
+             * Format: date-time
+             * @description User creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Last update date
+             */
+            updatedAt: string;
+            /**
+             * Format: date-time
+             * @description Last login date
+             */
+            lastLoginAt?: string;
+        };
+        PaginatedUsersResponseDto: {
+            /** @description List of users */
+            users: components["schemas"]["UserResponseDto"][];
+            /** @description Total number of users */
+            total: number;
+            /** @description Current page number */
+            page: number;
+            /** @description Number of items per page */
+            limit: number;
+            /** @description Total number of pages */
+            totalPages: number;
+        };
+        UpdateUserDto: {
+            /** @description User email address (unique) */
+            email?: string;
+            /** @description Username (optional) */
+            username?: string;
+            /** @description First name */
+            firstName?: string;
+            /** @description Last name */
+            lastName?: string;
+            /** @description Preferred name */
+            preferredName?: string;
+            /** @description Phone number */
+            phone?: string;
+            /** @description Date of birth */
+            dateOfBirth?: string;
+            /**
+             * @description Gender
+             * @enum {string}
+             */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say";
+            /** @description Profile photo URL */
+            profilePhoto?: string;
+            /** @description Bio/description */
+            bio?: string;
+            /** @description Street address */
+            address?: string;
+            /** @description City */
+            city?: string;
+            /** @description State/Province */
+            state?: string;
+            /** @description ZIP/Postal code */
+            zipCode?: string;
+            /** @description Country */
+            country?: string;
+            /** @description Emergency contact name */
+            emergencyContactName?: string;
+            /** @description Emergency contact phone */
+            emergencyContactPhone?: string;
+            /** @description Emergency contact relation */
+            emergencyContactRelation?: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description User status
+             * @enum {string}
+             */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+            /** @description Member ID (for members) */
+            memberId?: string;
+            /** @description Employee ID (for staff) */
+            employeeId?: string;
+            /** @description Department (for staff) */
+            department?: string;
+            /** @description Specialty (for staff) */
+            specialty?: string;
+            /** @description Certifications (for staff) */
+            certifications?: string[];
+            /** @description Hourly rate (for staff) */
+            hourlyRate?: string;
+            /** @description Email verification status */
+            emailVerified?: boolean;
+            /** @description Phone verification status */
+            phoneVerified?: boolean;
+        };
+        OrganizationStatsResponseDto: {
+            /** @description Total number of users */
+            totalUsers: number;
+            /** @description Number of members */
+            memberCount: number;
+            /** @description Number of staff */
+            staffCount: number;
+            /** @description Number of admins */
+            adminCount: number;
+            /** @description Number of active users */
+            activeUsers: number;
+            /** @description Number of inactive users */
+            inactiveUsers: number;
+            /** @description Number of suspended users */
+            suspendedUsers: number;
+            /** @description Number of pending users */
+            pendingUsers: number;
+        };
+        OrganizationActivityResponseDto: {
+            /** @description Total number of bookings */
+            totalBookings: number;
+            /** @description Number of completed bookings */
+            completedBookings: number;
+            /** @description Number of cancelled bookings */
+            cancelledBookings: number;
+            /** @description Number of no-shows */
+            noShows: number;
+            /** @description Number of new members */
+            newMembers: number;
+            /** @description Total revenue */
+            totalRevenue: number;
+        };
+        AttentionUsersResponseDto: {
+            /** @description Users pending verification */
+            pendingVerification: components["schemas"]["UserResponseDto"][];
+            /** @description Suspended users */
+            suspendedUsers: components["schemas"]["UserResponseDto"][];
+            /** @description Users with alerts */
+            usersWithAlerts: components["schemas"]["UserResponseDto"][];
+        };
+        BulkUserOperationDto: {
+            /** @description User IDs to perform operation on */
+            userIds: string[];
+            /**
+             * @description Operation to perform
+             * @enum {string}
+             */
+            operation: "activate" | "deactivate" | "suspend" | "delete";
+        };
+        BulkOperationResponseDto: {
+            /** @description Number of affected users */
+            affected: number;
+        };
+        ChangePasswordDto: {
+            /** @description Current password */
+            currentPassword: string;
+            /** @description New password */
+            newPassword: string;
+            /** @description Confirm new password */
+            confirmPassword: string;
+        };
+        ResetPasswordDto: {
+            /** @description User email */
+            email: string;
+        };
+        CreateUserNoteDto: {
+            /** @description Note content */
+            content: string;
+            /**
+             * @description Mark as alert
+             * @default false
+             */
+            isAlert: boolean;
+        };
+        UserNoteResponseDto: {
+            /** @description Note ID */
+            id: string;
+            /** @description Note content */
+            content: string;
+            /** @description Is alert flag */
+            isAlert: boolean;
+            /**
+             * Format: date-time
+             * @description Note creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Note update date
+             */
+            updatedAt: string;
+            /** @description Author information */
+            author: Record<string, never>;
+        };
+        UpdateUserNoteDto: {
+            /** @description Note content */
+            content?: string;
+            /** @description Mark as alert */
+            isAlert?: boolean;
+        };
+        UserWithAlertsResponseDto: {
+            /** @description User ID */
+            id: string;
+            /** @description User first name */
+            firstName: string;
+            /** @description User last name */
+            lastName: string;
+            /** @description User email */
+            email: string;
+            /**
+             * @description User role
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /** @description Number of alerts */
+            alertCount: number;
+            /** @description Latest alert */
+            latestAlert?: components["schemas"]["UserNoteResponseDto"];
+        };
+        NotesStatsResponseDto: {
+            /** @description Total number of notes */
+            totalNotes: number;
+            /** @description Total number of alerts */
+            totalAlerts: number;
+            /** @description Notes created this week */
+            notesThisWeek: number;
+            /** @description Alerts created this week */
+            alertsThisWeek: number;
+        };
         CreateOrganizationDto: {
             /** @description Organization name */
             name: string;
@@ -1110,335 +1439,6 @@ export interface components {
             /** @description Active status */
             isActive?: boolean;
         };
-        CreateUserDto: {
-            /** @description Organization ID for the user */
-            organizationId: string;
-            /** @description User email address (unique) */
-            email: string;
-            /** @description Username (optional) */
-            username?: string;
-            /** @description First name */
-            firstName: string;
-            /** @description Last name */
-            lastName: string;
-            /** @description Preferred name */
-            preferredName?: string;
-            /** @description Phone number */
-            phone?: string;
-            /** @description Date of birth */
-            dateOfBirth?: string;
-            /**
-             * @description Gender
-             * @enum {string}
-             */
-            gender?: "male" | "female" | "other" | "prefer_not_to_say";
-            /** @description Profile photo URL */
-            profilePhoto?: string;
-            /** @description Bio/description */
-            bio?: string;
-            /** @description Street address */
-            address?: string;
-            /** @description City */
-            city?: string;
-            /** @description State/Province */
-            state?: string;
-            /** @description ZIP/Postal code */
-            zipCode?: string;
-            /** @description Country */
-            country?: string;
-            /** @description Emergency contact name */
-            emergencyContactName?: string;
-            /** @description Emergency contact phone */
-            emergencyContactPhone?: string;
-            /** @description Emergency contact relation */
-            emergencyContactRelation?: string;
-            /**
-             * @description User role
-             * @enum {string}
-             */
-            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
-            /**
-             * @description User status
-             * @enum {string}
-             */
-            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
-            /** @description Member ID (for members) */
-            memberId?: string;
-            /** @description Employee ID (for staff) */
-            employeeId?: string;
-            /** @description Department (for staff) */
-            department?: string;
-            /** @description Specialty (for staff) */
-            specialty?: string;
-            /** @description Certifications (for staff) */
-            certifications?: string[];
-            /** @description Hourly rate (for staff) */
-            hourlyRate?: string;
-            /** @description Temporary password (will be required to change on first login) */
-            temporaryPassword?: string;
-        };
-        UserResponseDto: {
-            /** @description User ID */
-            id: string;
-            /** @description User email address */
-            email: string;
-            /** @description User first name */
-            firstName: string;
-            /** @description User last name */
-            lastName: string;
-            /**
-             * @description User role
-             * @enum {string}
-             */
-            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
-            /**
-             * @description User status
-             * @enum {string}
-             */
-            status: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
-            /** @description Organization ID */
-            organizationId: string;
-            /** @description Member ID (for members only) */
-            memberId?: string;
-            /** @description User phone number */
-            phone?: string;
-            /**
-             * Format: date-time
-             * @description Date of birth
-             */
-            dateOfBirth?: string;
-            /** @description Emergency contact name */
-            emergencyContactName?: string;
-            /** @description Emergency contact phone */
-            emergencyContactPhone?: string;
-            /** @description Email verified status */
-            emailVerified: boolean;
-            /** @description Phone verified status */
-            phoneVerified: boolean;
-            /**
-             * Format: date-time
-             * @description User creation date
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Last update date
-             */
-            updatedAt: string;
-            /**
-             * Format: date-time
-             * @description Last login date
-             */
-            lastLoginAt?: string;
-        };
-        PaginatedUsersResponseDto: {
-            /** @description List of users */
-            users: components["schemas"]["UserResponseDto"][];
-            /** @description Total number of users */
-            total: number;
-            /** @description Current page number */
-            page: number;
-            /** @description Number of items per page */
-            limit: number;
-            /** @description Total number of pages */
-            totalPages: number;
-        };
-        UpdateUserDto: {
-            /** @description User email address (unique) */
-            email?: string;
-            /** @description Username (optional) */
-            username?: string;
-            /** @description First name */
-            firstName?: string;
-            /** @description Last name */
-            lastName?: string;
-            /** @description Preferred name */
-            preferredName?: string;
-            /** @description Phone number */
-            phone?: string;
-            /** @description Date of birth */
-            dateOfBirth?: string;
-            /**
-             * @description Gender
-             * @enum {string}
-             */
-            gender?: "male" | "female" | "other" | "prefer_not_to_say";
-            /** @description Profile photo URL */
-            profilePhoto?: string;
-            /** @description Bio/description */
-            bio?: string;
-            /** @description Street address */
-            address?: string;
-            /** @description City */
-            city?: string;
-            /** @description State/Province */
-            state?: string;
-            /** @description ZIP/Postal code */
-            zipCode?: string;
-            /** @description Country */
-            country?: string;
-            /** @description Emergency contact name */
-            emergencyContactName?: string;
-            /** @description Emergency contact phone */
-            emergencyContactPhone?: string;
-            /** @description Emergency contact relation */
-            emergencyContactRelation?: string;
-            /**
-             * @description User role
-             * @enum {string}
-             */
-            role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
-            /**
-             * @description User status
-             * @enum {string}
-             */
-            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
-            /** @description Member ID (for members) */
-            memberId?: string;
-            /** @description Employee ID (for staff) */
-            employeeId?: string;
-            /** @description Department (for staff) */
-            department?: string;
-            /** @description Specialty (for staff) */
-            specialty?: string;
-            /** @description Certifications (for staff) */
-            certifications?: string[];
-            /** @description Hourly rate (for staff) */
-            hourlyRate?: string;
-            /** @description Email verification status */
-            emailVerified?: boolean;
-            /** @description Phone verification status */
-            phoneVerified?: boolean;
-        };
-        OrganizationStatsResponseDto: {
-            /** @description Total number of users */
-            totalUsers: number;
-            /** @description Number of members */
-            memberCount: number;
-            /** @description Number of staff */
-            staffCount: number;
-            /** @description Number of admins */
-            adminCount: number;
-            /** @description Number of active users */
-            activeUsers: number;
-            /** @description Number of inactive users */
-            inactiveUsers: number;
-            /** @description Number of suspended users */
-            suspendedUsers: number;
-            /** @description Number of pending users */
-            pendingUsers: number;
-        };
-        OrganizationActivityResponseDto: {
-            /** @description Total number of bookings */
-            totalBookings: number;
-            /** @description Number of completed bookings */
-            completedBookings: number;
-            /** @description Number of cancelled bookings */
-            cancelledBookings: number;
-            /** @description Number of no-shows */
-            noShows: number;
-            /** @description Number of new members */
-            newMembers: number;
-            /** @description Total revenue */
-            totalRevenue: number;
-        };
-        AttentionUsersResponseDto: {
-            /** @description Users pending verification */
-            pendingVerification: components["schemas"]["UserResponseDto"][];
-            /** @description Suspended users */
-            suspendedUsers: components["schemas"]["UserResponseDto"][];
-            /** @description Users with alerts */
-            usersWithAlerts: components["schemas"]["UserResponseDto"][];
-        };
-        BulkUserOperationDto: {
-            /** @description User IDs to perform operation on */
-            userIds: string[];
-            /**
-             * @description Operation to perform
-             * @enum {string}
-             */
-            operation: "activate" | "deactivate" | "suspend" | "delete";
-        };
-        BulkOperationResponseDto: {
-            /** @description Number of affected users */
-            affected: number;
-        };
-        ChangePasswordDto: {
-            /** @description Current password */
-            currentPassword: string;
-            /** @description New password */
-            newPassword: string;
-            /** @description Confirm new password */
-            confirmPassword: string;
-        };
-        ResetPasswordDto: {
-            /** @description User email */
-            email: string;
-        };
-        CreateUserNoteDto: {
-            /** @description Note content */
-            content: string;
-            /**
-             * @description Mark as alert
-             * @default false
-             */
-            isAlert: boolean;
-        };
-        UserNoteResponseDto: {
-            /** @description Note ID */
-            id: string;
-            /** @description Note content */
-            content: string;
-            /** @description Is alert flag */
-            isAlert: boolean;
-            /**
-             * Format: date-time
-             * @description Note creation date
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Note update date
-             */
-            updatedAt: string;
-            /** @description Author information */
-            author: Record<string, never>;
-        };
-        UpdateUserNoteDto: {
-            /** @description Note content */
-            content?: string;
-            /** @description Mark as alert */
-            isAlert?: boolean;
-        };
-        UserWithAlertsResponseDto: {
-            /** @description User ID */
-            id: string;
-            /** @description User first name */
-            firstName: string;
-            /** @description User last name */
-            lastName: string;
-            /** @description User email */
-            email: string;
-            /**
-             * @description User role
-             * @enum {string}
-             */
-            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
-            /** @description Number of alerts */
-            alertCount: number;
-            /** @description Latest alert */
-            latestAlert?: components["schemas"]["UserNoteResponseDto"];
-        };
-        NotesStatsResponseDto: {
-            /** @description Total number of notes */
-            totalNotes: number;
-            /** @description Total number of alerts */
-            totalAlerts: number;
-            /** @description Notes created this week */
-            notesThisWeek: number;
-            /** @description Alerts created this week */
-            alertsThisWeek: number;
-        };
     };
     responses: never;
     parameters: never;
@@ -1448,792 +1448,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    OrganizationController_findAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Organizations retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrganizationResponseDto"][];
-                };
-            };
-        };
-    };
-    OrganizationController_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrganizationDto"];
-            };
-        };
-        responses: {
-            /** @description Organization created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrganizationResponseDto"];
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization slug already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Organization retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrganizationResponseDto"];
-                };
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_remove: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Organization deleted successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateOrganizationDto"];
-            };
-        };
-        responses: {
-            /** @description Organization updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrganizationResponseDto"];
-                };
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findBySlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization slug */
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Organization retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrganizationResponseDto"];
-                };
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findLocations: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Locations retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_createLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateLocationDto"];
-            };
-        };
-        responses: {
-            /** @description Location created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Location ID */
-                locationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Location retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Location not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_removeLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Location ID */
-                locationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Location deleted successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Location not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_updateLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Location ID */
-                locationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateLocationDto"];
-            };
-        };
-        responses: {
-            /** @description Location updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Location not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findResources: {
-        parameters: {
-            query?: {
-                /** @description Filter by resource type */
-                type?: "ROOM" | "EQUIPMENT";
-                /** @description Filter by location ID */
-                locationId?: string;
-            };
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resources retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_createResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateResourceDto"];
-            };
-        };
-        responses: {
-            /** @description Resource created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_findResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Resource ID */
-                resourceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resource retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_removeResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Resource ID */
-                resourceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resource deleted successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_updateResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Resource ID */
-                resourceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateResourceDto"];
-            };
-        };
-        responses: {
-            /** @description Resource updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_getSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Settings retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_updateSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateOrganizationSettingsDto"];
-            };
-        };
-        responses: {
-            /** @description Settings updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_getServices: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Services retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_createService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateServiceDto"];
-            };
-        };
-        responses: {
-            /** @description Service created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid service data */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service name already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_getService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Service ID */
-                serviceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Service retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_removeService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Service ID */
-                serviceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Service deleted successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service has existing bookings */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_updateService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Service ID */
-                serviceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateServiceDto"];
-            };
-        };
-        responses: {
-            /** @description Service updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid service data */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service name already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    OrganizationController_getServicesByType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                id: string;
-                /** @description Service type */
-                serviceType: "CLASS" | "APPOINTMENT" | "WORKSHOP" | "PERSONAL_TRAINING";
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Services retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Organization not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     UsersController_findAll: {
         parameters: {
             query?: {
@@ -3399,6 +2613,792 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["NotesStatsResponseDto"];
                 };
+            };
+        };
+    };
+    OrganizationController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organizations retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"][];
+                };
+            };
+        };
+    };
+    OrganizationController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrganizationDto"];
+            };
+        };
+        responses: {
+            /** @description Organization created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"];
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization slug already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organization retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"];
+                };
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organization deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateOrganizationDto"];
+            };
+        };
+        responses: {
+            /** @description Organization updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"];
+                };
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization slug */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Organization retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"];
+                };
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findLocations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Locations retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_createLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLocationDto"];
+            };
+        };
+        responses: {
+            /** @description Location created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Location ID */
+                locationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Location retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Location not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_removeLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Location ID */
+                locationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Location deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Location not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Location ID */
+                locationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLocationDto"];
+            };
+        };
+        responses: {
+            /** @description Location updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Location not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findResources: {
+        parameters: {
+            query?: {
+                /** @description Filter by resource type */
+                type?: "ROOM" | "EQUIPMENT";
+                /** @description Filter by location ID */
+                locationId?: string;
+            };
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resources retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_createResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateResourceDto"];
+            };
+        };
+        responses: {
+            /** @description Resource created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Resource ID */
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_removeResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Resource ID */
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Resource ID */
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateResourceDto"];
+            };
+        };
+        responses: {
+            /** @description Resource updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Settings retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateOrganizationSettingsDto"];
+            };
+        };
+        responses: {
+            /** @description Settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getServices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Services retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_createService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid service data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service name already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_removeService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service has existing bookings */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service ID */
+                serviceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid service data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service name already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_getServicesByType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                id: string;
+                /** @description Service type */
+                serviceType: "CLASS" | "APPOINTMENT" | "WORKSHOP" | "PERSONAL_TRAINING";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Services retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

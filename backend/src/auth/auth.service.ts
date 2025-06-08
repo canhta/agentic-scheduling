@@ -1,29 +1,21 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 import { UserRole, User } from 'generated/prisma';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
+    private usersService: UsersService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-      include: { organization: true },
-    });
-
-    if (user && user.status === 'ACTIVE') {
-      // In a real implementation, you would verify the password hash here
-      // For now, we'll just return the user if found and password is provided
-      if (password) {
-        return user;
-      }
-    }
-    return null;
+    // Use the users service to verify the password
+    return this.usersService.verifyPassword(email, password);
   }
 
   login(user: User) {
@@ -54,12 +46,13 @@ export class AuthService {
     organizationId: string;
     role?: UserRole;
   }) {
-    // In a real implementation, you would hash the password here
-    // const hashedPassword = userData.password; // TODO: Hash with bcrypt
+    // Hash the password before storing
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const user = await this.prisma.user.create({
       data: {
         email: userData.email,
+        password: hashedPassword,
         firstName: userData.firstName,
         lastName: userData.lastName,
         organizationId: userData.organizationId,

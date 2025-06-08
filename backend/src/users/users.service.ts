@@ -62,6 +62,7 @@ export class UsersService {
 
     const userCreateData: Prisma.UserCreateInput = {
       ...userDataWithoutOrgId,
+      password: hashedPassword, // Add hashed password to user creation
       memberId,
       organization: organizationId
         ? { connect: { id: organizationId } }
@@ -397,6 +398,18 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
+    // If user has a current password, verify it
+    if (user.password && changePasswordDto.currentPassword) {
+      const isCurrentPasswordValid = await bcrypt.compare(
+        changePasswordDto.currentPassword,
+        user.password,
+      );
+
+      if (!isCurrentPasswordValid) {
+        throw new BadRequestException('Current password is incorrect');
+      }
+    }
+
     // Validate new password matches confirmation
     if (changePasswordDto.newPassword !== changePasswordDto.confirmPassword) {
       throw new BadRequestException(
@@ -404,15 +417,13 @@ export class UsersService {
       );
     }
 
-    // In a real implementation, you would verify the current password here
-    // For now, we'll just update the password (hash it)
+    // Hash and update the new password
     const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
 
     await this.prisma.user.update({
       where: { id },
       data: {
-        // Note: You'll need to add a password field to your schema or handle this differently
-        // For now, we'll just update the updatedAt field to indicate the password was changed
+        password: hashedPassword, // Update the password field
         updatedAt: new Date(),
       },
     });
@@ -436,15 +447,41 @@ export class UsersService {
     await this.prisma.user.update({
       where: { id },
       data: {
+        password: hashedPassword, // Set the new temporary password
         status: UserStatus.PENDING_VERIFICATION,
-        // Note: You'll need to add a password field to your schema or handle this differently
-        // For now, we'll just update the status to indicate a password reset is needed
         updatedAt: new Date(),
       },
     });
 
     // In a real implementation, you would send the temporary password via email
     console.log(`Temporary password for ${user.email}: ${temporaryPassword}`);
+  }
+
+  /**
+   * Verify a user's password for authentication
+   */
+  async verifyPassword(email: string, password: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { organization: true },
+    });
+
+    if (!user || !user.password) {
+      return null;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    // Only return user if they are active
+    if (user.status !== UserStatus.ACTIVE) {
+      return null;
+    }
+
+    return user;
   }
 
   private async generateMemberId(organizationId: string): Promise<string> {

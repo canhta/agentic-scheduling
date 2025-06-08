@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { HiPlus, HiPencil, HiTrash, HiEye } from 'react-icons/hi';
 import Link from 'next/link';
-import { apiClient, ResourceResponse, Organization } from '@/lib/api-client';
+import { api, ResourceResponse, Organization } from '@/lib/api';
 import { DataTable } from '@/components/ui/DataTable';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -26,7 +26,7 @@ export default function ResourcesPage() {
 
       // Load organizations and all resources across organizations
       const [orgsData, resourcesData] = await Promise.all([
-        apiClient.getOrganizations(),
+        api.getOrganizations(),
         // We'll need to load resources from all organizations
         getAllResources()
       ]);
@@ -47,13 +47,13 @@ export default function ResourcesPage() {
   const getAllResources = async (): Promise<ResourceResponse[]> => {
     try {
       // First get all organizations
-      const organizations = await apiClient.getOrganizations();
+      const organizations = await api.getOrganizations();
 
       // Then get resources for each organization
       const allResources: ResourceResponse[] = [];
       for (const org of organizations) {
         try {
-          const orgResources = await apiClient.getOrganizationResources(org.id);
+          const orgResources = await api.getOrganizationResources(org.id);
           allResources.push(...orgResources);
         } catch (error) {
           // Continue if one organization fails
@@ -87,7 +87,7 @@ export default function ResourcesPage() {
     if (!resourceToDelete) return;
 
     try {
-      await apiClient.deleteOrganizationResource(resourceToDelete.organizationId, resourceToDelete.id);
+      await api.deleteOrganizationResource(resourceToDelete.organizationId, resourceToDelete.id);
       setResources(resources.filter(r => r.id !== resourceToDelete.id));
       setShowDeleteModal(false);
       setResourceToDelete(null);
@@ -100,7 +100,7 @@ export default function ResourcesPage() {
     try {
       if (selectedResource) {
         // Update existing resource
-        const updatedResource = await apiClient.updateOrganizationResource(
+        const updatedResource = await api.updateOrganizationResource(
           selectedResource.organizationId,
           selectedResource.id,
           resourceData
@@ -110,7 +110,7 @@ export default function ResourcesPage() {
         ));
       } else {
         // Create new resource
-        const newResource = await apiClient.createOrganizationResource(
+        const newResource = await api.createOrganizationResource(
           resourceData.organizationId,
           resourceData
         );

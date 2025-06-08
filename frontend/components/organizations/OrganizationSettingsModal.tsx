@@ -2,7 +2,7 @@
 
 import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
 import { HiX } from 'react-icons/hi';
-import { UpdateOrganizationSettingsDto, OrganizationSettingsResponse, BusinessHoursDto } from '../../lib/api-client';
+import { UpdateOrganizationSettingsDto, OrganizationSettingsResponse, BusinessHoursDto } from '../../lib/types';
 
 interface OrganizationSettingsModalProps {
     isOpen: boolean;

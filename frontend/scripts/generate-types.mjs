@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
-const OUTPUT_FILE = './lib/api-types.ts';
+const OUTPUT_FILE = './lib/schema.d.ts';
 
 async function generateTypes() {
   try {

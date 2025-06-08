@@ -2,7 +2,7 @@
 
 import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
 import { HiX } from 'react-icons/hi';
-import { CreateServiceDto, UpdateServiceDto, ServiceResponse } from '../../lib/api-client';
+import { CreateServiceDto, UpdateServiceDto, ServiceResponse } from '../../lib/types';
 
 interface ServiceFormModalProps {
   isOpen: boolean;

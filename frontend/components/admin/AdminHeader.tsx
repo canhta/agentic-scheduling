@@ -14,6 +14,8 @@ import {
     HiChartPie
 } from 'react-icons/hi';
 import { Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, TextInput, Badge } from 'flowbite-react';
+import { useAuth } from '@/lib/auth/auth-context';
+import { useRouter } from 'next/navigation';
 
 interface AdminHeaderProps {
     onSidebarToggle: () => void;
@@ -23,11 +25,22 @@ interface AdminHeaderProps {
 export default function AdminHeader({ onSidebarToggle, sidebarOpen = false }: AdminHeaderProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [notificationCount] = useState(3);
+    const { user, logout } = useAuth();
+    const router = useRouter();
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         // TODO: Implement search functionality
         console.log('Search query:', searchQuery);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.push('/auth/login');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     return (
@@ -111,8 +124,20 @@ export default function AdminHeader({ onSidebarToggle, sidebarOpen = false }: Ad
                             }
                         >
                             <DropdownHeader>
-                                <span className="block text-sm font-medium">Admin User</span>
-                                <span className="block truncate text-sm text-gray-500">admin@example.com</span>
+                                <span className="block text-sm font-medium">
+                                    {user?.firstName && user?.lastName 
+                                        ? `${user.firstName} ${user.lastName}`
+                                        : user?.email || 'User'
+                                    }
+                                </span>
+                                <span className="block truncate text-sm text-gray-500">
+                                    {user?.email || 'user@example.com'}
+                                </span>
+                                {user?.role && (
+                                    <span className="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                        {user.role}
+                                    </span>
+                                )}
                             </DropdownHeader>
                             <DropdownItem href="/admin" className="flex items-center">
                                 <HiChartPie className="w-4 h-4 mr-2" />
@@ -123,7 +148,10 @@ export default function AdminHeader({ onSidebarToggle, sidebarOpen = false }: Ad
                                 Settings
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem className="flex items-center text-red-600 hover:text-red-700">
+                            <DropdownItem 
+                                onClick={handleLogout}
+                                className="flex items-center text-red-600 hover:text-red-700 cursor-pointer"
+                            >
                                 <HiLogout className="w-4 h-4 mr-2" />
                                 Sign out
                             </DropdownItem>

@@ -5,12 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import { Button, TabItem, Tabs } from 'flowbite-react';
 import { HiArrowLeft, HiLocationMarker, HiViewBoards, HiCog, HiPlus } from 'react-icons/hi';
 import {
-  apiClient,
+  api,
   Organization,
   LocationResponse,
   ResourceResponse,
   ServiceResponse,
-  OrganizationSettingsResponse,
+  OrganizationSettingsResponseDto,
   CreateLocationDto,
   UpdateLocationDto,
   CreateResourceDto,
@@ -18,7 +18,7 @@ import {
   CreateServiceDto,
   UpdateServiceDto,
   UpdateOrganizationSettingsDto
-} from '@/lib/api-client';
+} from '@/lib/api';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { DataTable, StatusBadge, TableColumn } from '@/components/ui/DataTable';
@@ -37,7 +37,7 @@ export default function OrganizationDetailPage() {
   const [locations, setLocations] = useState<LocationResponse[]>([]);
   const [resources, setResources] = useState<ResourceResponse[]>([]);
   const [services, setServices] = useState<ServiceResponse[]>([]);
-  const [settings, setSettings] = useState<OrganizationSettingsResponse | null>(null);
+  const [settings, setSettings] = useState<OrganizationSettingsResponseDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('locations');
@@ -90,11 +90,11 @@ export default function OrganizationDetailPage() {
       setError(null);
 
       const [orgData, locationsData, resourcesData, servicesData, settingsData] = await Promise.all([
-        apiClient.getOrganization(organizationId),
-        apiClient.getOrganizationLocations(organizationId).catch(() => []),
-        apiClient.getOrganizationResources(organizationId).catch(() => []),
-        apiClient.getOrganizationServices(organizationId).catch(() => []),
-        apiClient.getOrganizationSettings(organizationId).catch(() => null)
+        api.getOrganization(organizationId),
+        api.getOrganizationLocations(organizationId).catch(() => []),
+        api.getOrganizationResources(organizationId).catch(() => []),
+        api.getOrganizationServices(organizationId).catch(() => []),
+        api.getOrganizationSettings(organizationId).catch(() => null)
       ]);
 
       setOrganization(orgData);
@@ -179,9 +179,9 @@ export default function OrganizationDetailPage() {
   const handleSubmitLocation = async (data: CreateLocationDto | UpdateLocationDto) => {
     try {
       if (selectedLocation) {
-        await apiClient.updateOrganizationLocation(organizationId, selectedLocation.id, data as UpdateLocationDto);
+        await api.updateOrganizationLocation(organizationId, selectedLocation.id, data as UpdateLocationDto);
       } else {
-        await apiClient.createOrganizationLocation(organizationId, data as CreateLocationDto);
+        await api.createOrganizationLocation(organizationId, data as CreateLocationDto);
       }
       setShowLocationModal(false);
       fetchData();
@@ -218,9 +218,9 @@ export default function OrganizationDetailPage() {
   const handleSubmitResource = async (data: CreateResourceDto | UpdateResourceDto) => {
     try {
       if (selectedResource) {
-        await apiClient.updateOrganizationResource(organizationId, selectedResource.id, data as UpdateResourceDto);
+        await api.updateOrganizationResource(organizationId, selectedResource.id, data as UpdateResourceDto);
       } else {
-        await apiClient.createOrganizationResource(organizationId, data as CreateResourceDto);
+        await api.createOrganizationResource(organizationId, data as CreateResourceDto);
       }
       setShowResourceModal(false);
       fetchData();
@@ -268,9 +268,9 @@ export default function OrganizationDetailPage() {
   const handleSubmitService = async (data: CreateServiceDto | UpdateServiceDto) => {
     try {
       if (selectedService) {
-        await apiClient.updateOrganizationService(organizationId, selectedService.id, data as UpdateServiceDto);
+        await api.updateOrganizationService(organizationId, selectedService.id, data as UpdateServiceDto);
       } else {
-        await apiClient.createOrganizationService(organizationId, data as CreateServiceDto);
+        await api.createOrganizationService(organizationId, data as CreateServiceDto);
       }
       setShowServiceModal(false);
       fetchData();
@@ -286,7 +286,7 @@ export default function OrganizationDetailPage() {
 
   const handleSubmitSettings = async (data: UpdateOrganizationSettingsDto) => {
     try {
-      await apiClient.updateOrganizationSettings(organizationId, data);
+      await api.updateOrganizationSettings(organizationId, data);
       setShowSettingsModal(false);
       fetchData();
     } catch (err) {
@@ -306,13 +306,13 @@ export default function OrganizationDetailPage() {
     try {
       switch (deleteItem.type) {
         case 'location':
-          await apiClient.deleteOrganizationLocation(organizationId, deleteItem.item.id);
+          await api.deleteOrganizationLocation(organizationId, deleteItem.item.id);
           break;
         case 'resource':
-          await apiClient.deleteOrganizationResource(organizationId, deleteItem.item.id);
+          await api.deleteOrganizationResource(organizationId, deleteItem.item.id);
           break;
         case 'service':
-          await apiClient.deleteOrganizationService(organizationId, deleteItem.item.id);
+          await api.deleteOrganizationService(organizationId, deleteItem.item.id);
           break;
       }
       setShowDeleteModal(false);

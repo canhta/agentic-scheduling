@@ -2,7 +2,7 @@
 
 import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
 import { HiX } from 'react-icons/hi';
-import { CreateResourceDto, UpdateResourceDto, ResourceResponse } from '../../lib/api-client';
+import { CreateResourceDto, UpdateResourceDto, ResourceResponse } from '../../lib/types';
 
 interface ResourceFormModalProps {
   isOpen: boolean;

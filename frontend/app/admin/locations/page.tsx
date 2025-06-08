@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from 'flowbite-react';
 import { HiPlus, HiPencil, HiTrash, HiEye } from 'react-icons/hi';
 import Link from 'next/link';
-import { apiClient, LocationResponse, Organization, CreateLocationDto, UpdateLocationDto } from '@/lib/api-client';
+import { api, LocationResponse, Organization, CreateLocationDto, UpdateLocationDto } from '@/lib/api';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { DataTable, StatusBadge } from '@/components/ui/DataTable';
@@ -37,7 +37,7 @@ export default function LocationsPage() {
       
       // Load organizations and all locations across organizations
       const [orgsData, locationsData] = await Promise.all([
-        apiClient.getOrganizations(),
+        api.getOrganizations(),
         getAllLocations()
       ]);
       
@@ -57,13 +57,13 @@ export default function LocationsPage() {
   const getAllLocations = async (): Promise<LocationResponse[]> => {
     try {
       // First get all organizations
-      const organizations = await apiClient.getOrganizations();
+      const organizations = await api.getOrganizations();
       
       // Then get locations for each organization
       const allLocations: LocationResponse[] = [];
       for (const org of organizations) {
         try {
-          const orgLocations = await apiClient.getOrganizationLocations(org.id);
+          const orgLocations = await api.getOrganizationLocations(org.id);
           allLocations.push(...orgLocations);
         } catch (error) {
           // Continue if one organization fails
@@ -119,7 +119,7 @@ export default function LocationsPage() {
     if (!locationToDelete) return;
 
     try {
-      await apiClient.deleteOrganizationLocation(locationToDelete.organizationId, locationToDelete.id);
+      await api.deleteOrganizationLocation(locationToDelete.organizationId, locationToDelete.id);
       setLocations(locations.filter(l => l.id !== locationToDelete.id));
       setShowDeleteModal(false);
       setLocationToDelete(null);
@@ -132,7 +132,7 @@ export default function LocationsPage() {
     try {
       if (selectedLocation) {
         // Update existing location
-        const updatedLocation = await apiClient.updateOrganizationLocation(
+        const updatedLocation = await api.updateOrganizationLocation(
           selectedLocation.organizationId,
           selectedLocation.id,
           locationData as UpdateLocationDto
@@ -142,7 +142,7 @@ export default function LocationsPage() {
         ));
       } else {
         // Create new location
-        const newLocation = await apiClient.createOrganizationLocation(
+        const newLocation = await api.createOrganizationLocation(
           (locationData as CreateLocationDto & { organizationId: string }).organizationId,
           locationData as CreateLocationDto
         );

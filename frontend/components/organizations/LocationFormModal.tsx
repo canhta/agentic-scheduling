@@ -2,7 +2,7 @@
 
 import { Button, Label, TextInput, Textarea, Select } from 'flowbite-react';
 import { HiX } from 'react-icons/hi';
-import { CreateLocationDto, UpdateLocationDto, LocationResponse, Organization } from '../../lib/api-client';
+import { CreateLocationDto, UpdateLocationDto, LocationResponse, Organization } from '../../lib/types';
 
 interface LocationFormModalProps {
   isOpen: boolean;

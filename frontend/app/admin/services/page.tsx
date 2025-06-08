@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { ServiceFormModal } from '@/components/organizations/ServiceFormModal';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
-import { apiClient, ServiceResponse, Organization } from '@/lib/api-client';
+import { api, ServiceResponse, Organization, CreateServiceDto, UpdateServiceDto } from '@/lib/api';
 
 export default function ServicesPage() {
   const [services, setServices] = useState<ServiceResponse[]>([]);
@@ -24,13 +24,13 @@ export default function ServicesPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Load organizations and all services across organizations
       const [orgsData, servicesData] = await Promise.all([
-        apiClient.getOrganizations(),
+        api.getOrganizations(),
         getAllServices()
       ]);
-      
+
       setOrganizations(orgsData);
       setServices(servicesData);
     } catch (err) {
@@ -47,20 +47,20 @@ export default function ServicesPage() {
   const getAllServices = async (): Promise<ServiceResponse[]> => {
     try {
       // First get all organizations
-      const organizations = await apiClient.getOrganizations();
-      
+      const organizations = await api.getOrganizations();
+
       // Then get services for each organization
       const allServices: ServiceResponse[] = [];
       for (const org of organizations) {
         try {
-          const orgServices = await apiClient.getOrganizationServices(org.id);
+          const orgServices = await api.getOrganizationServices(org.id);
           allServices.push(...orgServices);
         } catch (error) {
           // Continue if one organization fails
           console.error(`Failed to load services for organization ${org.id}:`, error);
         }
       }
-      
+
       return allServices;
     } catch (error) {
       console.error('Failed to load all services:', error);
@@ -87,7 +87,7 @@ export default function ServicesPage() {
     if (!serviceToDelete) return;
 
     try {
-      await apiClient.deleteOrganizationService(serviceToDelete.organizationId, serviceToDelete.id);
+      await api.deleteOrganizationService(serviceToDelete.organizationId, serviceToDelete.id);
       setServices(services.filter(s => s.id !== serviceToDelete.id));
       setShowDeleteModal(false);
       setServiceToDelete(null);
@@ -100,17 +100,17 @@ export default function ServicesPage() {
     try {
       if (selectedService) {
         // Update existing service
-        const updatedService = await apiClient.updateOrganizationService(
+        const updatedService = await api.updateOrganizationService(
           selectedService.organizationId,
           selectedService.id,
           serviceData
         );
-        setServices(services.map(s => 
+        setServices(services.map(s =>
           s.id === selectedService.id ? updatedService : s
         ));
       } else {
         // Create new service
-        const newService = await apiClient.createOrganizationService(
+        const newService = await api.createOrganizationService(
           serviceData.organizationId,
           serviceData
         );
@@ -130,10 +130,11 @@ export default function ServicesPage() {
 
   const getServiceTypeDisplay = (type: string) => {
     switch (type) {
-      case 'CLASS': return 'Class';
+      case 'GROUP_CLASS': return 'Group Class';
       case 'APPOINTMENT': return 'Appointment';
-      case 'WORKSHOP': return 'Workshop';
       case 'PERSONAL_TRAINING': return 'Personal Training';
+      case 'EQUIPMENT_RENTAL': return 'Equipment Rental';
+      case 'FACILITY_ACCESS': return 'Facility Access';
       default: return type;
     }
   };
@@ -153,8 +154,8 @@ export default function ServicesPage() {
   };
 
   const columns = [
-    { 
-      key: 'name' as keyof ServiceResponse, 
+    {
+      key: 'name' as keyof ServiceResponse,
       title: 'Name',
       render: (value: unknown, service: ServiceResponse) => (
         <div>
@@ -165,40 +166,39 @@ export default function ServicesPage() {
         </div>
       )
     },
-    { 
-      key: 'type' as keyof ServiceResponse, 
+    {
+      key: 'type' as keyof ServiceResponse,
       title: 'Type',
       render: (value: unknown, service: ServiceResponse) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          service.type === 'CLASS' ? 'bg-blue-100 text-blue-800' :
-          service.type === 'APPOINTMENT' ? 'bg-green-100 text-green-800' :
-          service.type === 'WORKSHOP' ? 'bg-purple-100 text-purple-800' :
-          'bg-orange-100 text-orange-800'
-        }`}>
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${service.type === 'APPOINTMENT' ? 'bg-green-100 text-green-800' :
+            service.type === 'PERSONAL_TRAINING' ? 'bg-orange-100 text-orange-800' :
+
+              'bg-gray-100 text-gray-800'
+          }`}>
           {getServiceTypeDisplay(service.type)}
         </span>
       )
     },
-    { 
-      key: 'duration' as keyof ServiceResponse, 
+    {
+      key: 'duration' as keyof ServiceResponse,
       title: 'Duration',
       render: (value: unknown, service: ServiceResponse) => formatDuration(service.duration)
     },
-    { 
-      key: 'capacity' as keyof ServiceResponse, 
+    {
+      key: 'capacity' as keyof ServiceResponse,
       title: 'Capacity',
       render: (value: unknown, service: ServiceResponse) => service.capacity || 'Unlimited'
     },
-    { 
-      key: 'price' as keyof ServiceResponse, 
+    {
+      key: 'price' as keyof ServiceResponse,
       title: 'Price',
       render: (value: unknown, service: ServiceResponse) => formatPrice(service.price)
     },
-    { 
-      key: 'organizationId' as keyof ServiceResponse, 
+    {
+      key: 'organizationId' as keyof ServiceResponse,
       title: 'Organization',
       render: (value: unknown, service: ServiceResponse) => (
-        <Link 
+        <Link
           href={`/admin/organizations/${service.organizationId}`}
           className="text-blue-600 hover:text-blue-800 hover:underline"
         >
@@ -206,23 +206,17 @@ export default function ServicesPage() {
         </Link>
       )
     },
-    { 
-      key: 'isActive' as keyof ServiceResponse, 
+    {
+      key: 'isActive' as keyof ServiceResponse,
       title: 'Status',
       render: (value: unknown, service: ServiceResponse) => (
         <div className="flex flex-col space-y-1">
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            service.isActive 
-              ? 'bg-green-100 text-green-800' 
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${service.isActive
+              ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800'
-          }`}>
+            }`}>
             {service.isActive ? 'Active' : 'Inactive'}
           </span>
-          {service.bookable && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              Bookable
-            </span>
-          )}
         </div>
       )
     },

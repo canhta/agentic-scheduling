@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from 'flowbite-react';
 import { HiPlus, HiEye } from 'react-icons/hi';
-import { apiClient, Organization, CreateOrganizationDto } from '@/lib/api-client';
+import { api, Organization, CreateOrganizationDto } from '@/lib/api';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { DataTable, StatusBadge, TableColumn } from '@/components/ui/DataTable';
@@ -44,7 +44,7 @@ export default function OrganizationsPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiClient.getOrganizations();
+      const data = await api.getOrganizations();
       setOrganizations(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch organizations');
@@ -105,7 +105,7 @@ export default function OrganizationsPage() {
 
   const submitCreate = async () => {
     try {
-      await apiClient.createOrganization(formData);
+      await api.createOrganization(formData);
       setShowCreateModal(false);
       resetForm();
       await fetchOrganizations();
@@ -118,7 +118,7 @@ export default function OrganizationsPage() {
     if (!selectedOrganization) return;
     
     try {
-      await apiClient.updateOrganization(selectedOrganization.id, formData);
+      await api.updateOrganization(selectedOrganization.id, formData);
       setShowEditModal(false);
       setSelectedOrganization(null);
       resetForm();
@@ -132,7 +132,7 @@ export default function OrganizationsPage() {
     if (!selectedOrganization) return;
     
     try {
-      await apiClient.deleteOrganization(selectedOrganization.id);
+      await api.deleteOrganization(selectedOrganization.id);
       setShowDeleteModal(false);
       setSelectedOrganization(null);
       await fetchOrganizations();

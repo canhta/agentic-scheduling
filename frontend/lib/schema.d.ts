@@ -4,6 +4,176 @@
  */
 
 export interface paths {
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** User login */
+        post: operations["AuthController_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** User registration */
+        post: operations["AuthController_register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** User logout */
+        post: operations["AuthController_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh access token */
+        post: operations["AuthController_refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request password reset */
+        post: operations["AuthController_forgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset password with token */
+        post: operations["AuthController_resetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user information */
+        get: operations["AuthController_getProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Initiate Google OAuth flow */
+        get: operations["AuthController_googleAuth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/google/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Handle Google OAuth callback */
+        post: operations["AuthController_googleCallback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/dev-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create development token (DEV ONLY) */
+        post: operations["AuthController_createDevToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users": {
         parameters: {
             query?: never;
@@ -768,6 +938,198 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        LoginDto: {
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description User password
+             * @example SecurePassword123!
+             */
+            password: string;
+        };
+        AuthUserDto: {
+            /**
+             * @description User ID
+             * @example uuid-string
+             */
+            id: string;
+            /**
+             * @description User email
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description User first name
+             * @example John
+             */
+            firstName: string;
+            /**
+             * @description User last name
+             * @example Doe
+             */
+            lastName: string;
+            /**
+             * @description User role
+             * @example MEMBER
+             * @enum {string}
+             */
+            role: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+            /**
+             * @description Organization ID
+             * @example uuid-string
+             */
+            organizationId: string;
+            /**
+             * @description Email verification status
+             * @example true
+             */
+            emailVerified: boolean;
+            /**
+             * @description Phone verification status
+             * @example false
+             */
+            phoneVerified: boolean;
+        };
+        LoginResponseDto: {
+            /**
+             * @description JWT access token
+             * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+             */
+            access_token: string;
+            /** @description User information */
+            user: components["schemas"]["AuthUserDto"];
+            /**
+             * @description Refresh token
+             * @example refresh-token-string
+             */
+            refresh_token?: string;
+            /**
+             * @description Token expiry time in seconds
+             * @example 86400
+             */
+            expires_in: number;
+        };
+        RegisterDto: {
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description User password
+             * @example SecurePassword123!
+             */
+            password: string;
+            /**
+             * @description Confirm password
+             * @example SecurePassword123!
+             */
+            confirmPassword: string;
+            /**
+             * @description User first name
+             * @example John
+             */
+            firstName: string;
+            /**
+             * @description User last name
+             * @example Doe
+             */
+            lastName: string;
+            /**
+             * @description Organization ID
+             * @example uuid-string
+             */
+            organizationId: string;
+            /**
+             * @description User role
+             * @example MEMBER
+             * @enum {string}
+             */
+            role?: "SUPER_ADMIN" | "ORGANIZATION_ADMIN" | "ADMIN" | "STAFF" | "MEMBER";
+        };
+        RegisterResponseDto: {
+            /**
+             * @description JWT access token
+             * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+             */
+            access_token: string;
+            /** @description User information */
+            user: components["schemas"]["AuthUserDto"];
+            /**
+             * @description Refresh token
+             * @example refresh-token-string
+             */
+            refresh_token?: string;
+            /**
+             * @description Token expiry time in seconds
+             * @example 86400
+             */
+            expires_in: number;
+        };
+        MessageResponseDto: {
+            /**
+             * @description Response message
+             * @example Operation completed successfully
+             */
+            message: string;
+        };
+        RefreshTokenDto: {
+            /**
+             * @description Refresh token
+             * @example refresh-token-string
+             */
+            refreshToken: string;
+        };
+        RefreshTokenResponseDto: {
+            /**
+             * @description New JWT access token
+             * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+             */
+            access_token: string;
+            /**
+             * @description Token expiry time in seconds
+             * @example 86400
+             */
+            expires_in: number;
+        };
+        ForgotPasswordDto: {
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+        };
+        ResetPasswordDto: {
+            /** @description User email */
+            email: string;
+        };
+        OAuthUrlResponseDto: {
+            /**
+             * @description OAuth authorization URL
+             * @example https://accounts.google.com/o/oauth2/v2/auth?...
+             */
+            url: string;
+            /**
+             * @description OAuth state parameter
+             * @example state-string
+             */
+            state: string;
+        };
+        OAuthCallbackDto: {
+            /**
+             * @description OAuth authorization code
+             * @example oauth-code
+             */
+            code: string;
+            /**
+             * @description OAuth state parameter
+             * @example state-string
+             */
+            state?: string;
+        };
         CreateUserDto: {
             /** @description Organization ID for the user */
             organizationId: string;
@@ -1028,10 +1390,6 @@ export interface components {
             newPassword: string;
             /** @description Confirm new password */
             confirmPassword: string;
-        };
-        ResetPasswordDto: {
-            /** @description User email */
-            email: string;
         };
         CreateUserNoteDto: {
             /** @description Note content */
@@ -1448,6 +1806,301 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AuthController_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginDto"];
+            };
+        };
+        responses: {
+            /** @description Login successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
+            };
+            /** @description Invalid input data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterDto"];
+            };
+        };
+        responses: {
+            /** @description Registration successful */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegisterResponseDto"];
+                };
+            };
+            /** @description Invalid input data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Logout successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshTokenDto"];
+            };
+        };
+        responses: {
+            /** @description Token refreshed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshTokenResponseDto"];
+                };
+            };
+            /** @description Invalid refresh token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_forgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password reset email sent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Invalid email */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password reset successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Invalid token or password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User information retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_googleAuth: {
+        parameters: {
+            query?: {
+                /** @description Organization ID for registration */
+                organizationId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OAuth URL generated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OAuthUrlResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_googleCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OAuthCallbackDto"];
+            };
+        };
+        responses: {
+            /** @description OAuth authentication successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
+            };
+            /** @description OAuth authentication failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_createDevToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Development token created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
+            };
+        };
+    };
     UsersController_findAll: {
         parameters: {
             query?: {

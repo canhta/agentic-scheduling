@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminHeader from './AdminHeader';
 import AdminSidebar from './AdminSidebar';
+import { useAuth, useRequireAuth } from '@/lib/auth/auth-context';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -10,6 +12,8 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { loading } = useAuth();
+  const user = useRequireAuth();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -34,7 +38,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Show loading while authenticating
+  if (loading || !user) {
     return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <LoadingSpinner text="Loading..." />
+      </div>
+    );
+  }
+
+  return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <AdminHeader onSidebarToggle={toggleSidebar} sidebarOpen={sidebarOpen} />
       <AdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />

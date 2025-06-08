@@ -1,0 +1,27 @@
+{
+  "name": "agentic-scheduling",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "checks": "npm --prefix backend run lint && npm --prefix backend run format && npm --prefix backend run build && npm --prefix frontend run lint && npm --prefix frontend run format && npm --prefix frontend run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "npm run checks"
+    ]
+  }
+}

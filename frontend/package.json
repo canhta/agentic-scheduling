@@ -9,7 +9,8 @@
     "lint": "next lint",
     "generate-types": "node scripts/generate-types.mjs",
     "generate-types:watch": "nodemon --watch ../backend/src --ext ts --exec \"npm run generate-types\"",
-    "postinstall": "flowbite-react patch"
+    "postinstall": "flowbite-react patch",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,css,md,json}\""
   },
   "dependencies": {
     "flowbite": "^3.1.2",
@@ -29,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "openapi-typescript": "^7.8.0",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,46 +1,104 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Calendar } from '@/components/calendar/Calendar';
-import { EventDetailsModal } from '@/components/calendar/EventDetailsModal';
 import { mockCalendarEvents } from '@/components/calendar/mock-data';
 import type { CalendarEvent } from '@/lib/types';
 
 export default function CalendarPage() {
+  const [events, setEvents] = useState<CalendarEvent[]>(mockCalendarEvents);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleEventClick = (event: CalendarEvent) => {
+  const handleEventClick = useCallback((event: CalendarEvent) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = useCallback((date: Date) => {
     console.log('Date selected:', date);
-    // Here you could open a "Create Event" modal or navigate to event creation
-  };
+    // This is now handled by the drag-to-create functionality in the Calendar component
+  }, []);
 
-  const handleEventDrop = (event: CalendarEvent, newStart: Date, newEnd: Date) => {
+  const handleEventDrop = useCallback((event: CalendarEvent, newStart: Date, newEnd: Date) => {
     console.log('Event dropped:', { event, newStart, newEnd });
-    // Here you would update the event in your data store
-  };
+    
+    // Update the event in the events array
+    setEvents(prevEvents => 
+      prevEvents.map(e => 
+        e.id === event.id 
+          ? { ...e, start: newStart.toISOString(), end: newEnd.toISOString() }
+          : e
+      )
+    );
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleEventResize = useCallback((event: CalendarEvent, newStart: Date, newEnd: Date) => {
+    console.log('Event resized:', { event, newStart, newEnd });
+    
+    // Update the event in the events array
+    setEvents(prevEvents => 
+      prevEvents.map(e => 
+        e.id === event.id 
+          ? { ...e, start: newStart.toISOString(), end: newEnd.toISOString() }
+          : e
+      )
+    );
+  }, []);
+
+  const handleEventCreate = useCallback((eventData: Omit<CalendarEvent, 'id'>) => {
+    console.log('Creating new event:', eventData);
+    
+    const newEvent: CalendarEvent = {
+      ...eventData,
+      id: `event_${Date.now()}`, // Generate a simple ID
+    };
+    
+    setEvents(prevEvents => [...prevEvents, newEvent]);
+  }, []);
+
+  const handleEventUpdate = useCallback((event: CalendarEvent) => {
+    console.log('Updating event:', event);
+    
+    setEvents(prevEvents => 
+      prevEvents.map(e => 
+        e.id === event.id ? event : e
+      )
+    );
+  }, []);
+
+  const handleEventDelete = useCallback((event: CalendarEvent, deleteAll?: boolean) => {
+    console.log('Deleting event:', { event, deleteAll });
+    
+    if (deleteAll && event.recurringScheduleId) {
+      // Delete all events in the recurring series
+      setEvents(prevEvents => 
+        prevEvents.filter(e => e.recurringScheduleId !== event.recurringScheduleId)
+      );
+    } else {
+      // Delete just this event
+      setEvents(prevEvents => 
+        prevEvents.filter(e => e.id !== event.id)
+      );
+    }
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedEvent(null);
-  };
+  }, []);
 
-  const handleEditEvent = (event: CalendarEvent) => {
+  const handleEditEvent = useCallback((event: CalendarEvent) => {
     console.log('Edit event:', event);
-    // Here you would open an edit form or navigate to edit page
+    // The edit functionality is now handled directly in the Calendar component
     handleCloseModal();
-  };
+  }, [handleCloseModal]);
 
-  const handleDeleteEvent = (event: CalendarEvent) => {
+  const handleDeleteEventModal = useCallback((event: CalendarEvent) => {
     console.log('Delete event:', event);
-    // Here you would show a confirmation dialog and delete the event
+    // The delete functionality is now handled directly in the Calendar component
     handleCloseModal();
-  };
+  }, [handleCloseModal]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -58,21 +116,16 @@ export default function CalendarPage() {
         {/* Calendar Component */}
         <Calendar
           organizationId="org-1"
-          events={mockCalendarEvents}
+          events={events}
           onEventClick={handleEventClick}
           onDateSelect={handleDateSelect}
           onEventDrop={handleEventDrop}
+          onEventResize={handleEventResize}
+          onEventCreate={handleEventCreate}
+          onEventUpdate={handleEventUpdate}
+          onEventDelete={handleEventDelete}
           height="calc(100vh - 200px)"
           className="shadow-sm"
-        />
-
-        {/* Event Details Modal */}
-        <EventDetailsModal
-          event={selectedEvent}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onEdit={handleEditEvent}
-          onDelete={handleDeleteEvent}
         />
       </div>
     </div>

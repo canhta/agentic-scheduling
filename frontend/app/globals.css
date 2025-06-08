@@ -27,3 +27,48 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Fix z-index issues for calendar and modals */
+.calendar-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure calendar events are clickable */
+.ec-event {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Ensure modal backdrop has proper z-index */
+[data-testid="modal"] {
+  z-index: 1000 !important;
+}
+
+/* Fix calendar interaction issues */
+.ec {
+  z-index: 1;
+}
+
+.ec-draggable {
+  cursor: grab;
+}
+
+.ec-dragging {
+  cursor: grabbing;
+  z-index: 999;
+}
+
+/* Ensure proper layering for event creation */
+.ec-selectable {
+  user-select: none;
+}
+
+/* Fix modal positioning */
+.modal-backdrop {
+  z-index: 1000;
+}
+
+.modal-content {
+  z-index: 1001;
+}

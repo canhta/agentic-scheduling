@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { createCalendar, destroyCalendar, DayGrid, TimeGrid, ResourceTimeGrid, List, ResourceTimeline } from '@event-calendar/core';
+import { createCalendar, destroyCalendar, DayGrid, TimeGrid, ResourceTimeGrid, List, ResourceTimeline, Interaction } from '@event-calendar/core';
 import { Card } from 'flowbite-react';
 import { CalendarToolbar, type CalendarView } from './CalendarToolbar';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { EventFormModal } from './EventFormModal';
+import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import { mockCalendarEvents, mockResources } from './mock-data';
 import type { CalendarEvent } from '@/lib/types';
 import '@event-calendar/core/index.css';
@@ -16,6 +18,10 @@ interface CalendarProps {
   onEventClick?: (event: CalendarEvent) => void;
   onDateSelect?: (date: Date) => void;
   onEventDrop?: (event: CalendarEvent, newStart: Date, newEnd: Date) => void;
+  onEventResize?: (event: CalendarEvent, newStart: Date, newEnd: Date) => void;
+  onEventCreate?: (event: Omit<CalendarEvent, 'id'>) => void;
+  onEventUpdate?: (event: CalendarEvent) => void;
+  onEventDelete?: (event: CalendarEvent, deleteAll?: boolean) => void;
   className?: string;
   height?: string;
   initialView?: CalendarView;
@@ -28,6 +34,10 @@ export function Calendar({
   onEventClick,
   onDateSelect,
   onEventDrop,
+  onEventResize,
+  onEventCreate,
+  onEventUpdate,
+  onEventDelete,
   className = '',
   height = '600px',
   initialView = 'dayGridMonth',
@@ -37,6 +47,20 @@ export function Calendar({
   const [currentView, setCurrentView] = useState<CalendarView>(initialView);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedResource, setSelectedResource] = useState<string>('');
+  
+  // Modal states
+  const [eventFormModal, setEventFormModal] = useState({
+    isOpen: false,
+    event: null as CalendarEvent | null,
+    selectedDate: null as Date | null,
+    selectedStartTime: null as Date | null,
+    selectedEndTime: null as Date | null,
+  });
+  
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState({
+    isOpen: false,
+    event: null as CalendarEvent | null,
+  });
 
   // Convert CalendarEvent to @event-calendar/core format
   const formatEventsForCalendar = useCallback((events: CalendarEvent[]) => {
@@ -64,7 +88,7 @@ export function Calendar({
 
   // Get plugins needed for the current view
   const getPlugins = useCallback(() => {
-    const plugins = [];
+    const plugins = [Interaction]; // Always include Interaction plugin
     
     if (currentView === 'dayGridMonth') {
       plugins.push(DayGrid);
@@ -106,17 +130,50 @@ export function Calendar({
         minute: '2-digit' as const,
         hour12: true,
       },
+      
+      // Interaction settings
+      selectable: true,
+      editable: true,
+      eventResizable: true,
+      eventDraggable: true,
+      dragRevertDuration: 300,
+      
       // Event handlers
       eventClick: (info: any) => {
-        if (onEventClick && info.event.extendedProps) {
-          onEventClick(info.event.extendedProps as CalendarEvent);
+        if (info.event.extendedProps) {
+          const event = info.event.extendedProps as CalendarEvent;
+          // Show event details or edit form
+          setEventFormModal({
+            isOpen: true,
+            event,
+            selectedDate: null,
+            selectedStartTime: null,
+            selectedEndTime: null,
+          });
+          
+          if (onEventClick) {
+            onEventClick(event);
+          }
         }
       },
+      
       dateClick: (info: any) => {
         if (onDateSelect) {
           onDateSelect(info.date);
         }
       },
+      
+      select: (info: any) => {
+        // Handle date range selection for creating new events
+        setEventFormModal({
+          isOpen: true,
+          event: null,
+          selectedDate: info.start,
+          selectedStartTime: info.start,
+          selectedEndTime: info.end,
+        });
+      },
+      
       eventDrop: (info: any) => {
         if (onEventDrop && info.event.extendedProps) {
           onEventDrop(
@@ -126,12 +183,35 @@ export function Calendar({
           );
         }
       },
+      
+      eventResize: (info: any) => {
+        if (onEventResize && info.event.extendedProps) {
+          onEventResize(
+            info.event.extendedProps as CalendarEvent,
+            info.event.start,
+            info.event.end
+          );
+        }
+      },
+      
+      // Drag and drop constraints
+      eventAllow: (dropInfo: any, draggedEvent: any) => {
+        // Allow dropping only during business hours
+        return true; // You can add more complex logic here
+      },
+      
+      selectAllow: (selectInfo: any) => {
+        // Allow selection only during business hours
+        return true; // You can add more complex logic here
+      },
+      
       // Business hours
       businessHours: {
         daysOfWeek: [1, 2, 3, 4, 5, 6, 0], // Monday - Sunday
         startTime: '06:00',
         endTime: '22:00',
       },
+      
       // Time grid specific options (only apply to time views)
       ...(currentView.includes('timeGrid') && {
         slotMinTime: '06:00:00',
@@ -140,6 +220,8 @@ export function Calendar({
         slotLabelInterval: '01:00:00',
         nowIndicator: true,
         scrollTime: '08:00:00',
+        selectMirror: true,
+        unselectAuto: false,
       }),
     };
 
@@ -155,13 +237,13 @@ export function Calendar({
     }
 
     return baseOptions;
-  }, [currentView, height, formatEventsForCalendar, filteredEvents, onEventClick, onDateSelect, onEventDrop]);
+  }, [currentView, height, formatEventsForCalendar, filteredEvents, onEventClick, onDateSelect, onEventDrop, onEventResize]);
 
   // Initialize calendar once
   useEffect(() => {
     if (!calendarRef.current) return;
 
-    const plugins = [DayGrid, TimeGrid, ResourceTimeGrid, List, ResourceTimeline];
+    const plugins = getPlugins();
     const options = getCalendarOptions();
     const newCalendar = createCalendar(calendarRef.current, plugins, options);
     setCalendar(newCalendar);
@@ -169,7 +251,7 @@ export function Calendar({
     return () => {
       destroyCalendar(newCalendar);
     };
-  }, [getCalendarOptions]); // Include the dependency
+  }, [getPlugins, getCalendarOptions]);
 
   // Update calendar options when they change
   useEffect(() => {
@@ -188,6 +270,54 @@ export function Calendar({
       }
     }
   }, [calendar, currentView, filteredEvents, formatEventsForCalendar]);
+
+  // Modal handlers
+  const handleEventSave = (eventData: Omit<CalendarEvent, 'id'> & { id?: string }) => {
+    if (eventData.id) {
+      // Update existing event
+      if (onEventUpdate) {
+        onEventUpdate({
+          ...eventData,
+          id: eventData.id,
+        } as CalendarEvent);
+      }
+    } else {
+      // Create new event
+      if (onEventCreate) {
+        onEventCreate(eventData);
+      }
+    }
+    setEventFormModal({ isOpen: false, event: null, selectedDate: null, selectedStartTime: null, selectedEndTime: null });
+  };
+
+  const handleEventDelete = (event: CalendarEvent, deleteAll?: boolean) => {
+    if (onEventDelete) {
+      onEventDelete(event, deleteAll);
+    }
+    setDeleteConfirmModal({ isOpen: false, event: null });
+  };
+
+  const handleEventClickInternal = (event: CalendarEvent) => {
+    // Show event details or edit form
+    setEventFormModal({
+      isOpen: true,
+      event,
+      selectedDate: null,
+      selectedStartTime: null,
+      selectedEndTime: null,
+    });
+    
+    if (onEventClick) {
+      onEventClick(event);
+    }
+  };
+
+  const handleDeleteEventClick = (event: CalendarEvent) => {
+    setDeleteConfirmModal({
+      isOpen: true,
+      event,
+    });
+  };
 
   // Toolbar handlers
   const handleViewChange = (view: CalendarView) => {
@@ -237,22 +367,43 @@ export function Calendar({
   }
 
   return (
-    <Card className={`overflow-hidden ${className}`}>
-      <CalendarToolbar
-        currentView={currentView}
-        onViewChange={handleViewChange}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        onToday={handleToday}
-        currentDate={currentDate}
-        selectedResource={selectedResource}
-        resources={mockResources}
-        onResourceChange={handleResourceChange}
+    <>
+      <Card className={`overflow-hidden ${className}`}>
+        <CalendarToolbar
+          currentView={currentView}
+          onViewChange={handleViewChange}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          onToday={handleToday}
+          currentDate={currentDate}
+          selectedResource={selectedResource}
+          resources={mockResources}
+          onResourceChange={handleResourceChange}
+        />
+        
+        <div className="calendar-container relative">
+          <div ref={calendarRef} className="w-full ec-calendar" />
+        </div>
+      </Card>
+
+      {/* Event Form Modal */}
+      <EventFormModal
+        event={eventFormModal.event}
+        isOpen={eventFormModal.isOpen}
+        onClose={() => setEventFormModal({ isOpen: false, event: null, selectedDate: null, selectedStartTime: null, selectedEndTime: null })}
+        onSave={handleEventSave}
+        selectedDate={eventFormModal.selectedDate}
+        selectedStartTime={eventFormModal.selectedStartTime}
+        selectedEndTime={eventFormModal.selectedEndTime}
       />
-      
-      <div className="calendar-container">
-        <div ref={calendarRef} className="w-full" />
-      </div>
-    </Card>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        event={deleteConfirmModal.event}
+        isOpen={deleteConfirmModal.isOpen}
+        onClose={() => setDeleteConfirmModal({ isOpen: false, event: null })}
+        onConfirm={handleEventDelete}
+      />
+    </>
   );
 }

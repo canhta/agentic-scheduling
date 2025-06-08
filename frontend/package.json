@@ -12,6 +12,8 @@
     "postinstall": "flowbite-react patch"
   },
   "dependencies": {
+    "@event-calendar/core": "^4.4.0",
+    "@types/event-calendar__core": "^4.4.0",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.11.8",
     "next": "15.3.3",

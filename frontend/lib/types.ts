@@ -53,6 +53,19 @@ export type CreateUserNoteDto = components['schemas']['CreateUserNoteDto'];
 export type UserNoteResponseDto = components['schemas']['UserNoteResponseDto'];
 export type UpdateUserNoteDto = components['schemas']['UpdateUserNoteDto'];
 
+// User Statistics and Analytics
+export type OrganizationStatsResponseDto = components['schemas']['OrganizationStatsResponseDto'];
+export type OrganizationActivityResponseDto = components['schemas']['OrganizationActivityResponseDto'];
+export type AttentionUsersResponseDto = components['schemas']['AttentionUsersResponseDto'];
+export type UserWithAlertsResponseDto = components['schemas']['UserWithAlertsResponseDto'];
+export type NotesStatsResponseDto = components['schemas']['NotesStatsResponseDto'];
+export type PaginatedUsersResponseDto = components['schemas']['PaginatedUsersResponseDto'];
+
+// User Management
+export type ChangePasswordDto = components['schemas']['ChangePasswordDto'];
+export type BulkUserOperationDto = components['schemas']['BulkUserOperationDto'];
+export type BulkOperationResponseDto = components['schemas']['BulkOperationResponseDto'];
+
 // =============================================================================
 // ORGANIZATION TYPES
 // =============================================================================
@@ -171,6 +184,146 @@ export type OrganizationSettingsResponse = {
 export type OrganizationSettingsResponseDto = OrganizationSettingsResponse; // Alias
 
 // =============================================================================
+// BOOKING TYPES
+// =============================================================================
+
+export type CreateBookingDto = components['schemas']['CreateBookingDto'];
+export type UpdateBookingDto = components['schemas']['UpdateBookingDto'];
+export type CheckAvailabilityDto = components['schemas']['CheckAvailabilityDto'];
+
+// Booking response type (not in schema, defined manually)
+export type BookingResponse = {
+  id: string;
+  serviceId: string;
+  userId: string;
+  locationId?: string;
+  resourceId?: string;
+  startTime: string;
+  endTime: string;
+  allDay: boolean;
+  status: "CONFIRMED" | "PENDING" | "CANCELLED_BY_MEMBER" | "CANCELLED_BY_STAFF" | "NO_SHOW" | "ATTENDED" | "LATE_CANCELLED";
+  notes?: string;
+  privateNotes?: string;
+  recurringScheduleId?: string;
+  instanceDate?: string;
+  price?: number;
+  creditsUsed?: number;
+  organizationId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+export type BookingResponseDto = BookingResponse; // Alias
+
+// Waitlist Types
+export type AddToWaitlistDto = components['schemas']['AddToWaitlistDto'];
+export type UpdateWaitlistPositionDto = components['schemas']['UpdateWaitlistPositionDto'];
+
+// Waitlist response type (not in schema, defined manually)
+export type WaitlistResponse = {
+  id: string;
+  userId: string;
+  serviceId: string;
+  position: number;
+  notifyByEmail: boolean;
+  notifyBySms: boolean;
+  organizationId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+export type WaitlistResponseDto = WaitlistResponse; // Alias
+
+// =============================================================================
+// RECURRING SCHEDULE TYPES
+// =============================================================================
+
+export type CreateRecurringScheduleDto = components['schemas']['CreateRecurringScheduleDto'];
+
+// Recurring schedule response type (not in schema, defined manually)
+export type RecurringScheduleResponse = {
+  id: string;
+  serviceId: string;
+  organizationId: string;
+  rrule: string;
+  dtstart: string;
+  dtend?: string;
+  timezone: string;
+  frequency: string;
+  interval: number;
+  byDay?: string[];
+  byMonthDay?: string[];
+  byMonth?: string[];
+  bySetPos?: string[];
+  byYearDay?: string[];
+  byWeekNo?: string[];
+  count?: number;
+  until?: string;
+  weekStart?: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  exdates?: string[];
+  description?: string;
+  resourceId?: string;
+  staffId?: string;
+  notes?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+export type RecurringScheduleResponseDto = RecurringScheduleResponse; // Alias
+
+// =============================================================================
+// CALENDAR TYPES
+// =============================================================================
+
+// Calendar event type (not in schema, defined manually)
+export type CalendarEvent = {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  allDay: boolean;
+  serviceId?: string;
+  bookingId?: string;
+  recurringScheduleId?: string;
+  type: 'booking' | 'recurring' | 'exception' | 'availability';
+  status?: string;
+  location?: string;
+  resource?: string;
+  instructor?: string;
+  capacity?: number;
+  booked?: number;
+  color?: string;
+};
+
+// Day view response type (not in schema, defined manually)
+export type DayViewResponse = {
+  date: string;
+  events: CalendarEvent[];
+  timeSlots: {
+    time: string;
+    available: boolean;
+    capacity?: number;
+    booked?: number;
+  }[];
+};
+
+// Week view response type (not in schema, defined manually)
+export type WeekViewResponse = {
+  startDate: string;
+  endDate: string;
+  days: {
+    date: string;
+    events: CalendarEvent[];
+    summary: {
+      totalEvents: number;
+      totalCapacity: number;
+      totalBooked: number;
+    };
+  }[];
+};
+
+// =============================================================================
 // UTILITY TYPES (Not in schema but needed for app state)
 // =============================================================================
 
@@ -217,6 +370,99 @@ export type CreateUserOperation = operations['UsersController_create'];
 export type GetUserOperation = operations['UsersController_findOne'];
 export type UpdateUserOperation = operations['UsersController_update'];
 export type DeleteUserOperation = operations['UsersController_remove'];
+
+// Member Operations
+export type GetMembersOperation = operations['UsersController_getAllMembers'];
+export type CreateMemberOperation = operations['UsersController_createMember'];
+export type GetMemberOperation = operations['UsersController_getMemberById'];
+export type UpdateMemberOperation = operations['UsersController_updateMember'];
+export type DeleteMemberOperation = operations['UsersController_deleteMember'];
+export type GetMemberByMemberIdOperation = operations['UsersController_getMemberByMemberId'];
+export type GetMemberBookingHistoryOperation = operations['UsersController_getMemberBookingHistory'];
+export type GetMemberAttendanceStatsOperation = operations['UsersController_getMemberAttendanceStats'];
+export type ActivateMemberOperation = operations['UsersController_activateMember'];
+export type DeactivateMemberOperation = operations['UsersController_deactivateMember'];
+export type SuspendMemberOperation = operations['UsersController_suspendMember'];
+
+// Staff Operations
+export type GetStaffOperation = operations['UsersController_getAllStaff'];
+export type CreateStaffOperation = operations['UsersController_createStaff'];
+export type GetStaffByIdOperation = operations['UsersController_getStaffById'];
+export type UpdateStaffOperation = operations['UsersController_updateStaff'];
+export type DeleteStaffOperation = operations['UsersController_deleteStaff'];
+export type GetStaffAvailabilityOperation = operations['UsersController_getStaffAvailability'];
+export type SetStaffAvailabilityOperation = operations['UsersController_setStaffAvailability'];
+
+// Admin Operations
+export type GetAdminsOperation = operations['UsersController_getAllAdmins'];
+export type CreateAdminOperation = operations['UsersController_createAdmin'];
+export type GetAdminByIdOperation = operations['UsersController_getAdminById'];
+export type UpdateAdminOperation = operations['UsersController_updateAdmin'];
+export type DeleteAdminOperation = operations['UsersController_deleteAdmin'];
+
+// User Management Operations
+export type GetOrganizationStatsOperation = operations['UsersController_getOrganizationStats'];
+export type GetOrganizationActivityOperation = operations['UsersController_getOrganizationActivity'];
+export type GetRecentSignupsOperation = operations['UsersController_getRecentSignups'];
+export type GetUsersRequiringAttentionOperation = operations['UsersController_getUsersRequiringAttention'];
+export type BulkUserOperationsOperation = operations['UsersController_bulkUserOperations'];
+export type PromoteUserRoleOperation = operations['UsersController_promoteUserRole'];
+export type DemoteUserRoleOperation = operations['UsersController_demoteUserRole'];
+export type ChangePasswordOperation = operations['UsersController_changePassword'];
+export type ResetUserPasswordOperation = operations['UsersController_resetPassword'];
+export type VerifyEmailOperation = operations['UsersController_verifyEmail'];
+export type VerifyPhoneOperation = operations['UsersController_verifyPhone'];
+
+// User Notes Operations
+export type GetUserNotesOperation = operations['UsersController_getUserNotes'];
+export type CreateUserNoteOperation = operations['UsersController_createUserNote'];
+export type GetNoteOperation = operations['UsersController_getNote'];
+export type UpdateUserNoteOperation = operations['UsersController_updateUserNote'];
+export type DeleteUserNoteOperation = operations['UsersController_deleteUserNote'];
+export type GetAlertsOperation = operations['UsersController_getAlerts'];
+export type GetUsersWithAlertsOperation = operations['UsersController_getUsersWithAlerts'];
+export type MarkAlertAsReadOperation = operations['UsersController_markAlertAsRead'];
+export type GetNotesStatsOperation = operations['UsersController_getNotesStats'];
+
+// Booking Operations
+export type GetBookingsOperation = operations['BookingController_getBookings'];
+export type CreateBookingOperation = operations['BookingController_createBooking'];
+export type GetMyBookingsOperation = operations['BookingController_getMyBookings'];
+export type GetBookingOperation = operations['BookingController_getBooking'];
+export type UpdateBookingOperation = operations['BookingController_updateBooking'];
+export type CancelBookingOperation = operations['BookingController_cancelBooking'];
+export type CheckAvailabilityOperation = operations['BookingController_checkAvailability'];
+export type GetAvailableSlotsOperation = operations['BookingController_getAvailableSlots'];
+
+// Waitlist Operations
+export type GetWaitlistEntriesOperation = operations['BookingController_getWaitlistEntries'];
+export type AddToWaitlistOperation = operations['BookingController_addToWaitlist'];
+export type GetMyWaitlistEntriesOperation = operations['BookingController_getMyWaitlistEntries'];
+export type RemoveFromWaitlistOperation = operations['BookingController_removeFromWaitlist'];
+export type UpdateWaitlistPriorityOperation = operations['BookingController_updateWaitlistPriority'];
+export type GetWaitlistPositionOperation = operations['BookingController_getWaitlistPosition'];
+
+// Recurring Schedule Operations
+export type GetRecurringSchedulesOperation = operations['RecurringScheduleController_getRecurringSchedules'];
+export type CreateRecurringScheduleOperation = operations['RecurringScheduleController_createRecurringSchedule'];
+export type ValidateRRuleOperation = operations['RecurringScheduleController_validateRRule'];
+export type GetRecurringTemplatesOperation = operations['RecurringScheduleController_getRecurringTemplates'];
+export type GetRecurringScheduleOperation = operations['RecurringScheduleController_getRecurringSchedule'];
+export type UpdateRecurringScheduleOperation = operations['RecurringScheduleController_updateRecurringSchedule'];
+export type DeleteRecurringScheduleOperation = operations['RecurringScheduleController_deleteRecurringSchedule'];
+export type GenerateOccurrencesOperation = operations['RecurringScheduleController_generateOccurrences'];
+export type CreateExceptionOperation = operations['RecurringScheduleController_createException'];
+
+// Calendar Operations
+export type GetCalendarEventsOperation = operations['CalendarController_getCalendarEvents'];
+export type GetStaffCalendarOperation = operations['CalendarController_getStaffCalendar'];
+export type GetMemberCalendarOperation = operations['CalendarController_getMemberCalendar'];
+export type GetResourceCalendarOperation = operations['CalendarController_getResourceCalendar'];
+export type GetServiceScheduleOperation = operations['CalendarController_getServiceSchedule'];
+export type GetDayViewOperation = operations['CalendarController_getDayView'];
+export type GetWeekViewOperation = operations['CalendarController_getWeekView'];
+export type GetMyCalendarOperation = operations['CalendarController_getMyCalendar'];
+export type GetAvailabilityOverviewOperation = operations['CalendarController_getAvailabilityOverview'];
 
 // Organization Operations
 export type GetOrganizationsOperation = operations['OrganizationController_findAll'];

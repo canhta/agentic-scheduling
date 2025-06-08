@@ -19,6 +19,23 @@ import type {
   OAuthUrlResponseDto,
   User,
   
+  // User types
+  UserResponseDto,
+  CreateUserDto,
+  UpdateUserDto,
+  PaginatedUsersResponseDto,
+  OrganizationStatsResponseDto,
+  OrganizationActivityResponseDto,
+  AttentionUsersResponseDto,
+  BulkUserOperationDto,
+  BulkOperationResponseDto,
+  ChangePasswordDto,
+  CreateUserNoteDto,
+  UserNoteResponseDto,
+  UpdateUserNoteDto,
+  UserWithAlertsResponseDto,
+  NotesStatsResponseDto,
+  
   // Organization types
   Organization,
   CreateOrganizationDto,
@@ -42,6 +59,26 @@ import type {
   // Settings types
   OrganizationSettingsResponseDto,
   UpdateOrganizationSettingsDto,
+  
+  // Booking types
+  BookingResponse,
+  CreateBookingDto,
+  UpdateBookingDto,
+  CheckAvailabilityDto,
+  
+  // Waitlist types
+  WaitlistResponse,
+  AddToWaitlistDto,
+  UpdateWaitlistPositionDto,
+  
+  // Recurring schedule types
+  RecurringScheduleResponse,
+  CreateRecurringScheduleDto,
+  
+  // Calendar types
+  CalendarEvent,
+  DayViewResponse,
+  WeekViewResponse,
   
   // Utility types
   ApiError,
@@ -295,6 +332,767 @@ export class ApiClient {
   }
 
   // =============================================================================
+  // USER MANAGEMENT API METHODS
+  // =============================================================================
+
+  async getUsers(params?: {
+    search?: string;
+    role?: string;
+    status?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedUsersResponseDto> {
+    const searchParams = new URLSearchParams();
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.role) searchParams.append('role', params.role);
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<PaginatedUsersResponseDto>(`/users${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createUser(data: CreateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>("/users", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getUser(id: string): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/${id}`);
+  }
+
+  async updateUser(id: string, data: UpdateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    return this.request<void>(`/users/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Member Management
+  async getMembers(params?: {
+    search?: string;
+    status?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<UserResponseDto[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<UserResponseDto[]>(`/users/members${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createMember(data: CreateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>("/users/members", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMember(id: string): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/members/${id}`);
+  }
+
+  async getMemberByMemberId(memberId: string): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/members/member-id/${memberId}`);
+  }
+
+  async updateMember(id: string, data: UpdateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/members/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteMember(id: string): Promise<void> {
+    return this.request<void>(`/users/members/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  async getMemberBookingHistory(id: string, params?: {
+    startDate?: string;
+    endDate?: string;
+    status?: string;
+  }): Promise<BookingResponse[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    if (params?.status) searchParams.append('status', params.status);
+    
+    const queryString = searchParams.toString();
+    return this.request<BookingResponse[]>(`/users/members/${id}/booking-history${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getMemberAttendanceStats(id: string, params?: {
+    startDate?: string;
+    endDate?: string;
+  }): Promise<any> {
+    const searchParams = new URLSearchParams();
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    
+    const queryString = searchParams.toString();
+    return this.request<any>(`/users/members/${id}/attendance-stats${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async activateMember(id: string): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/members/${id}/activate`, {
+      method: "POST",
+    });
+  }
+
+  async deactivateMember(id: string): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/members/${id}/deactivate`, {
+      method: "POST",
+    });
+  }
+
+  async suspendMember(id: string): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/members/${id}/suspend`, {
+      method: "POST",
+    });
+  }
+
+  // Staff Management
+  async getStaff(params?: {
+    search?: string;
+    department?: string;
+    specialty?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<UserResponseDto[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.department) searchParams.append('department', params.department);
+    if (params?.specialty) searchParams.append('specialty', params.specialty);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<UserResponseDto[]>(`/users/staff${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createStaff(data: CreateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>("/users/staff", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getStaffById(id: string): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/staff/${id}`);
+  }
+
+  async updateStaff(id: string, data: UpdateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/staff/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteStaff(id: string): Promise<void> {
+    return this.request<void>(`/users/staff/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  async getStaffAvailability(id: string, params?: {
+    date?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<any> {
+    const searchParams = new URLSearchParams();
+    if (params?.date) searchParams.append('date', params.date);
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    
+    const queryString = searchParams.toString();
+    return this.request<any>(`/users/staff/${id}/availability${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async setStaffAvailability(id: string, data: any): Promise<any> {
+    return this.request<any>(`/users/staff/${id}/availability`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Admin Management
+  async getAdmins(params?: {
+    search?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<UserResponseDto[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<UserResponseDto[]>(`/users/admins${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createAdmin(data: CreateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>("/users/admins", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getAdminById(id: string): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/admins/${id}`);
+  }
+
+  async updateAdmin(id: string, data: UpdateUserDto): Promise<UserResponseDto> {
+    return this.request<UserResponseDto>(`/users/admins/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteAdmin(id: string): Promise<void> {
+    return this.request<void>(`/users/admins/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Organization Statistics and Reports
+  async getOrganizationStats(): Promise<OrganizationStatsResponseDto> {
+    return this.request<OrganizationStatsResponseDto>("/users/organization/stats");
+  }
+
+  async getOrganizationActivity(params?: {
+    startDate?: string;
+    endDate?: string;
+  }): Promise<OrganizationActivityResponseDto> {
+    const searchParams = new URLSearchParams();
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    
+    const queryString = searchParams.toString();
+    return this.request<OrganizationActivityResponseDto>(`/users/organization/activity${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getRecentSignups(params?: {
+    days?: number;
+    limit?: number;
+  }): Promise<UserResponseDto[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.days) searchParams.append('days', params.days.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<UserResponseDto[]>(`/users/organization/recent-signups${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getUsersRequiringAttention(): Promise<AttentionUsersResponseDto> {
+    return this.request<AttentionUsersResponseDto>("/users/organization/attention-required");
+  }
+
+  async bulkUserOperations(data: BulkUserOperationDto): Promise<BulkOperationResponseDto> {
+    return this.request<BulkOperationResponseDto>("/users/bulk-operations", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async promoteUserRole(id: string, data: { newRole: string }): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/promote`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async demoteUserRole(id: string, data: { newRole: string }): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/demote`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async changeUserPassword(id: string, data: ChangePasswordDto): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/change-password`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async resetUserPassword(id: string, data: { newPassword: string }): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/reset-password`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async verifyUserEmail(id: string): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/verify-email`, {
+      method: "POST",
+    });
+  }
+
+  async verifyUserPhone(id: string, data: { verificationCode: string }): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/${id}/verify-phone`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  // User Notes Management
+  async getUserNotes(userId: string, params?: {
+    includeAlerts?: boolean;
+    page?: number;
+    limit?: number;
+  }): Promise<UserNoteResponseDto[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.includeAlerts !== undefined) searchParams.append('includeAlerts', params.includeAlerts.toString());
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<UserNoteResponseDto[]>(`/users/${userId}/notes${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createUserNote(userId: string, data: CreateUserNoteDto): Promise<UserNoteResponseDto> {
+    return this.request<UserNoteResponseDto>(`/users/${userId}/notes`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getNote(noteId: string): Promise<UserNoteResponseDto> {
+    return this.request<UserNoteResponseDto>(`/users/notes/${noteId}`);
+  }
+
+  async updateUserNote(noteId: string, data: UpdateUserNoteDto): Promise<UserNoteResponseDto> {
+    return this.request<UserNoteResponseDto>(`/users/notes/${noteId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteUserNote(noteId: string): Promise<void> {
+    return this.request<void>(`/users/notes/${noteId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async getAlerts(): Promise<UserNoteResponseDto[]> {
+    return this.request<UserNoteResponseDto[]>("/users/organization/alerts");
+  }
+
+  async getUsersWithAlerts(): Promise<UserWithAlertsResponseDto[]> {
+    return this.request<UserWithAlertsResponseDto[]>("/users/organization/users-with-alerts");
+  }
+
+  async markAlertAsRead(alertId: string): Promise<MessageResponseDto> {
+    return this.request<MessageResponseDto>(`/users/alerts/${alertId}/mark-read`, {
+      method: "POST",
+    });
+  }
+
+  async getNotesStats(): Promise<NotesStatsResponseDto> {
+    return this.request<NotesStatsResponseDto>("/users/organization/notes-stats");
+  }
+
+  // =============================================================================
+  // BOOKING API METHODS
+  // =============================================================================
+
+  async getBookings(organizationId: string, params?: {
+    serviceId?: string;
+    userId?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<BookingResponse[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params?.userId) searchParams.append('userId', params.userId);
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<BookingResponse[]>(`/organizations/${organizationId}/bookings${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createBooking(organizationId: string, data: CreateBookingDto): Promise<BookingResponse> {
+    return this.request<BookingResponse>(`/organizations/${organizationId}/bookings`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMyBookings(organizationId: string, params?: {
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<BookingResponse[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<BookingResponse[]>(`/organizations/${organizationId}/bookings/my-bookings${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getBooking(organizationId: string, bookingId: string): Promise<BookingResponse> {
+    return this.request<BookingResponse>(`/organizations/${organizationId}/bookings/${bookingId}`);
+  }
+
+  async updateBooking(organizationId: string, bookingId: string, data: UpdateBookingDto): Promise<BookingResponse> {
+    return this.request<BookingResponse>(`/organizations/${organizationId}/bookings/${bookingId}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async cancelBooking(organizationId: string, bookingId: string): Promise<void> {
+    return this.request<void>(`/organizations/${organizationId}/bookings/${bookingId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async checkAvailability(organizationId: string, data: CheckAvailabilityDto): Promise<{ available: boolean; conflictingBookings?: any[] }> {
+    return this.request<{ available: boolean; conflictingBookings?: any[] }>(`/organizations/${organizationId}/bookings/check-availability`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getAvailableSlots(organizationId: string, params: {
+    serviceId: string;
+    date: string;
+    resourceId?: string;
+    staffId?: string;
+  }): Promise<{ time: string; available: boolean; capacity?: number; booked?: number }[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('serviceId', params.serviceId);
+    searchParams.append('date', params.date);
+    if (params.resourceId) searchParams.append('resourceId', params.resourceId);
+    if (params.staffId) searchParams.append('staffId', params.staffId);
+    
+    return this.request<{ time: string; available: boolean; capacity?: number; booked?: number }[]>(`/organizations/${organizationId}/bookings/availability/slots?${searchParams.toString()}`);
+  }
+
+  // Waitlist Management
+  async getWaitlistEntries(organizationId: string, params?: {
+    serviceId?: string;
+    userId?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<WaitlistResponse[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params?.userId) searchParams.append('userId', params.userId);
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<WaitlistResponse[]>(`/organizations/${organizationId}/bookings/waitlist${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async addToWaitlist(organizationId: string, data: AddToWaitlistDto): Promise<WaitlistResponse> {
+    return this.request<WaitlistResponse>(`/organizations/${organizationId}/bookings/waitlist`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMyWaitlistEntries(organizationId: string): Promise<WaitlistResponse[]> {
+    return this.request<WaitlistResponse[]>(`/organizations/${organizationId}/bookings/waitlist/my-entries`);
+  }
+
+  async removeFromWaitlist(organizationId: string, waitlistId: string): Promise<void> {
+    return this.request<void>(`/organizations/${organizationId}/bookings/waitlist/${waitlistId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async updateWaitlistPriority(organizationId: string, waitlistId: string, data: UpdateWaitlistPositionDto): Promise<WaitlistResponse> {
+    return this.request<WaitlistResponse>(`/organizations/${organizationId}/bookings/waitlist/${waitlistId}/priority`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getWaitlistPosition(organizationId: string, params: {
+    userId: string;
+    serviceId: string;
+  }): Promise<{ position: number; totalInWaitlist: number }> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('userId', params.userId);
+    searchParams.append('serviceId', params.serviceId);
+    
+    return this.request<{ position: number; totalInWaitlist: number }>(`/organizations/${organizationId}/bookings/waitlist/position?${searchParams.toString()}`);
+  }
+
+  // =============================================================================
+  // RECURRING SCHEDULE API METHODS
+  // =============================================================================
+
+  async getRecurringSchedules(organizationId: string, params?: {
+    serviceId?: string;
+    staffId?: string;
+    isActive?: boolean;
+    page?: number;
+    limit?: number;
+  }): Promise<RecurringScheduleResponse[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params?.staffId) searchParams.append('staffId', params.staffId);
+    if (params?.isActive !== undefined) searchParams.append('isActive', params.isActive.toString());
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    
+    const queryString = searchParams.toString();
+    return this.request<RecurringScheduleResponse[]>(`/organizations/${organizationId}/recurring-schedules${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async createRecurringSchedule(organizationId: string, data: CreateRecurringScheduleDto): Promise<RecurringScheduleResponse> {
+    return this.request<RecurringScheduleResponse>(`/organizations/${organizationId}/recurring-schedules`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async validateRRule(organizationId: string, params: {
+    rrule: string;
+    dtstart: string;
+    previewCount?: number;
+  }): Promise<{
+    isValid: boolean;
+    error?: string;
+    preview: { start: string; end: string }[];
+  }> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('rrule', params.rrule);
+    searchParams.append('dtstart', params.dtstart);
+    if (params.previewCount) searchParams.append('previewCount', params.previewCount.toString());
+    
+    return this.request<{
+      isValid: boolean;
+      error?: string;
+      preview: { start: string; end: string }[];
+    }>(`/organizations/${organizationId}/recurring-schedules/validate-rrule?${searchParams.toString()}`);
+  }
+
+  async getRecurringTemplates(organizationId: string): Promise<{
+    name: string;
+    description: string;
+    rrule: string;
+    frequency: string;
+  }[]> {
+    return this.request<{
+      name: string;
+      description: string;
+      rrule: string;
+      frequency: string;
+    }[]>(`/organizations/${organizationId}/recurring-schedules/templates`);
+  }
+
+  async getRecurringSchedule(organizationId: string, scheduleId: string): Promise<RecurringScheduleResponse> {
+    return this.request<RecurringScheduleResponse>(`/organizations/${organizationId}/recurring-schedules/${scheduleId}`);
+  }
+
+  async updateRecurringSchedule(organizationId: string, scheduleId: string, data: Partial<CreateRecurringScheduleDto>): Promise<RecurringScheduleResponse> {
+    return this.request<RecurringScheduleResponse>(`/organizations/${organizationId}/recurring-schedules/${scheduleId}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteRecurringSchedule(organizationId: string, scheduleId: string): Promise<void> {
+    return this.request<void>(`/organizations/${organizationId}/recurring-schedules/${scheduleId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async generateOccurrences(organizationId: string, scheduleId: string, params: {
+    startDate: string;
+    endDate: string;
+    limit?: number;
+  }): Promise<{ start: string; end: string; instanceDate: string }[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    if (params.limit) searchParams.append('limit', params.limit.toString());
+    
+    return this.request<{ start: string; end: string; instanceDate: string }[]>(`/organizations/${organizationId}/recurring-schedules/${scheduleId}/occurrences?${searchParams.toString()}`);
+  }
+
+  async createException(organizationId: string, scheduleId: string, data: {
+    exceptionDate: string;
+    reason?: string;
+  }): Promise<{ success: boolean; message: string }> {
+    return this.request<{ success: boolean; message: string }>(`/organizations/${organizationId}/recurring-schedules/${scheduleId}/exceptions`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  // =============================================================================
+  // CALENDAR API METHODS
+  // =============================================================================
+
+  async getCalendarEvents(organizationId: string, params: {
+    startDate: string;
+    endDate: string;
+    serviceId?: string;
+    resourceId?: string;
+    staffId?: string;
+    view?: 'month' | 'week' | 'day';
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    if (params.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params.resourceId) searchParams.append('resourceId', params.resourceId);
+    if (params.staffId) searchParams.append('staffId', params.staffId);
+    if (params.view) searchParams.append('view', params.view);
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar?${searchParams.toString()}`);
+  }
+
+  async getStaffCalendar(organizationId: string, staffId: string, params: {
+    startDate: string;
+    endDate: string;
+    includeAvailability?: boolean;
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    if (params.includeAvailability !== undefined) searchParams.append('includeAvailability', params.includeAvailability.toString());
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/staff/${staffId}?${searchParams.toString()}`);
+  }
+
+  async getMemberCalendar(organizationId: string, memberId: string, params: {
+    startDate: string;
+    endDate: string;
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/member/${memberId}?${searchParams.toString()}`);
+  }
+
+  async getResourceCalendar(organizationId: string, resourceId: string, params: {
+    startDate: string;
+    endDate: string;
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/resource/${resourceId}?${searchParams.toString()}`);
+  }
+
+  async getServiceSchedule(organizationId: string, serviceId: string, params: {
+    startDate: string;
+    endDate: string;
+    includeRecurring?: boolean;
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    if (params.includeRecurring !== undefined) searchParams.append('includeRecurring', params.includeRecurring.toString());
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/service/${serviceId}/schedule?${searchParams.toString()}`);
+  }
+
+  async getDayView(organizationId: string, params: {
+    date: string;
+    serviceId?: string;
+    resourceId?: string;
+    staffId?: string;
+  }): Promise<DayViewResponse> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('date', params.date);
+    if (params.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params.resourceId) searchParams.append('resourceId', params.resourceId);
+    if (params.staffId) searchParams.append('staffId', params.staffId);
+    
+    return this.request<DayViewResponse>(`/organizations/${organizationId}/calendar/day?${searchParams.toString()}`);
+  }
+
+  async getWeekView(organizationId: string, params: {
+    startDate: string;
+    serviceId?: string;
+    resourceId?: string;
+    staffId?: string;
+  }): Promise<WeekViewResponse> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    if (params.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params.resourceId) searchParams.append('resourceId', params.resourceId);
+    if (params.staffId) searchParams.append('staffId', params.staffId);
+    
+    return this.request<WeekViewResponse>(`/organizations/${organizationId}/calendar/week?${searchParams.toString()}`);
+  }
+
+  async getMyCalendar(organizationId: string, params: {
+    startDate: string;
+    endDate: string;
+    includeWaitlist?: boolean;
+  }): Promise<CalendarEvent[]> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', params.startDate);
+    searchParams.append('endDate', params.endDate);
+    if (params.includeWaitlist !== undefined) searchParams.append('includeWaitlist', params.includeWaitlist.toString());
+    
+    return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/my-calendar?${searchParams.toString()}`);
+  }
+
+  async getAvailabilityOverview(organizationId: string, params: {
+    date: string;
+    resourceIds?: string[];
+    staffIds?: string[];
+  }): Promise<{
+    date: string;
+    resources: { id: string; name: string; availability: { time: string; available: boolean; capacity?: number; booked?: number }[] }[];
+    staff: { id: string; name: string; availability: { time: string; available: boolean }[] }[];
+  }> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('date', params.date);
+    if (params.resourceIds?.length) {
+      params.resourceIds.forEach(id => searchParams.append('resourceIds', id));
+    }
+    if (params.staffIds?.length) {
+      params.staffIds.forEach(id => searchParams.append('staffIds', id));
+    }
+    
+    return this.request<{
+      date: string;
+      resources: { id: string; name: string; availability: { time: string; available: boolean; capacity?: number; booked?: number }[] }[];
+      staff: { id: string; name: string; availability: { time: string; available: boolean }[] }[];
+    }>(`/organizations/${organizationId}/calendar/availability-overview?${searchParams.toString()}`);
+  }
+
+  // =============================================================================
   // ORGANIZATION API METHODS
   // =============================================================================
 
@@ -478,15 +1276,35 @@ export const api = new ApiClient();
 
 // Re-export commonly used types for convenience
 export type {
+  // Auth types
   LoginDto,
   RegisterDto,
   User,
+  
+  // User types
+  UserResponseDto,
+  CreateUserDto,
+  UpdateUserDto,
+  PaginatedUsersResponseDto,
+  OrganizationStatsResponseDto,
+  OrganizationActivityResponseDto,
+  AttentionUsersResponseDto,
+  BulkUserOperationDto,
+  BulkOperationResponseDto,
+  ChangePasswordDto,
+  CreateUserNoteDto,
+  UserNoteResponseDto,
+  UpdateUserNoteDto,
+  UserWithAlertsResponseDto,
+  NotesStatsResponseDto,
+  
+  // Organization types
   Organization,
+  CreateOrganizationDto,
+  UpdateOrganizationDto,
   LocationResponse,
   ResourceResponse,
   ServiceResponse,
-  CreateOrganizationDto,
-  UpdateOrganizationDto,
   CreateLocationDto,
   UpdateLocationDto,
   CreateResourceDto,
@@ -495,4 +1313,22 @@ export type {
   UpdateServiceDto,
   OrganizationSettingsResponseDto,
   UpdateOrganizationSettingsDto,
+  
+  // Booking types
+  BookingResponse,
+  CreateBookingDto,
+  UpdateBookingDto,
+  CheckAvailabilityDto,
+  WaitlistResponse,
+  AddToWaitlistDto,
+  UpdateWaitlistPositionDto,
+  
+  // Recurring schedule types
+  RecurringScheduleResponse,
+  CreateRecurringScheduleDto,
+  
+  // Calendar types
+  CalendarEvent,
+  DayViewResponse,
+  WeekViewResponse,
 };

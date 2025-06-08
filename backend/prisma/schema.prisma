@@ -131,12 +131,14 @@ model Location {
   id             String  @id @default(cuid())
   organizationId String
   name           String
+  description    String?
   address        String?
   city           String?
   state          String?
   zipCode        String?
   phone          String?
   email          String?
+  isPrimary      Boolean @default(false)
   isActive       Boolean @default(true)
 
   createdAt DateTime @default(now())

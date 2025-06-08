@@ -4,7 +4,6 @@ import {
   BadRequestException,
   ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateOrganizationDto,
   UpdateOrganizationDto,
@@ -17,7 +16,8 @@ import {
   UpdateServiceDto,
   ServiceType,
 } from './dto/organization.dto';
-import { Prisma } from '../../generated/prisma';
+import { Prisma } from 'generated/prisma';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OrganizationService {
@@ -478,9 +478,7 @@ export class OrganizationService {
 
       return await this.prisma.organizationSettings.upsert({
         where: { organizationId },
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         update: updateData as any,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         create: {
           organizationId,
           ...updateData,

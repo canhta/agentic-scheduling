@@ -11,6 +11,7 @@ import {
   HiCog,
   HiViewBoards,
   HiUsers,
+  HiUserGroup,
   HiCube,
   HiChevronRight,
   HiHome,
@@ -42,10 +43,16 @@ const sidebarSections: SidebarSection[] = [
     ]
   },
   {
+    title: 'User Management',
+    items: [
+      { name: 'Members', href: '/admin/members', icon: HiUsers },
+      { name: 'Staff & Admins', href: '/admin/users', icon: HiUserGroup, badge: '12+' },
+    ]
+  },
+  {
     title: 'Management',
     items: [
       { name: 'Organizations', href: '/admin/organizations', icon: HiViewBoards },
-      { name: 'Users', href: '/admin/users', icon: HiUsers, badge: '12+' },
       { name: 'Locations', href: '/admin/locations', icon: HiLocationMarker },
       { name: 'Resources', href: '/admin/resources', icon: HiShoppingBag },
       { name: 'Services', href: '/admin/services', icon: HiCube },

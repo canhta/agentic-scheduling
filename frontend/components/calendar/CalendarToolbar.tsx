@@ -1,16 +1,16 @@
 'use client';
 
 import { Button, Select } from 'flowbite-react';
-import { 
-  HiChevronLeft, 
+import {
+  HiChevronLeft,
   HiChevronRight,
   HiPlus
 } from 'react-icons/hi';
 
-export type CalendarView = 
-  | 'dayGridMonth' 
-  | 'timeGridWeek' 
-  | 'timeGridDay' 
+export type CalendarView =
+  | 'dayGridMonth'
+  | 'timeGridWeek'
+  | 'timeGridDay'
   | 'listWeek'
   | 'listDay'
   | 'resourceTimeGridWeek'
@@ -73,7 +73,7 @@ export function CalendarToolbar({
       {/* Left section - Navigation and Create */}
       <div className="flex items-center gap-3">
         {onCreateEvent && (
-          <Button 
+          <Button
             onClick={onCreateEvent}
             className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
             size="sm"
@@ -82,20 +82,18 @@ export function CalendarToolbar({
             Create
           </Button>
         )}
-        
+
         <Button
           onClick={onToday}
-          color="gray"
           size="sm"
           className="border border-gray-300 text-gray-700 hover:bg-gray-50"
         >
           Today
         </Button>
-        
+
         <div className="flex items-center gap-1 ml-2">
           <Button
             onClick={onPrevious}
-            color="gray"
             size="sm"
             className="p-2 border border-gray-300 hover:bg-gray-50"
             title="Previous"
@@ -104,7 +102,6 @@ export function CalendarToolbar({
           </Button>
           <Button
             onClick={onNext}
-            color="gray"
             size="sm"
             className="p-2 border border-gray-300 hover:bg-gray-50"
             title="Next"
@@ -112,7 +109,7 @@ export function CalendarToolbar({
             <HiChevronRight className="h-4 w-4" />
           </Button>
         </div>
-        
+
         <h1 className="text-xl font-normal text-gray-800 ml-4">
           {formatDate(currentDate)}
         </h1>
@@ -149,8 +146,8 @@ export function CalendarToolbar({
               onClick={() => onViewChange(value)}
               className={`
                 px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                ${currentView === value 
-                  ? 'bg-white text-gray-900 shadow-sm border border-gray-200' 
+                ${currentView === value
+                  ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }
               `}

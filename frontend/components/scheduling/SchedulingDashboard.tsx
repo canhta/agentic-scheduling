@@ -4,9 +4,9 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Card, Button, Badge, Tabs, TabItem, Select, TextInput, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import { HiCalendar, HiViewList, HiViewGrid, HiSearch, HiFilter, HiPlus, HiEye, HiPencil, HiX, HiUser, HiClock, HiLocationMarker } from 'react-icons/hi';
 import { Calendar } from '@/components/calendar/Calendar';
-import { useCalendarEvents, useBookings } from '@/hooks';
+import { useBookings } from '@/hooks';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import type { CalendarEvent } from '@/lib/types';
+import type { CalendarEvent, CreateBookingDto, UpdateBookingDto } from '@/lib/types';
 
 export type ViewMode = 'calendar' | 'list' | 'table';
 export type UserContext = 'admin' | 'member';
@@ -36,26 +36,17 @@ export function SchedulingDashboard({
     events, 
     loading: eventsLoading, 
     error: eventsError,
-    createEvent,
-    updateEvent,
-    deleteEvent,
+    createBooking,
+    updateBooking,
+    cancelBooking,
     refetch: refetchEvents
-  } = useCalendarEvents({ 
+  } = useBookings({ 
     organizationId, 
     memberId: userContext === 'member' ? memberId : undefined 
   });
 
-  const {
-    bookings,
-    loading: bookingsLoading,
-    error: bookingsError,
-    createBooking,
-    updateBooking,
-    cancelBooking
-  } = useBookings({ organizationId, memberId });
-
-  const loading = eventsLoading || bookingsLoading;
-  const error = eventsError || bookingsError;
+  const loading = eventsLoading;
+  const error = eventsError;
 
   // Filter events based on user context and filters
   const filteredEvents = useMemo(() => {
@@ -111,7 +102,7 @@ export function SchedulingDashboard({
   const upcomingEvents = filteredEvents.filter(event => new Date(event.start) >= new Date());
   const pastEvents = filteredEvents.filter(event => new Date(event.start) < new Date());
 
-  // Event handlers - now using API hooks
+  // Event handlers - now using booking operations since calendar events are read-only
   const handleEventClick = useCallback((event: CalendarEvent) => {
     // Handle event details modal or navigation
     console.log('Event clicked:', event);
@@ -119,61 +110,141 @@ export function SchedulingDashboard({
 
   const handleEventCreate = useCallback(async (eventData: Omit<CalendarEvent, 'id'>) => {
     try {
-      await createEvent(eventData);
-      // Event is automatically added to the events state via the hook
+      if (!organizationId) {
+        throw new Error('Organization ID is required');
+      }
+
+      // Map CalendarEvent data to CreateBookingDto
+      const createBookingData: CreateBookingDto = {
+        serviceId: eventData.serviceId,
+        userId: eventData.memberId,
+        startTime: typeof eventData.start === 'string' ? eventData.start : eventData.start.toISOString(),
+        endTime: typeof eventData.end === 'string' ? eventData.end : eventData.end.toISOString(),
+        allDay: eventData.allDay || false,
+        status: (eventData.status as any) || 'CONFIRMED',
+        notes: eventData.notes,
+        resourceId: eventData.resourceId,
+        // Add other optional fields as needed
+      };
+
+      // Create the booking
+      await createBooking(createBookingData);
+      
+      // Refresh calendar events to show the new booking
+      refetchEvents();
+      
+      console.log('Booking created successfully');
     } catch (error) {
-      console.error('Failed to create event:', error);
+      console.error('Failed to create booking:', error);
+      // You might want to show a toast notification here
     }
-  }, [createEvent]);
+  }, [createBooking, refetchEvents, organizationId]);
 
   const handleEventUpdate = useCallback(async (event: CalendarEvent) => {
     try {
-      await updateEvent(event);
-      // Event is automatically updated in the events state via the hook
+      if (!organizationId) {
+        throw new Error('Organization ID is required');
+      }
+
+      // Calendar events are read-only views of bookings, so we update the underlying booking
+      if (event.bookingId) {
+        // Map CalendarEvent data to UpdateBookingDto
+        const updateBookingData: UpdateBookingDto = {
+          startTime: typeof event.start === 'string' ? event.start : event.start.toISOString(),
+          endTime: typeof event.end === 'string' ? event.end : event.end.toISOString(),
+          status: event.status as any,
+          notes: event.notes,
+          // Add other optional fields as needed
+        };
+
+        // Update the booking
+        await updateBooking(event.bookingId, updateBookingData);
+        
+        // Refresh calendar events to show the updated booking
+        refetchEvents();
+        
+        console.log('Booking updated successfully');
+      } else {
+        throw new Error('Cannot update calendar event: No associated booking ID found');
+      }
     } catch (error) {
-      console.error('Failed to update event:', error);
+      console.error('Failed to update booking:', error);
+      // You might want to show a toast notification here
     }
-  }, [updateEvent]);
+  }, [updateBooking, refetchEvents, organizationId]);
 
   const handleEventDelete = useCallback(async (event: CalendarEvent, deleteAll?: boolean) => {
     try {
-      if (deleteAll && event.recurringScheduleId) {
-        // Handle recurring event deletion - you might need to add this to the API
-        await deleteEvent(event.id);
-      } else {
-        await deleteEvent(event.id);
+      // Calendar events are read-only views of bookings, so we cancel the underlying booking
+      if (event.bookingId) {
+        await cancelBooking(event.bookingId);
+        // Refresh calendar events after booking cancellation
+        refetchEvents();
       }
-      // Event is automatically removed from the events state via the hook
     } catch (error) {
-      console.error('Failed to delete event:', error);
+      console.error('Failed to cancel booking:', error);
     }
-  }, [deleteEvent]);
+  }, [cancelBooking, refetchEvents]);
 
   const handleEventDrop = useCallback(async (event: CalendarEvent, newStart: Date, newEnd: Date) => {
     try {
-      const updatedEvent = { 
-        ...event, 
-        start: newStart.toISOString(), 
-        end: newEnd.toISOString() 
-      };
-      await updateEvent(updatedEvent);
+      if (!organizationId) {
+        throw new Error('Organization ID is required');
+      }
+
+      // Calendar events are read-only. For drag-and-drop, we update the underlying booking
+      if (event.bookingId) {
+        // Map the new times to booking update data
+        const updateBookingData: UpdateBookingDto = {
+          startTime: newStart.toISOString(),
+          endTime: newEnd.toISOString(),
+        };
+
+        // Update the booking with new times
+        await updateBooking(event.bookingId, updateBookingData);
+        
+        // Refresh calendar events to show the updated booking
+        refetchEvents();
+        
+        console.log('Booking time updated successfully');
+      } else {
+        throw new Error('Cannot update calendar event: No associated booking ID found');
+      }
     } catch (error) {
-      console.error('Failed to update event:', error);
+      console.error('Failed to update booking times:', error);
+      // You might want to show a toast notification here
     }
-  }, [updateEvent]);
+  }, [updateBooking, refetchEvents, organizationId]);
 
   const handleEventResize = useCallback(async (event: CalendarEvent, newStart: Date, newEnd: Date) => {
     try {
-      const updatedEvent = { 
-        ...event, 
-        start: newStart.toISOString(), 
-        end: newEnd.toISOString() 
-      };
-      await updateEvent(updatedEvent);
+      if (!organizationId) {
+        throw new Error('Organization ID is required');
+      }
+
+      // Calendar events are read-only. For resize, we update the underlying booking
+      if (event.bookingId) {
+        // Map the new times to booking update data
+        const updateBookingData: UpdateBookingDto = {
+          startTime: newStart.toISOString(),
+          endTime: newEnd.toISOString(),
+        };
+
+        // Update the booking with new times
+        await updateBooking(event.bookingId, updateBookingData);
+        
+        // Refresh calendar events to show the updated booking
+        refetchEvents();
+        
+        console.log('Booking duration updated successfully');
+      } else {
+        throw new Error('Cannot update calendar event: No associated booking ID found');
+      }
     } catch (error) {
-      console.error('Failed to update event:', error);
+      console.error('Failed to update booking duration:', error);
+      // You might want to show a toast notification here
     }
-  }, [updateEvent]);
+  }, [updateBooking, refetchEvents, organizationId]);
 
   const formatDateTime = (dateInput: string | Date) => {
     const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;

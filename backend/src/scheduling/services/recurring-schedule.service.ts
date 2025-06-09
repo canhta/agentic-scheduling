@@ -306,7 +306,9 @@ export class RecurringScheduleService {
       case 'YEARLY':
         return 0; // RRule.YEARLY
       default:
-        throw new BadRequestException(`Invalid frequency: ${frequency}`);
+        throw new BadRequestException(
+          `Invalid frequency: ${frequency as string}`,
+        );
     }
   }
 

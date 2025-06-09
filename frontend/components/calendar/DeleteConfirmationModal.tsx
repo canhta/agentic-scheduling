@@ -19,7 +19,7 @@ export function DeleteConfirmationModal({
 }: DeleteConfirmationModalProps) {
   if (!event) return null;
 
-  const isRecurring = event.type === 'recurring' || event.recurringScheduleId;
+  const isRecurring = !!event.recurringScheduleId;
 
   const handleDeleteThis = () => {
     onConfirm(event, false);
@@ -44,19 +44,19 @@ export function DeleteConfirmationModal({
           Delete Event
         </div>
       </ModalHeader>
-      
+
       <ModalBody>
         <div className="text-center">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
             <HiExclamation className="h-6 w-6 text-red-600" />
           </div>
-          
+
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             Delete &quot;{event.title}&quot;?
           </h3>
-          
+
           <p className="text-sm text-gray-500 mb-4">
-            {isRecurring 
+            {isRecurring
               ? "This is a recurring event. Would you like to delete just this occurrence or all occurrences?"
               : "This action cannot be undone. The event will be permanently deleted."
             }
@@ -65,14 +65,14 @@ export function DeleteConfirmationModal({
           {event.booked && event.booked > 0 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
               <p className="text-sm text-yellow-800">
-                <strong>Warning:</strong> This event has {event.booked} booking{event.booked > 1 ? 's' : ''}. 
+                <strong>Warning:</strong> This event has {event.booked} booking{event.booked > 1 ? 's' : ''}.
                 Deleting it will affect existing bookings.
               </p>
             </div>
           )}
         </div>
       </ModalBody>
-      
+
       <ModalFooter className="justify-center">
         {isRecurring ? (
           <div className="flex flex-col sm:flex-row gap-2 w-full">

@@ -321,7 +321,7 @@ export type DayViewResponse = {
 
 // Week view response type (not in schema, defined manually)
 export type WeekViewResponse = {
-  startDate: string;
+  startOfWeek: string;
   endDate: string;
   days: {
     date: string;

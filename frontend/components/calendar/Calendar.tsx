@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { createCalendar, destroyCalendar, DayGrid, TimeGrid, ResourceTimeGrid, List, ResourceTimeline, Interaction } from '@event-calendar/core';
 import { Card } from 'flowbite-react';
 import { CalendarToolbar, type CalendarView } from './CalendarToolbar';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { EventFormModal } from './EventFormModal';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
-import { mockCalendarEvents, mockResources } from './mock-data';
-import type { CalendarEvent } from '@/lib/types';
+import { ApiClient } from '@/lib/api';
+import type { CalendarEvent, ResourceResponse } from '@/lib/types';
 import '@event-calendar/core/index.css';
 
 interface CalendarProps {
@@ -47,6 +47,11 @@ export function Calendar({
   const [currentView, setCurrentView] = useState<CalendarView>(initialView);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedResource, setSelectedResource] = useState<string>('');
+  const [resources, setResources] = useState<Array<{ id: string; title: string }>>([]);
+  const [resourcesLoading, setResourcesLoading] = useState(false);
+  
+  // Initialize API client
+  const api = useMemo(() => new ApiClient(), []);
   
   // Modal states
   const [eventFormModal, setEventFormModal] = useState({
@@ -61,6 +66,37 @@ export function Calendar({
     isOpen: false,
     event: null as CalendarEvent | null,
   });
+
+  // Fetch resources for the organization
+  const fetchResources = useCallback(async () => {
+    if (!organizationId) {
+      setResources([]);
+      return;
+    }
+
+    try {
+      setResourcesLoading(true);
+      const organizationResources = await api.getOrganizationResources(organizationId);
+      
+      // Format resources for calendar library (expects id and title properties)
+      const formattedResources = organizationResources.map((resource: ResourceResponse) => ({
+        id: resource.id,
+        title: resource.name,
+      }));
+      
+      setResources(formattedResources);
+    } catch (error) {
+      console.error('Failed to fetch resources:', error);
+      setResources([]);
+    } finally {
+      setResourcesLoading(false);
+    }
+  }, [organizationId, api]);
+
+  // Fetch resources when organizationId changes
+  useEffect(() => {
+    fetchResources();
+  }, [fetchResources]);
 
   // Convert CalendarEvent to @event-calendar/core format
   const formatEventsForCalendar = useCallback((events: CalendarEvent[]) => {
@@ -252,7 +288,7 @@ export function Calendar({
     if (currentView.includes('resource')) {
       return {
         ...baseOptions,
-        resources: mockResources,
+        resources: resources,
         resourceAreaHeaderContent: 'Resources',
         resourceAreaWidth: '200px',
         filterResourcesWithEvents: false,
@@ -261,7 +297,7 @@ export function Calendar({
     }
 
     return baseOptions;
-  }, [currentView, height, formatEventsForCalendar, filteredEvents, onEventClick, onDateSelect, onEventDrop, onEventResize]);
+  }, [currentView, height, formatEventsForCalendar, filteredEvents, onEventClick, onDateSelect, onEventDrop, onEventResize, resources]);
 
   // Initialize calendar once
   useEffect(() => {
@@ -288,12 +324,12 @@ export function Calendar({
       
       // Only set resource options for resource views
       if (currentView.includes('resource')) {
-        calendar.setOption('resources', mockResources);
+        calendar.setOption('resources', resources);
         calendar.setOption('resourceAreaHeaderContent', 'Resources');
         calendar.setOption('resourceAreaWidth', '200px');
       }
     }
-  }, [calendar, currentView, filteredEvents, formatEventsForCalendar]);
+  }, [calendar, currentView, filteredEvents, formatEventsForCalendar, resources]);
 
   // Modal handlers
   const handleEventSave = (eventData: Omit<CalendarEvent, 'id'> & { id?: string }) => {
@@ -411,7 +447,7 @@ export function Calendar({
           onToday={handleToday}
           currentDate={currentDate}
           selectedResource={selectedResource}
-          resources={mockResources}
+          resources={resources}
           onResourceChange={handleResourceChange}
           onCreateEvent={handleCreateEvent}
         />
@@ -430,6 +466,7 @@ export function Calendar({
         selectedDate={eventFormModal.selectedDate}
         selectedStartTime={eventFormModal.selectedStartTime}
         selectedEndTime={eventFormModal.selectedEndTime}
+        organizationId={organizationId}
       />
 
       {/* Delete Confirmation Modal */}

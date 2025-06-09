@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Modal, Button, Label, TextInput, Textarea, Select, Checkbox, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
 import { HiCalendar, HiClock, HiLocationMarker, HiUser, HiUserGroup, HiRefresh, HiX, HiCheck, HiExclamation } from 'react-icons/hi';
 import type { CalendarEvent } from '@/lib/types';
+import { useServices } from '@/hooks/useServices';
+import { useUsers } from '@/hooks/useUsers';
 
 interface EventFormModalProps {
   event?: CalendarEvent | null;
@@ -13,6 +15,7 @@ interface EventFormModalProps {
   selectedDate?: Date | null;
   selectedStartTime?: Date | null;
   selectedEndTime?: Date | null;
+  organizationId?: string;
 }
 
 interface RecurrencePattern {
@@ -37,17 +40,24 @@ export function EventFormModal({
   selectedDate,
   selectedStartTime,
   selectedEndTime,
+  organizationId,
 }: EventFormModalProps) {
+  // Fetch services and users using the hooks
+  const { services, loading: servicesLoading, error: servicesError } = useServices({ organizationId });
+  const { users, loading: usersLoading, error: usersError } = useUsers({ organizationId });
+
   const [formData, setFormData] = useState({
     title: '',
     start: '',
     end: '',
     allDay: false,
+    serviceId: '',
+    memberId: '',
     location: '',
     instructor: '',
     capacity: '',
     color: '#1a73e8',
-    type: 'booking' as 'booking' | 'recurring' | 'exception' | 'availability',
+    type: 'APPOINTMENT' as 'APPOINTMENT' | 'CLASS' | 'AVAILABILITY' | 'EXCEPTION',
     status: 'confirmed',
     description: '',
   });
@@ -59,8 +69,6 @@ export function EventFormModal({
   });
 
   const [isRecurring, setIsRecurring] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Partial<FormValidation>>({});
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   // Initialize form data when modal opens or event changes
@@ -72,7 +80,9 @@ export function EventFormModal({
           title: event.title,
           start: new Date(event.start).toISOString().slice(0, 16),
           end: new Date(event.end).toISOString().slice(0, 16),
-          allDay: event.allDay,
+          allDay: event.allDay || false,
+          serviceId: event.serviceId || '',
+          memberId: event.memberId || '',
           location: event.location || '',
           instructor: event.instructor || '',
           capacity: event.capacity?.toString() || '',
@@ -81,7 +91,7 @@ export function EventFormModal({
           status: event.status || 'confirmed',
           description: '',
         });
-        setIsRecurring(event.type === 'recurring');
+        setIsRecurring(event.isRecurring || false);
       } else {
         // Creating new event
         const startDate = selectedStartTime || selectedDate || new Date();
@@ -92,11 +102,13 @@ export function EventFormModal({
           start: startDate.toISOString().slice(0, 16),
           end: endDate.toISOString().slice(0, 16),
           allDay: false,
+          serviceId: '',
+          memberId: '',
           location: '',
           instructor: '',
           capacity: '',
           color: '#1a73e8',
-          type: 'booking',
+          type: 'APPOINTMENT',
           status: 'confirmed',
           description: '',
         });
@@ -130,6 +142,14 @@ export function EventFormModal({
     if (formData.start && formData.end && new Date(formData.end) <= new Date(formData.start)) {
       newErrors.push('End time must be after start time');
     }
+
+    if (!formData.serviceId) {
+      newErrors.push('Service selection is required');
+    }
+
+    if (!formData.memberId) {
+      newErrors.push('Member selection is required');
+    }
     
     return newErrors;
   };
@@ -159,11 +179,19 @@ export function EventFormModal({
       return;
     }
 
+    // Find selected service and user names
+    const selectedService = services.find(s => s.id === formData.serviceId);
+    const selectedUser = users.find(u => u.id === formData.memberId);
+
     const eventData: Omit<CalendarEvent, 'id'> & { id?: string } = {
       ...formData,
       id: event?.id,
       capacity: formData.capacity ? parseInt(formData.capacity) : undefined,
-      type: isRecurring ? 'recurring' : formData.type,
+      type: formData.type,
+      // Required CalendarEvent fields
+      serviceName: selectedService?.name || '',
+      memberName: selectedUser ? `${selectedUser.firstName} ${selectedUser.lastName}` : '',
+      isRecurring: isRecurring,
       // Add recurrence data if it's a recurring event
       ...(isRecurring && recurrence.type !== 'none' && {
         recurringScheduleId: event?.recurringScheduleId || `recurring_${Date.now()}`,
@@ -180,11 +208,13 @@ export function EventFormModal({
       start: '',
       end: '',
       allDay: false,
+      serviceId: '',
+      memberId: '',
       location: '',
       instructor: '',
       capacity: '',
       color: '#1a73e8',
-      type: 'booking',
+      type: 'APPOINTMENT',
       status: 'confirmed',
       description: '',
     });
@@ -198,9 +228,10 @@ export function EventFormModal({
   };
 
   const eventTypeOptions = [
-    { value: 'booking', label: 'Booking' },
-    { value: 'availability', label: 'Availability' },
-    { value: 'exception', label: 'Exception' },
+    { value: 'APPOINTMENT', label: 'Appointment' },
+    { value: 'CLASS', label: 'Class' },
+    { value: 'AVAILABILITY', label: 'Availability' },
+    { value: 'EXCEPTION', label: 'Exception' },
   ];
 
   const colorOptions = [
@@ -396,6 +427,53 @@ export function EventFormModal({
                     ))}
                   </div>
                 </div>
+              )}
+            </div>
+          </div>
+
+          {/* Service and User Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="serviceId" className="mb-2 block text-sm font-medium text-gray-900">
+                Service *
+              </Label>
+              <Select
+                id="serviceId"
+                value={formData.serviceId}
+                onChange={(e) => handleInputChange('serviceId', e.target.value)}
+                disabled={servicesLoading}
+              >
+                <option value="">Select a service</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.id}>
+                    {service.name} ({service.duration} min)
+                  </option>
+                ))}
+              </Select>
+              {servicesError && (
+                <p className="text-sm text-red-600 mt-1">{servicesError}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="memberId" className="mb-2 block text-sm font-medium text-gray-900">
+                Member *
+              </Label>
+              <Select
+                id="memberId"
+                value={formData.memberId}
+                onChange={(e) => handleInputChange('memberId', e.target.value)}
+                disabled={usersLoading}
+              >
+                <option value="">Select a member</option>
+                {users.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.firstName} {user.lastName} ({user.email})
+                  </option>
+                ))}
+              </Select>
+              {usersError && (
+                <p className="text-sm text-red-600 mt-1">{usersError}</p>
               )}
             </div>
           </div>

@@ -714,18 +714,26 @@ export class ApiClient {
   async getBookings(organizationId: string, params?: {
     serviceId?: string;
     userId?: string;
+    memberId?: string;
+    staffId?: string;
+    resourceId?: string;
     status?: string;
     startDate?: string;
     endDate?: string;
+    type?: string;
     page?: number;
     limit?: number;
   }): Promise<BookingResponse[]> {
     const searchParams = new URLSearchParams();
     if (params?.serviceId) searchParams.append('serviceId', params.serviceId);
     if (params?.userId) searchParams.append('userId', params.userId);
+    if (params?.memberId) searchParams.append('memberId', params.memberId);
+    if (params?.staffId) searchParams.append('staffId', params.staffId);
+    if (params?.resourceId) searchParams.append('resourceId', params.resourceId);
     if (params?.status) searchParams.append('status', params.status);
     if (params?.startDate) searchParams.append('startDate', params.startDate);
     if (params?.endDate) searchParams.append('endDate', params.endDate);
+    if (params?.type) searchParams.append('type', params.type);
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     
@@ -787,12 +795,14 @@ export class ApiClient {
     date: string;
     resourceId?: string;
     staffId?: string;
+    duration?: string;
   }): Promise<{ time: string; available: boolean; capacity?: number; booked?: number }[]> {
     const searchParams = new URLSearchParams();
     searchParams.append('serviceId', params.serviceId);
     searchParams.append('date', params.date);
     if (params.resourceId) searchParams.append('resourceId', params.resourceId);
     if (params.staffId) searchParams.append('staffId', params.staffId);
+    if (params.duration) searchParams.append('duration', params.duration);
     
     return this.request<{ time: string; available: boolean; capacity?: number; booked?: number }[]>(`/organizations/${organizationId}/bookings/availability/slots?${searchParams.toString()}`);
   }
@@ -800,13 +810,21 @@ export class ApiClient {
   // Waitlist Management
   async getWaitlistEntries(organizationId: string, params?: {
     serviceId?: string;
+    resourceId?: string;
+    memberId?: string;
     userId?: string;
+    startDate?: string;
+    endDate?: string;
     page?: number;
     limit?: number;
   }): Promise<WaitlistResponse[]> {
     const searchParams = new URLSearchParams();
     if (params?.serviceId) searchParams.append('serviceId', params.serviceId);
+    if (params?.resourceId) searchParams.append('resourceId', params.resourceId);
+    if (params?.memberId) searchParams.append('memberId', params.memberId);
     if (params?.userId) searchParams.append('userId', params.userId);
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     
@@ -963,6 +981,8 @@ export class ApiClient {
     serviceId?: string;
     resourceId?: string;
     staffId?: string;
+    memberId?: string;
+    type?: string;
     view?: 'month' | 'week' | 'day';
   }): Promise<CalendarEvent[]> {
     const searchParams = new URLSearchParams();
@@ -971,6 +991,8 @@ export class ApiClient {
     if (params.serviceId) searchParams.append('serviceId', params.serviceId);
     if (params.resourceId) searchParams.append('resourceId', params.resourceId);
     if (params.staffId) searchParams.append('staffId', params.staffId);
+    if (params.memberId) searchParams.append('memberId', params.memberId);
+    if (params.type) searchParams.append('type', params.type);
     if (params.view) searchParams.append('view', params.view);
     
     return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar?${searchParams.toString()}`);
@@ -1040,13 +1062,13 @@ export class ApiClient {
   }
 
   async getWeekView(organizationId: string, params: {
-    startDate: string;
+    startOfWeek: string;
     serviceId?: string;
     resourceId?: string;
     staffId?: string;
   }): Promise<WeekViewResponse> {
     const searchParams = new URLSearchParams();
-    searchParams.append('startDate', params.startDate);
+    searchParams.append('startOfWeek', params.startOfWeek);
     if (params.serviceId) searchParams.append('serviceId', params.serviceId);
     if (params.resourceId) searchParams.append('resourceId', params.resourceId);
     if (params.staffId) searchParams.append('staffId', params.staffId);
@@ -1057,11 +1079,13 @@ export class ApiClient {
   async getMyCalendar(organizationId: string, params: {
     startDate: string;
     endDate: string;
+    type?: string;
     includeWaitlist?: boolean;
   }): Promise<CalendarEvent[]> {
     const searchParams = new URLSearchParams();
     searchParams.append('startDate', params.startDate);
     searchParams.append('endDate', params.endDate);
+    if (params.type) searchParams.append('type', params.type);
     if (params.includeWaitlist !== undefined) searchParams.append('includeWaitlist', params.includeWaitlist.toString());
     
     return this.request<CalendarEvent[]>(`/organizations/${organizationId}/calendar/my-calendar?${searchParams.toString()}`);

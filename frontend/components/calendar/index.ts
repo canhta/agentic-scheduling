@@ -7,6 +7,5 @@
 
 export { Calendar } from './Calendar';
 export { CalendarToolbar } from './CalendarToolbar';
-export { mockCalendarEvents, mockResources, mockStaff } from './mock-data';
 
 export type { CalendarView } from './CalendarToolbar';

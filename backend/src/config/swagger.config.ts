@@ -93,6 +93,11 @@ const SWAGGER_MODULES: Record<string, SwaggerModuleConfig> = {
 function createModuleDocumentConfig(config: SwaggerModuleConfig) {
   const builder = new DocumentBuilder()
     .setTitle(config.title)
+    .addServer(`http://localhost:3000`, 'Local development server')
+    .addServer(
+      `https://9f3d-14-248-83-252.ngrok-free.app`,
+      'Ngrok tunnel for local development',
+    )
     .setDescription(config.description)
     .setVersion(SWAGGER_CONFIG.version);
 

@@ -29,7 +29,7 @@ interface CalendarProps {
 
 export function Calendar({
   organizationId,
-  events = mockCalendarEvents,
+  events = [],
   loading = false,
   onEventClick,
   onDateSelect,

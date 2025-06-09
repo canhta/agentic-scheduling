@@ -5,8 +5,27 @@ import { HiPlus, HiCalendar } from 'react-icons/hi';
 import { SchedulingDashboard } from '@/components/scheduling/SchedulingDashboard';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { UserRole } from '@/lib/types';
+import { useAuth } from '@/lib/auth/auth-context';
+import { authService } from '@/lib/auth/auth-service';
 
 export default function AdminSchedulingPage() {
+  const { user } = useAuth();
+  const organizationId = authService.getCurrentOrganizationId();
+
+  // Show loading or error state if no organizationId
+  if (!organizationId) {
+    return (
+      <ProtectedRoute requireRole={[UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.ORGANIZATION_ADMIN, UserRole.STAFF]}>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">No Organization Access</h2>
+            <p className="text-gray-600">You need to be associated with an organization to view schedules.</p>
+          </div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
+
   return (
     <ProtectedRoute requireRole={[UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.ORGANIZATION_ADMIN, UserRole.STAFF]}>
       <div className="min-h-screen bg-gray-50">
@@ -37,7 +56,7 @@ export default function AdminSchedulingPage() {
           {/* Scheduling Dashboard */}
           <SchedulingDashboard 
             userContext="admin"
-            organizationId="org-1"
+            organizationId={organizationId}
           />
         </div>
       </div>

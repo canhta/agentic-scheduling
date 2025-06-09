@@ -182,7 +182,9 @@ export class RecurringScheduleService {
       staffId?: string;
     },
   ): Promise<any[]> {
-    const where: Prisma.RecurringScheduleWhereInput = {};
+    const where: Prisma.RecurringScheduleWhereInput = {
+      service: { organizationId },
+    };
 
     if (filters.serviceId) where.serviceId = filters.serviceId;
 

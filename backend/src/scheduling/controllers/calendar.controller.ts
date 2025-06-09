@@ -65,7 +65,7 @@ export class CalendarController {
       type,
     };
 
-    return this.calendarService.getCalendarEvents(dto);
+    return this.calendarService.getCalendarEvents(organizationId, dto);
   }
 
   @Get('/staff/:staffId')

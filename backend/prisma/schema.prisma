@@ -17,7 +17,7 @@ datasource db {
 // =============================================================================
 
 model Organization {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   name        String
   slug        String  @unique // For subdomain/URL identification
   description String?
@@ -62,7 +62,7 @@ model Organization {
 }
 
 model OrganizationSettings {
-  id             String @id @default(cuid())
+  id             String @id @default(uuid())
   organizationId String @unique
 
   // Booking settings
@@ -128,7 +128,7 @@ model OrganizationSettings {
 }
 
 model Location {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   name           String
   description    String?
@@ -174,7 +174,7 @@ enum UserStatus {
 }
 
 model User {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String? // null for super admins
 
   // Basic info
@@ -259,7 +259,7 @@ model User {
 }
 
 model UserNote {
-  id       String  @id @default(cuid())
+  id       String  @id @default(uuid())
   userId   String
   authorId String // Who wrote the note
   content  String
@@ -287,7 +287,7 @@ enum MembershipStatus {
 }
 
 model MembershipType {
-  id             String @id @default(cuid())
+  id             String @id @default(uuid())
   organizationId String
 
   name         String
@@ -319,7 +319,7 @@ model MembershipType {
 }
 
 model Membership {
-  id               String @id @default(cuid())
+  id               String @id @default(uuid())
   userId           String
   membershipTypeId String
 
@@ -361,7 +361,7 @@ enum ServiceType {
 }
 
 model Service {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   locationId     String?
 
@@ -405,7 +405,7 @@ model Service {
 }
 
 model Resource {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   locationId     String?
 
@@ -493,7 +493,7 @@ enum Frequency {
 }
 
 model Booking {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   locationId     String?
   serviceId      String
@@ -553,7 +553,7 @@ model Booking {
 
 // Enhanced RRULE-based recurring schedules following Google Calendar standard
 model RecurringSchedule {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   serviceId String
 
   // Core RRULE components (RFC 5545 compliant)
@@ -600,7 +600,7 @@ model RecurringSchedule {
 
 // Handle modifications to specific instances in a recurring series
 model RecurrenceException {
-  id                  String @id @default(cuid())
+  id                  String @id @default(uuid())
   recurringScheduleId String
 
   // Which specific instance this exception applies to
@@ -654,7 +654,7 @@ enum DayOfWeek {
 }
 
 model StaffAvailability {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String // Staff member
 
   // Regular weekly availability
@@ -681,7 +681,7 @@ model StaffAvailability {
 // =============================================================================
 
 model Waiver {
-  id             String @id @default(cuid())
+  id             String @id @default(uuid())
   organizationId String
 
   title      String
@@ -700,7 +700,7 @@ model Waiver {
 }
 
 model WaiverSignature {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   waiverId String
   userId   String
 
@@ -730,7 +730,7 @@ enum CommunicationType {
 }
 
 model CommunicationLog {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String
 
   type    CommunicationType
@@ -758,7 +758,7 @@ model CommunicationLog {
 // =============================================================================
 
 model Waitlist {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   serviceId String
   userId    String
 
@@ -804,7 +804,7 @@ enum TimeOffType {
 }
 
 model TimeOffRequest {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String // Staff member requesting time off
 
   type   TimeOffType
@@ -851,7 +851,7 @@ enum PaymentMethod {
 }
 
 model Payment {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   userId         String
   bookingId      String? // Optional - for booking-specific payments
@@ -892,7 +892,7 @@ model Payment {
 // =============================================================================
 
 model AnalyticsSnapshot {
-  id             String @id @default(cuid())
+  id             String @id @default(uuid())
   organizationId String
 
   // Time period
@@ -939,7 +939,7 @@ model AnalyticsSnapshot {
 // =============================================================================
 
 model CheckIn {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   userId         String
   bookingId      String?
@@ -971,7 +971,7 @@ model CheckIn {
 // =============================================================================
 
 model Review {
-  id             String  @id @default(cuid())
+  id             String  @id @default(uuid())
   organizationId String
   userId         String
   serviceId      String?
@@ -1017,7 +1017,7 @@ enum PackageStatus {
 }
 
 model MemberPackage {
-  id               String  @id @default(cuid())
+  id               String  @id @default(uuid())
   organizationId   String
   userId           String
   membershipTypeId String?
@@ -1055,7 +1055,7 @@ model MemberPackage {
 }
 
 model PackageUsage {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   packageId String
   bookingId String
 

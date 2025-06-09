@@ -277,17 +277,28 @@ export type RecurringScheduleResponseDto = RecurringScheduleResponse; // Alias
 // =============================================================================
 
 // Calendar event type (not in schema, defined manually)
+// Updated to match backend CalendarService transformToCalendarEvent output
 export type CalendarEvent = {
   id: string;
   title: string;
-  start: string;
-  end: string;
-  allDay: boolean;
-  serviceId?: string;
-  bookingId?: string;
+  start: string | Date;
+  end: string | Date;
+  allDay?: boolean;
+  type: 'APPOINTMENT' | 'CLASS' | 'AVAILABILITY' | 'EXCEPTION';
+  status: string;
+  memberId: string;
+  memberName: string;
+  staffId?: string;
+  staffName?: string;
+  serviceId: string;
+  serviceName: string;
+  resourceId?: string;
+  resourceName?: string;
+  notes?: string;
+  isRecurring: boolean;
   recurringScheduleId?: string;
-  type: 'booking' | 'recurring' | 'exception' | 'availability';
-  status?: string;
+  // Legacy properties for backward compatibility
+  bookingId?: string;
   location?: string;
   resource?: string;
   instructor?: string;

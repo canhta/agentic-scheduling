@@ -26,8 +26,11 @@ type BookingWithRelations = Booking & {
 export class CalendarService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getCalendarEvents(dto: GetCalendarDto): Promise<CalendarEvent[]> {
-    const whereClause = this.buildWhereClause(dto);
+  async getCalendarEvents(
+    organizationId: string,
+    dto: GetCalendarDto,
+  ): Promise<CalendarEvent[]> {
+    const whereClause = this.buildWhereClause(organizationId, dto);
 
     // Get regular bookings
     const bookings = await this.prisma.booking.findMany({
@@ -48,8 +51,12 @@ export class CalendarService {
     return bookings.map((booking) => this.transformToCalendarEvent(booking));
   }
 
-  private buildWhereClause(dto: GetCalendarDto): Prisma.BookingWhereInput {
+  private buildWhereClause(
+    organizationId: string,
+    dto: GetCalendarDto,
+  ): Prisma.BookingWhereInput {
     const where: Prisma.BookingWhereInput = {
+      organizationId,
       startTime: {
         gte: dto.startDate,
         lte: dto.endDate,
@@ -130,11 +137,13 @@ export class CalendarService {
   }
 
   async getUpcomingBookings(
+    organizationId: string,
     userId: string,
     limit: number = 10,
   ): Promise<CalendarEvent[]> {
     const bookings = await this.prisma.booking.findMany({
       where: {
+        organizationId,
         userId,
         startTime: {
           gte: new Date(),
